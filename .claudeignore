@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+!client/.env.example
+*.pem
+*.key
+node_modules/
+client/node_modules/
+dist/
+client/dist/

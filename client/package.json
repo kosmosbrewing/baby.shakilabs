@@ -1,0 +1,39 @@
+{
+  "name": "baby-tools",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build.mjs",
+    "verify:static": "node scripts/validate-static-output.mjs",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@shakilabs/ui": "file:vendor/shakilabs-ui-0.3.8.tgz",
+    "@unhead/vue": "^2.1.10",
+    "autoprefixer": "^10.4.24",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.563.0",
+    "postcss": "^8.5.6",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-animate": "^1.0.7",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.2",
+    "typescript": "^5.7.3",
+    "vite": "^7.3.1",
+    "vite-ssg": "^28.3.0",
+    "vitest": "^4.0.18",
+    "vue-tsc": "^2.2.0"
+  }
+}

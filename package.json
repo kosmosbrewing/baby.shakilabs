@@ -1,0 +1,9 @@
+{
+  "name": "baby-shakilabs-deploy-root",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm --prefix client ci",
+    "build": "npm --prefix client run build"
+  }
+}

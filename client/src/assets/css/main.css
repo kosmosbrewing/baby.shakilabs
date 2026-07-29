@@ -1,0 +1,233 @@
+/* Critical CSS는 index.html에 inline으로 이동 */
+
+/* 로컬 폰트 — CDN 의존 없이 /public/fonts/ 서빙 */
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Regular-subset.woff2") format("woff2"),
+       url("/fonts/Pretendard-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-SemiBold-subset.woff2") format("woff2"),
+       url("/fonts/Pretendard-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Bold-subset.woff2") format("woff2"),
+       url("/fonts/Pretendard-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GmarketSans";
+  src: url("/fonts/GmarketSansBold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --status-success: 148 61% 36%;
+    --status-warning: 43 88% 43%;
+    --status-caution: 28 82% 48%;
+    --status-danger: 0 70% 52%;
+    --status-info: 212 83% 45%;
+  }
+
+  .dark {
+    --status-success: 148 63% 66%;
+    --status-warning: 43 95% 70%;
+    --status-caution: 28 91% 66%;
+    --status-danger: 0 86% 73%;
+    --status-info: 205 90% 72%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  :where(
+      a,
+      button,
+      input,
+      select,
+      textarea,
+      summary,
+      [role="button"],
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* 한국어는 기본값(word-break: normal)에서 어절 중간이 잘려 개행이 어색해진다.
+       keep-all로 공백 단위 줄바꿈을 강제하고, 긴 숫자·URL만 break-word로 예외 처리한다. */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    /* 마지막 줄에 한두 글자만 남는 고아줄을 줄인다 (미지원 브라우저는 무시) */
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .retro-panel-content {
+    @apply px-4 py-3 sm:px-5 sm:py-4;
+  }
+
+  .retro-panel {
+    @apply rounded-2xl border border-border bg-card shadow-sm;
+  }
+
+  .retro-panel-muted {
+    @apply rounded-2xl border border-border bg-muted/30 shadow-sm;
+  }
+
+  .retro-step {
+    @apply flex items-center gap-2 rounded-xl border border-border/70 bg-background/65 px-3 py-2;
+  }
+
+  .retro-step-index {
+    @apply inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-tiny font-bold text-primary-foreground;
+  }
+
+  .retro-titlebar {
+    @apply flex items-center justify-between gap-3 border-b border-border/70 bg-muted/35 px-4 py-3 sm:px-5 sm:py-3.5 text-foreground;
+  }
+
+  .retro-title {
+    @apply text-heading font-semibold tracking-normal font-brand;
+  }
+
+  .retro-link {
+    @apply font-semibold text-primary hover:text-primary/80 hover:underline underline-offset-2;
+  }
+
+  .touch-target {
+    @apply min-h-11 min-w-11;
+  }
+
+  .scroll-hint {
+    @apply px-3 py-1 text-tiny text-muted-foreground sm:hidden;
+  }
+
+  .retro-stat-grid {
+    @apply grid grid-cols-2 gap-2 sm:grid-cols-4;
+  }
+
+  .retro-stat {
+    @apply retro-panel-muted p-3.5;
+  }
+
+  .retro-stat-label {
+    @apply whitespace-nowrap truncate text-caption uppercase tracking-wide text-muted-foreground;
+  }
+
+  .retro-stat-value {
+    @apply mt-1 text-heading font-bold tabular-nums;
+  }
+}
+
+/* Vue Transition — 공통 전환 애니메이션 */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 639px) {
+  .text-display {
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  .text-heading,
+  .retro-title {
+    font-size: 0.9375rem;
+    line-height: 1.3;
+  }
+
+  .text-body {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .text-caption {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .text-tiny {
+    font-size: 0.65625rem;
+    line-height: 1.3;
+  }
+
+  .retro-titlebar {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+    gap: 0.625rem;
+  }
+
+  .retro-panel-content {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+}
+
+/* 모바일 활성 탭은 배경 하이라이트(흰색 16%)로 이미 구분된다.
+   공용 네비 indicator가 타일 전체 폭을 차지해 글자보다 두 배 가까이 넓어 과해 보이므로,
+   모바일에서는 글자 폭에 맞춘 밑줄로 대체한다 (데스크톱은 배경이 없어 기존 유지). */
+@media (max-width: 639px) {
+  .sh-primary-navigation__link--mobile .sh-primary-navigation__indicator {
+    display: none;
+  }
+
+  .sh-primary-navigation__link--mobile.sh-primary-navigation__link--active
+    .sh-primary-navigation__label {
+    position: relative;
+  }
+
+  .sh-primary-navigation__link--mobile.sh-primary-navigation__link--active
+    .sh-primary-navigation__label::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -0.25rem;
+    left: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+}

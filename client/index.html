@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/baby/favicon.png" />
+    <link rel="apple-touch-icon" href="/baby/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026 육아·출산 지원금 계산기 | 부모급여·아동수당·첫만남이용권</title>
+    <meta
+      name="description"
+      content="자녀 생년월과 지역만 입력하면 부모급여·아동수당·첫만남이용권 남은 총 수령액을 월별 타임라인으로 계산합니다."
+    />
+
+    <!-- GA4 preconnect -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+
+    <!-- 로컬 폰트 preload -->
+    <link rel="preload" href="/baby/fonts/Pretendard-Regular-subset.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/baby/fonts/Pretendard-Bold-subset.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- OG 태그 -->
+    <meta property="og:title" content="2026 육아·출산 지원금 계산기 | 부모급여·아동수당·첫만남이용권" />
+    <meta
+      property="og:description"
+      content="부모급여, 아동수당, 첫만남이용권까지 남은 총 수령액을 한 번에 계산하세요."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="ShakiLabs 육아 지원금 계산기" />
+    <link rel="canonical" href="https://shakilabs.com/baby/" />
+    <meta property="og:url" content="https://shakilabs.com/baby/" />
+    <meta property="og:image" content="https://shakilabs.com/baby/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="2026 육아·출산 지원금 계산기" />
+    <meta name="twitter:description" content="부모급여·아동수당·첫만남이용권 남은 총 수령액을 무료로 계산하세요." />
+    <meta name="twitter:image" content="https://shakilabs.com/baby/og-image.png" />
+
+    <!-- GEO / 언어 -->
+    <meta name="content-language" content="ko" />
+    <meta name="geo.region" content="KR" />
+    <meta name="geo.placename" content="대한민국" />
+
+    <!-- OG 이미지 크기 -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- 테마 — 로즈 계열 -->
+    <meta name="theme-color" content="hsl(330, 70%, 40%)" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="hsl(222, 47%, 11%)" media="(prefers-color-scheme: dark)" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "육아·출산 지원금 계산기",
+        "url": "https://shakilabs.com/baby",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+        "inLanguage": "ko"
+      }
+    </script>
+
+    <script>
+      (() => {
+        try {
+          const key = "baby-tools:theme:v1";
+          const saved = localStorage.getItem(key);
+          const prefersDark =
+            typeof window.matchMedia === "function" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme =
+            saved === "dark" || saved === "light" ? saved : prefersDark ? "dark" : "light";
+
+          if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch {
+          // no-op
+        }
+      })();
+    </script>
+    <!-- Critical CSS: baby 테마 — rose-700 -->
+    <style>
+      :root {
+        --background: 210 40% 98%;
+        --foreground: 222 47% 11%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 16% 37%;
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
+        --primary: 330 70% 40%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 330 24% 94%;
+        --secondary-foreground: 222 47% 11%;
+        --accent: 330 28% 96%;
+        --accent-foreground: 330 58% 34%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 11%;
+        --destructive: 0 72% 52%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214 16% 85%;
+        --input: 214 16% 85%;
+        --ring: 330 70% 40%;
+        --radius: 0.4rem;
+      }
+
+      .dark {
+        --background: 222 47% 11%;
+        --foreground: 210 40% 96%;
+        --muted: 217 33% 17%;
+        --muted-foreground: 215 20% 72%;
+        --card: 217 33% 17%;
+        --card-foreground: 210 40% 96%;
+        --primary: 330 78% 62%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 330 12% 19%;
+        --secondary-foreground: 210 40% 96%;
+        --accent: 330 16% 23%;
+        --accent-foreground: 330 74% 84%;
+        --popover: 217 33% 17%;
+        --popover-foreground: 210 40% 96%;
+        --destructive: 0 72% 58%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 214 16% 26%;
+        --input: 214 16% 30%;
+        --ring: 330 78% 62%;
+      }
+
+      html {
+        scroll-behavior: auto;
+        font-size: 16px;
+      }
+
+      body {
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        margin: 0;
+        color-scheme: light dark;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <section style="max-width:920px;margin:0 auto;padding:20px 16px;line-height:1.6;">
+        <h1 style="font-size:28px;line-height:1.3;margin:0 0 12px;">육아·출산 지원금 계산기</h1>
+        <p style="margin:0 0 10px;">부모급여, 아동수당, 첫만남이용권 남은 총 수령액을 브라우저에서 바로 계산하세요.</p>
+        <ul style="margin:0;padding-left:20px;">
+          <li><a href="/baby/parental-benefit">부모급여 계산기</a></li>
+          <li><a href="/baby/child-allowance">아동수당 계산기</a></li>
+          <li><a href="/baby/first-meeting">첫만남이용권 계산기</a></li>
+          <li><a href="/baby/about">서비스 안내</a></li>
+        </ul>
+      </section>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
