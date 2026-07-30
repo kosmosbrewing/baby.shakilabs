@@ -4,11 +4,14 @@ import { ShButton, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/u
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import { useChildAllowanceCalc } from "@/composables/useChildAllowanceCalc";
 import { BIRTH_MONTH_PRESETS } from "@/data/babyPresets";
-import { CALCULATION_BASIS_NOTE, REGION_OPTIONS } from "@/data/benefitRates2026";
+import { CALCULATION_BASIS_NOTE, REGION_OPTIONS, type RegionTier } from "@/data/benefitRates2026";
 import { formatWon } from "@/lib/utils";
 
+// initialRegion: 상황별 랜딩 페이지(예: /child-allowance/population-decline)가 기본값을 지정할 때만 사용한다.
+const props = withDefaults(defineProps<{ initialRegion?: RegionTier }>(), { initialRegion: "metro" });
+
 const { state, currentMonths, monthlyAmount, isEligible, remainingTotal, applyBirthMonthPreset } =
-  useChildAllowanceCalc();
+  useChildAllowanceCalc(props.initialRegion);
 
 const metrics = computed(() => [
   { label: "현재 개월수", value: `${currentMonths.value}개월` },

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { debounce, formatNumber, formatWon, parseNumericInput } from "./utils";
+import { debounce, formatNumber, formatWon, formatYearMonth, parseNumericInput } from "./utils";
 
 describe("utils formatters", () => {
   it("formatNumber/formatWon은 nullish를 '-'로 처리한다", () => {
@@ -8,6 +8,11 @@ describe("utils formatters", () => {
 
     expect(formatWon(undefined)).toBe("-");
     expect(formatWon(12345.6)).toBe("12,346원");
+  });
+
+  it("formatYearMonth는 '연도년 월월' 형식으로 표기한다", () => {
+    expect(formatYearMonth({ year: 2027, month: 1 })).toBe("2027년 1월");
+    expect(formatYearMonth({ year: 2035, month: 12 })).toBe("2035년 12월");
   });
 
   it("parseNumericInput은 콤마·기호를 제거하고 음수를 0으로 clamp한다", () => {

@@ -17,6 +17,11 @@ export function formatWon(amount: number | null | undefined): string {
   return `${Math.round(amount).toLocaleString("ko-KR")}원`;
 }
 
+// 연월 포맷: {year:2027, month:1} → "2027년 1월" — 출생연도 랜딩 페이지의 종료 시점 표기에 사용
+export function formatYearMonth(yearMonth: { year: number; month: number }): string {
+  return `${yearMonth.year}년 ${yearMonth.month}월`;
+}
+
 // 콤마 포함 입력값에서 숫자만 추출: "1,234,000" → 1234000
 export function parseNumericInput(value: string): number {
   const num = Number(value.replace(/[^0-9.-]/g, ""));

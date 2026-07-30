@@ -8,29 +8,28 @@ import NextStepsLinks from "@/components/common/NextStepsLinks.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import FirstMeetingCalculator from "@/components/baby/FirstMeetingCalculator.vue";
-import { FIRST_MEETING_GUIDE } from "@/data/seoGuides";
+import { TWINS_FIRST_MEETING_GUIDE } from "@/data/situationalGuides";
 import {
   CHILD_ALLOWANCE_LINK,
   FINANCE_CROSS_LINKS,
   HOME_LINK,
   PARENTAL_BENEFIT_LINK,
   SECOND_CHILD_FIRST_MEETING_LINK,
-  TWINS_FIRST_MEETING_LINK,
 } from "@/data/crossLinks";
 
 const faqItems = [
   {
-    q: "둘째 아이 첫만남이용권은 얼마인가요?",
-    a: "둘째 이상은 300만원이 지급됩니다. 첫째는 200만원입니다.",
+    q: "쌍둥이는 각각 첫만남이용권을 받나요?",
+    a: "네, 쌍둥이도 각자 출생 순위를 부여받아 개별 지급됩니다. 첫째가 쌍둥이라면 200만원+300만원, 총 500만원을 받는 것이 다수 지자체 안내 기준입니다.",
   },
   {
-    q: "쌍둥이는 각각 받나요?",
-    a: "네, 쌍둥이도 각자 출생 순위를 부여받아 개별 지급됩니다. 예를 들어 첫째가 쌍둥이라면 200만원+300만원, 총 500만원을 받습니다.",
+    q: "쌍둥이 첫만남이용권도 2년 안에 써야 하나요?",
+    a: "네, 사용기한은 단태아와 동일하게 출생일로부터 2년입니다. 기한이 지나면 잔액이 소멸됩니다.",
   },
 ] as const;
 
 // 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
-const mergedFaqs = mergeFaqs(faqItems, FIRST_MEETING_GUIDE.faqs);
+const mergedFaqs = mergeFaqs(faqItems, TWINS_FIRST_MEETING_GUIDE.faqs);
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -41,40 +40,33 @@ const faqJsonLd = computed(() => ({
   })),
 }));
 
-const nextSteps = [
-  HOME_LINK,
-  PARENTAL_BENEFIT_LINK,
-  CHILD_ALLOWANCE_LINK,
-  TWINS_FIRST_MEETING_LINK,
-  SECOND_CHILD_FIRST_MEETING_LINK,
-  ...FINANCE_CROSS_LINKS,
-];
+const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, SECOND_CHILD_FIRST_MEETING_LINK, ...FINANCE_CROSS_LINKS];
 </script>
 
 <template>
   <SEOHead
-    title="첫만남이용권 계산기 | 출생순위·다태아 바우처 총액"
-    description="출생 순위와 다태아 수를 입력하면 첫만남이용권 바우처 총액과 2년 사용기한을 바로 계산합니다."
+    title="쌍둥이 첫만남이용권 | 다태아 합산 지급액"
+    description="쌍둥이·다태아는 출생 순위별로 첫만남이용권을 각각 받습니다. 첫째가 쌍둥이면 합산 얼마인지 바로 계산합니다."
     :json-ld="faqJsonLd"
   />
 
   <div class="container space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
-      <CalculatorPageHeader title="첫만남이용권 계산기" />
+      <CalculatorPageHeader title="쌍둥이 첫만남이용권" />
       <FreshBadge />
     </div>
 
-    <FirstMeetingCalculator />
+    <FirstMeetingCalculator initial-birth-order="first" :initial-multiple-birth-count="2" />
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
 
     <SeoRichGuide
-      :title="FIRST_MEETING_GUIDE.title"
-      :intro="FIRST_MEETING_GUIDE.intro"
-      :sections="FIRST_MEETING_GUIDE.sections"
-      :disclaimer="FIRST_MEETING_GUIDE.disclaimer"
+      :title="TWINS_FIRST_MEETING_GUIDE.title"
+      :intro="TWINS_FIRST_MEETING_GUIDE.intro"
+      :sections="TWINS_FIRST_MEETING_GUIDE.sections"
+      :disclaimer="TWINS_FIRST_MEETING_GUIDE.disclaimer"
     />
   </div>
 </template>

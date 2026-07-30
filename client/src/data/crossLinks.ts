@@ -46,3 +46,48 @@ export const FIRST_MEETING_LINK: NextStepLink = {
   description: "출생 순위·다태아 수에 따른 바우처 총액과 사용기한을 계산합니다.",
   href: "/first-meeting",
 };
+
+/** 아동수당 출생연도 랜딩 페이지(/child-allowance/YYYY) 링크를 생성한다 — 연도마다 상수를 따로 두지 않는다. */
+export function childAllowanceYearLink(year: number): NextStepLink {
+  return {
+    title: `${year}년생 아동수당 총정리`,
+    description: `${year}년생 기준 지급 종료 시점과 지역별 남은 총액을 확인합니다.`,
+    href: `/child-allowance/${year}`,
+  };
+}
+
+export const POPULATION_DECLINE_CHILD_ALLOWANCE_LINK: NextStepLink = {
+  title: "인구감소지역 아동수당",
+  description: "인구감소지역 우대·특별 지원금 11만/12만원 기준을 확인합니다.",
+  href: "/child-allowance/population-decline",
+};
+
+export const PARENTAL_BENEFIT_DAYCARE_LINK: NextStepLink = {
+  title: "어린이집 이용 시 부모급여",
+  description: "어린이집을 이용하면 부모급여 현금 차액이 어떻게 달라지는지 확인합니다.",
+  href: "/parental-benefit/daycare",
+};
+
+export const TWINS_FIRST_MEETING_LINK: NextStepLink = {
+  title: "쌍둥이 첫만남이용권",
+  description: "다태아 출생 순위별 첫만남이용권 합산 지급액을 확인합니다.",
+  href: "/first-meeting/twins",
+};
+
+export const SECOND_CHILD_FIRST_MEETING_LINK: NextStepLink = {
+  title: "둘째 첫만남이용권 300만원",
+  description: "둘째 이상 자녀의 첫만남이용권 지급 기준을 확인합니다.",
+  href: "/first-meeting/second",
+};
+
+export const NEWBORN_CHECKLIST_LINK: NextStepLink = {
+  title: "출산 직후 신청 순서 가이드",
+  description: "출생신고부터 부모급여·아동수당까지 신청 순서와 기한을 확인합니다.",
+  href: "/guide/newborn-checklist",
+};
+
+export const DAYCARE_TRANSITION_LINK: NextStepLink = {
+  title: "어린이집 입소 전환 체크리스트",
+  description: "부모급여에서 보육료 바우처로 전환될 때 확인할 사항을 안내합니다.",
+  href: "/guide/daycare-transition",
+};

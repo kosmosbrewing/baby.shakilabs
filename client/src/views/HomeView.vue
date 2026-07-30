@@ -9,7 +9,14 @@ import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import TimelineSimulator from "@/components/baby/TimelineSimulator.vue";
 import { BABY_HOME_GUIDE } from "@/data/seoGuides";
-import { CHILD_ALLOWANCE_LINK, FINANCE_CROSS_LINKS, FIRST_MEETING_LINK, PARENTAL_BENEFIT_LINK } from "@/data/crossLinks";
+import {
+  CHILD_ALLOWANCE_LINK,
+  DAYCARE_TRANSITION_LINK,
+  FINANCE_CROSS_LINKS,
+  FIRST_MEETING_LINK,
+  NEWBORN_CHECKLIST_LINK,
+  PARENTAL_BENEFIT_LINK,
+} from "@/data/crossLinks";
 
 const faqItems = [
   {
@@ -38,7 +45,14 @@ const faqJsonLd = computed(() => ({
   })),
 }));
 
-const nextSteps = [PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, FIRST_MEETING_LINK, ...FINANCE_CROSS_LINKS];
+const nextSteps = [
+  PARENTAL_BENEFIT_LINK,
+  CHILD_ALLOWANCE_LINK,
+  FIRST_MEETING_LINK,
+  NEWBORN_CHECKLIST_LINK,
+  DAYCARE_TRANSITION_LINK,
+  ...FINANCE_CROSS_LINKS,
+];
 </script>
 
 <template>

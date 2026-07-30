@@ -1,6 +1,15 @@
 // SEO 리치 가이드 데이터 (baby 앱) — SeoRichGuide 본문 텍스트 + FaqAccordionPanel extra 문항.
 // 주의: 이 파일의 faqs는 SeoRichGuide에는 넘기지 않고 FaqAccordionPanel의 extra로만 병합한다 (이중 노출 금지).
-import { LOCAL_BIRTH_SUPPORT_URL, PARENTAL_BENEFIT_MISINFO_NOTE } from "@/data/benefitRates2026";
+import {
+  APPLICATION_CHANNELS,
+  FIRST_MEETING_EXCLUDED_CATEGORIES,
+  FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE,
+  LOCAL_BIRTH_SUPPORT_URL,
+  PARENTAL_BENEFIT_MISINFO_NOTE,
+  PARENTAL_BENEFIT_PAYMENT_DAY_CASH,
+  PARENTAL_BENEFIT_PAYMENT_DAY_DAYCARE_DIFF,
+  PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS,
+} from "@/data/benefitRates2026";
 
 export interface GuideSection {
   h2: string;
@@ -20,7 +29,8 @@ export interface GuideData {
   disclaimer?: string;
 }
 
-const COMMON_DISCLAIMER =
+// export: 출생연도 랜딩(childAllowanceYearGuides.ts) 등 신규 가이드 파일에서 동일 문구를 재사용한다.
+export const COMMON_DISCLAIMER =
   "본 계산 결과는 참고용이며, 실제 신청·심사·지급 여부는 복지로(bokjiro.go.kr) 또는 관할 행정복지센터의 최종 안내를 따릅니다.";
 
 export const BABY_HOME_GUIDE: GuideData = {
@@ -40,6 +50,10 @@ export const BABY_HOME_GUIDE: GuideData = {
       h2: "지자체 자체 출산지원금은 별도",
       body: `여기서 계산하는 금액은 중앙정부 지원금(부모급여·아동수당·첫만남이용권)만 포함합니다. 지자체별 출산장려금은 지역마다 편차가 매우 커 이 계산기에는 반영하지 않았으며, 정부24 통합 신청 페이지(${LOCAL_BIRTH_SUPPORT_URL})에서 거주지 기준으로 별도 확인해야 합니다.`,
     },
+    {
+      h2: "어디서 신청하나요? (신청 경로 3종)",
+      body: `부모급여·아동수당·첫만남이용권 모두 ${APPLICATION_CHANNELS.join(", ")} 중 편한 곳에서 신청할 수 있습니다. 온라인 신청이 가장 빠르지만 서류 확인이 필요하면 방문 신청이 유리합니다.`,
+    },
   ],
   faqs: [
     {
@@ -49,6 +63,10 @@ export const BABY_HOME_GUIDE: GuideData = {
     {
       q: "지자체 출산지원금도 이 계산기에 포함되나요?",
       a: "포함되지 않습니다. 지자체 자체 출산지원금은 지역별 금액 편차가 커 정부24 링크로 별도 안내하며, 정확한 금액은 거주지 행정복지센터에서 확인해야 합니다.",
+    },
+    {
+      q: "온라인으로도 신청할 수 있나요?",
+      a: `네, ${APPLICATION_CHANNELS[1]}이나 ${APPLICATION_CHANNELS[2]}에서 온라인으로 신청할 수 있고, ${APPLICATION_CHANNELS[0]} 신청도 가능합니다.`,
     },
   ],
   disclaimer: COMMON_DISCLAIMER,
@@ -67,6 +85,10 @@ export const PARENTAL_BENEFIT_GUIDE: GuideData = {
       h2: "24개월 이후 양육수당 전환",
       body: "부모급여는 24개월(만 2세)에 종료되며, 이후 가정양육을 계속하면 86개월까지 월 10만원의 양육수당으로 전환됩니다. 어린이집을 이용 중이라면 24개월 이후 양육수당도 지급되지 않습니다.",
     },
+    {
+      h2: "지급일과 60일 소급 신청 기한",
+      body: `가정양육 부모급여는 매월 ${PARENTAL_BENEFIT_PAYMENT_DAY_CASH}일 현금으로 지급되고, 어린이집 이용 시 보육료 차액은 익월 ${PARENTAL_BENEFIT_PAYMENT_DAY_DAYCARE_DIFF}일에 지급됩니다. 출생 후 ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일 이내에 신청하면 출생월부터 소급 지급되지만, ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일이 지나 신청하면 신청한 달부터만 지급되어 이전 달분을 받지 못합니다. ${FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE}`,
+    },
   ],
   faqs: [
     {
@@ -76,6 +98,10 @@ export const PARENTAL_BENEFIT_GUIDE: GuideData = {
     {
       q: "어린이집을 다니면 부모급여를 아예 못 받나요?",
       a: "0세는 보육료 바우처와의 차액인 41.6만원을 현금으로 받을 수 있습니다. 다만 1세부터는 보육료 지원액이 부모급여 금액을 넘어서 차액이 0원이 됩니다.",
+    },
+    {
+      q: "출산 후 언제까지 신청해야 손해를 안 보나요?",
+      a: `출생일로부터 ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일 이내에 신청해야 출생월분부터 소급해서 받을 수 있습니다. ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일이 지나면 신청한 달부터만 지급되므로 놓친 달만큼 받지 못합니다.`,
     },
   ],
   disclaimer: COMMON_DISCLAIMER,
@@ -94,6 +120,10 @@ export const CHILD_ALLOWANCE_GUIDE: GuideData = {
       h2: "인구감소 특별지역 12만원의 예외",
       body: "인구감소 특별지역의 12만원은 지자체에 따라 지역화폐(상품권) 형태로 일부 지급될 수 있어, 전액 현금 지원인 다른 지역과 실질 가치가 다를 수 있습니다. 정확한 지급 방식은 거주지 행정복지센터에서 확인하세요.",
     },
+    {
+      h2: "신청 경로와 지급일",
+      body: `아동수당도 ${APPLICATION_CHANNELS.join(", ")} 중 어디서든 신청할 수 있습니다. 지급일은 다른 지원금과 마찬가지로 매월 ${PARENTAL_BENEFIT_PAYMENT_DAY_CASH}일 전후이며, 정확한 지급일은 관할 지자체 공지를 따릅니다.`,
+    },
   ],
   faqs: [
     {
@@ -103,6 +133,10 @@ export const CHILD_ALLOWANCE_GUIDE: GuideData = {
     {
       q: "1월 지급분 소급은 언제 들어오나요?",
       a: "2026년 4월 시행 이후 1~3월 인상분 차액이 일괄 소급 지급되며, 정확한 지급일은 복지로 공지사항을 따릅니다.",
+    },
+    {
+      q: "아동수당은 어디서 신청하나요?",
+      a: `${APPLICATION_CHANNELS.join(", ")} 중 어디서든 신청할 수 있습니다.`,
     },
   ],
   disclaimer: COMMON_DISCLAIMER,
@@ -119,7 +153,11 @@ export const FIRST_MEETING_GUIDE: GuideData = {
     },
     {
       h2: "사용기한과 사용처",
-      body: "출생일로부터 2년 이내에 사용해야 하며, 기한이 지나면 잔액이 소멸됩니다. 병원비, 유아용품, 산후조리원 등 대부분의 업종에서 사용 가능하지만 유흥·사행성 업종에는 사용할 수 없습니다.",
+      body: `출생일로부터 2년 이내에 사용해야 하며, 기한이 지나면 잔액이 소멸됩니다. 병원비, 유아용품, 산후조리원 등 대부분의 업종에서 사용 가능하지만 ${FIRST_MEETING_EXCLUDED_CATEGORIES.join(", ")}에는 사용할 수 없습니다.`,
+    },
+    {
+      h2: "신청 경로 3종",
+      body: `첫만남이용권도 ${APPLICATION_CHANNELS.join(", ")} 중 어디서든 신청할 수 있으며, 출생신고와 함께 신청하는 경우가 많습니다.`,
     },
   ],
   faqs: [
@@ -130,6 +168,10 @@ export const FIRST_MEETING_GUIDE: GuideData = {
     {
       q: "사용기한 안에 다 못 쓰면 어떻게 되나요?",
       a: "출생일로부터 2년이 지나면 남은 포인트는 자동 소멸되며 환급이나 기한 연장은 되지 않습니다.",
+    },
+    {
+      q: "첫만남이용권을 쓸 수 없는 업종은 구체적으로 어디인가요?",
+      a: `${FIRST_MEETING_EXCLUDED_CATEGORIES.join(", ")}에서는 사용할 수 없습니다. 그 외 병원·산후조리원·유아용품점 등에서는 정상적으로 사용 가능합니다.`,
     },
   ],
   disclaimer: COMMON_DISCLAIMER,

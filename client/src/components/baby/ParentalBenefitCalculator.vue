@@ -4,11 +4,14 @@ import { ShButton, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/u
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import { useParentalBenefitCalc } from "@/composables/useParentalBenefitCalc";
 import { BIRTH_MONTH_PRESETS } from "@/data/babyPresets";
-import { CALCULATION_BASIS_NOTE, CARE_TYPE_OPTIONS } from "@/data/benefitRates2026";
+import { CALCULATION_BASIS_NOTE, CARE_TYPE_OPTIONS, type CareType } from "@/data/benefitRates2026";
 import { formatWon } from "@/lib/utils";
 
+// initialCareType: 상황별 랜딩 페이지(예: /parental-benefit/daycare)가 기본값을 지정할 때만 사용한다.
+const props = withDefaults(defineProps<{ initialCareType?: CareType }>(), { initialCareType: "home" });
+
 const { state, currentMonths, monthlyAmount, isEligible, remainingTotal, applyBirthMonthPreset } =
-  useParentalBenefitCalc();
+  useParentalBenefitCalc(props.initialCareType);
 
 const metrics = computed(() => [
   { label: "현재 개월수", value: `${currentMonths.value}개월` },

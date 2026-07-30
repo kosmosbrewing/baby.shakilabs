@@ -8,13 +8,12 @@ import NextStepsLinks from "@/components/common/NextStepsLinks.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import FirstMeetingCalculator from "@/components/baby/FirstMeetingCalculator.vue";
-import { FIRST_MEETING_GUIDE } from "@/data/seoGuides";
+import { SECOND_CHILD_FIRST_MEETING_GUIDE } from "@/data/situationalGuides";
 import {
   CHILD_ALLOWANCE_LINK,
   FINANCE_CROSS_LINKS,
   HOME_LINK,
   PARENTAL_BENEFIT_LINK,
-  SECOND_CHILD_FIRST_MEETING_LINK,
   TWINS_FIRST_MEETING_LINK,
 } from "@/data/crossLinks";
 
@@ -24,13 +23,13 @@ const faqItems = [
     a: "둘째 이상은 300만원이 지급됩니다. 첫째는 200만원입니다.",
   },
   {
-    q: "쌍둥이는 각각 받나요?",
-    a: "네, 쌍둥이도 각자 출생 순위를 부여받아 개별 지급됩니다. 예를 들어 첫째가 쌍둥이라면 200만원+300만원, 총 500만원을 받습니다.",
+    q: "셋째도 300만원인가요?",
+    a: "네, 둘째 이상은 출생 순위와 무관하게 동일하게 300만원이 지급됩니다.",
   },
 ] as const;
 
 // 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
-const mergedFaqs = mergeFaqs(faqItems, FIRST_MEETING_GUIDE.faqs);
+const mergedFaqs = mergeFaqs(faqItems, SECOND_CHILD_FIRST_MEETING_GUIDE.faqs);
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -41,40 +40,33 @@ const faqJsonLd = computed(() => ({
   })),
 }));
 
-const nextSteps = [
-  HOME_LINK,
-  PARENTAL_BENEFIT_LINK,
-  CHILD_ALLOWANCE_LINK,
-  TWINS_FIRST_MEETING_LINK,
-  SECOND_CHILD_FIRST_MEETING_LINK,
-  ...FINANCE_CROSS_LINKS,
-];
+const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, TWINS_FIRST_MEETING_LINK, ...FINANCE_CROSS_LINKS];
 </script>
 
 <template>
   <SEOHead
-    title="첫만남이용권 계산기 | 출생순위·다태아 바우처 총액"
-    description="출생 순위와 다태아 수를 입력하면 첫만남이용권 바우처 총액과 2년 사용기한을 바로 계산합니다."
+    title="둘째 첫만남이용권 300만원 | 첫째와 비교"
+    description="2024년 1월 1일 이후 출생아부터 둘째 이상은 첫만남이용권 300만원을 받습니다. 첫째와의 차이를 바로 계산합니다."
     :json-ld="faqJsonLd"
   />
 
   <div class="container space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
-      <CalculatorPageHeader title="첫만남이용권 계산기" />
+      <CalculatorPageHeader title="둘째 첫만남이용권" />
       <FreshBadge />
     </div>
 
-    <FirstMeetingCalculator />
+    <FirstMeetingCalculator initial-birth-order="secondOrMore" :initial-multiple-birth-count="1" />
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
 
     <SeoRichGuide
-      :title="FIRST_MEETING_GUIDE.title"
-      :intro="FIRST_MEETING_GUIDE.intro"
-      :sections="FIRST_MEETING_GUIDE.sections"
-      :disclaimer="FIRST_MEETING_GUIDE.disclaimer"
+      :title="SECOND_CHILD_FIRST_MEETING_GUIDE.title"
+      :intro="SECOND_CHILD_FIRST_MEETING_GUIDE.intro"
+      :sections="SECOND_CHILD_FIRST_MEETING_GUIDE.sections"
+      :disclaimer="SECOND_CHILD_FIRST_MEETING_GUIDE.disclaimer"
     />
   </div>
 </template>

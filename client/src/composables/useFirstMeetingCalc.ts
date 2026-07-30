@@ -17,11 +17,18 @@ function todayDateString(): string {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
-export function useFirstMeetingCalc() {
+export interface FirstMeetingInitialState {
+  birthOrder?: BirthOrder;
+  multipleBirthCount?: number;
+}
+
+// initial: 상황별 랜딩 페이지(예: /first-meeting/twins, /first-meeting/second)에서 기본값을 다르게
+// 열기 위한 파라미터. 생략하면 기존 동작(첫째·단태아 기본)과 동일하다.
+export function useFirstMeetingCalc(initial: FirstMeetingInitialState = {}) {
   const state = reactive<FirstMeetingState>({
     birthDate: todayDateString(),
-    birthOrder: "first",
-    multipleBirthCount: 1,
+    birthOrder: initial.birthOrder ?? "first",
+    multipleBirthCount: initial.multipleBirthCount ?? 1,
   });
 
   // 날짜 텍스트 입력만 300ms 디바운스한다 (BOILERPLATE_FRONTEND.md §0)

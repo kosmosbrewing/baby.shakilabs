@@ -24,8 +24,10 @@ const basePriority = {
   "/privacy": "0.3",
 };
 
+// 신규 랜딩(연도별·상황별)·가이드 페이지는 허브 페이지보다는 낮지만 About류보다는 높은 0.6/0.5를 기본값으로 쓴다.
 function getRouteConfig(path) {
-  const priority = basePriority[path] ?? "0.5";
+  const priority =
+    basePriority[path] ?? (path.startsWith("/guide/") ? "0.5" : path === "/" ? "1.0" : "0.6");
   const changefreq =
     path === "/" ? "weekly" : ["about", "terms", "privacy"].some((s) => path.includes(s)) ? "monthly" : "weekly";
   return { changefreq, priority };
