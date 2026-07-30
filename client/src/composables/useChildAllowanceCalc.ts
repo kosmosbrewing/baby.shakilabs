@@ -14,10 +14,12 @@ export interface ChildAllowanceState {
   region: RegionTier;
 }
 
-export function useChildAllowanceCalc() {
+// initialRegion: 상황별 랜딩 페이지(예: /child-allowance/population-decline)에서 기본값을 다르게 열기 위한 파라미터.
+// 생략하면 기존 동작(수도권 기본)과 동일하다.
+export function useChildAllowanceCalc(initialRegion: RegionTier = "metro") {
   const state = reactive<ChildAllowanceState>({
     birthYearMonth: currentYearMonth(),
-    region: "metro",
+    region: initialRegion,
   });
 
   const debouncedBirthYearMonth = ref(state.birthYearMonth);

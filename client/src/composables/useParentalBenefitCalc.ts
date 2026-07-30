@@ -14,10 +14,12 @@ export interface ParentalBenefitState {
   careType: CareType;
 }
 
-export function useParentalBenefitCalc() {
+// initialCareType: 상황별 랜딩 페이지(예: /parental-benefit/daycare)에서 기본값을 다르게 열기 위한 파라미터.
+// 생략하면 기존 동작(가정양육 기본)과 동일하다.
+export function useParentalBenefitCalc(initialCareType: CareType = "home") {
   const state = reactive<ParentalBenefitState>({
     birthYearMonth: currentYearMonth(),
-    careType: "home",
+    careType: initialCareType,
   });
 
   const debouncedBirthYearMonth = ref(state.birthYearMonth);

@@ -61,7 +61,39 @@ export const BIRTH_ORDER_OPTIONS: ReadonlyArray<{ value: BirthOrder; label: stri
 ];
 
 // 지자체 자체 출산지원금은 지역별 편차가 매우 커 특정 수치를 안내하지 않고 정부24 링크로 유도한다.
+// 인구감소지역 지정 목록도 같은 사유로 하드코딩하지 않고 이 링크로 안내한다(행안부 고시 기준, 정부24 원스톱 서비스에서 조회).
 export const LOCAL_BIRTH_SUPPORT_URL = "https://www.gov.kr/portal/onestopSvc/happyBirthLocalBirth";
+
+// 부모급여 지급일 — 가정양육 현금은 매월 25일, 어린이집 이용 시 보육료 차액은 익월 20일
+// 출처: 복지로(bokjiro.go.kr) 부모급여 안내
+export const PARENTAL_BENEFIT_PAYMENT_DAY_CASH = 25;
+export const PARENTAL_BENEFIT_PAYMENT_DAY_DAYCARE_DIFF = 20; // 익월 지급
+
+// 부모급여 소급 신청 기한 — 출생일로부터 60일 이내 신청해야 출생월부터 소급 지급된다.
+// 60일이 지나 신청하면 신청한 달부터만 지급되어 이전 달분은 받을 수 없다.
+// 출처: 복지로(bokjiro.go.kr), korea.kr 부모급여 안내
+export const PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS = 60;
+
+// 종일제 아이돌봄서비스는 부모급여(가정양육 지원)와 중복 지원되지 않아 두 제도 중 하나만 선택해야 한다.
+// 출처: 아이돌봄서비스(idolbom.go.kr), 복지로(bokjiro.go.kr)
+export const FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE =
+  "종일제 아이돌봄서비스를 이용 중이면 부모급여(가정양육 지원)와 중복 지원되지 않아 두 제도 중 하나를 선택해야 합니다.";
+
+// 육아 지원금(부모급여·아동수당·첫만남이용권) 공통 신청 경로 3종
+// 출처: 복지로(bokjiro.go.kr), 정부24(gov.kr)
+export const APPLICATION_CHANNELS = [
+  "관할 행정복지센터 방문",
+  "복지로(bokjiro.go.kr) 온라인",
+  "정부24(gov.kr) 온라인",
+] as const;
+
+// 첫만남이용권(국민행복카드 바우처) 사용 제외 업종
+// 출처: 사회보장정보원(socialservice.or.kr) 첫만남이용권 안내
+export const FIRST_MEETING_EXCLUDED_CATEGORIES = [
+  "유흥업종",
+  "사행성 업종(카지노·복권 등)",
+  "상품권류 재판매",
+] as const;
 
 // 부모급여 FAQ에 노출되는 "110만원 인상" 오보 정정 문구 (블로그발 misinformation 대응)
 export const PARENTAL_BENEFIT_MISINFO_NOTE =

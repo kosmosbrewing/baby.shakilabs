@@ -3,11 +3,21 @@ import { computed } from "vue";
 import { ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import { useFirstMeetingCalc } from "@/composables/useFirstMeetingCalc";
-import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE } from "@/data/benefitRates2026";
+import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, type BirthOrder } from "@/data/benefitRates2026";
 import { MULTIPLE_BIRTH_OPTIONS } from "@/data/babyPresets";
 import { formatWon } from "@/lib/utils";
 
-const { state, voucherTotal, deadline, isStillValid } = useFirstMeetingCalc();
+// initialBirthOrder/initialMultipleBirthCount: 상황별 랜딩 페이지(예: /first-meeting/twins)가
+// 기본값을 지정할 때만 사용한다. 생략하면 기존 동작(첫째·단태아 기본)과 동일하다.
+const props = defineProps<{
+  initialBirthOrder?: BirthOrder;
+  initialMultipleBirthCount?: number;
+}>();
+
+const { state, voucherTotal, deadline, isStillValid } = useFirstMeetingCalc({
+  birthOrder: props.initialBirthOrder,
+  multipleBirthCount: props.initialMultipleBirthCount,
+});
 
 const metrics = computed(() => [
   { label: "사용 기한", value: deadline.value, helper: "출생일로부터 2년" },

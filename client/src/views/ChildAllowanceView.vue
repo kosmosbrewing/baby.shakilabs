@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { mergeFaqs } from "@/lib/faqMerge";
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
@@ -9,7 +10,14 @@ import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ChildAllowanceCalculator from "@/components/baby/ChildAllowanceCalculator.vue";
 import { CHILD_ALLOWANCE_GUIDE } from "@/data/seoGuides";
-import { FINANCE_CROSS_LINKS, FIRST_MEETING_LINK, HOME_LINK, PARENTAL_BENEFIT_LINK } from "@/data/crossLinks";
+import { CHILD_ALLOWANCE_LANDING_YEARS } from "@/data/childAllowanceYearGuides";
+import {
+  FINANCE_CROSS_LINKS,
+  FIRST_MEETING_LINK,
+  HOME_LINK,
+  PARENTAL_BENEFIT_LINK,
+  POPULATION_DECLINE_CHILD_ALLOWANCE_LINK,
+} from "@/data/crossLinks";
 
 const faqItems = [
   {
@@ -34,7 +42,13 @@ const faqJsonLd = computed(() => ({
   })),
 }));
 
-const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, FIRST_MEETING_LINK, ...FINANCE_CROSS_LINKS];
+const nextSteps = [
+  HOME_LINK,
+  PARENTAL_BENEFIT_LINK,
+  FIRST_MEETING_LINK,
+  POPULATION_DECLINE_CHILD_ALLOWANCE_LINK,
+  ...FINANCE_CROSS_LINKS,
+];
 </script>
 
 <template>
@@ -51,6 +65,20 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, FIRST_MEETING_LINK, ...FINA
     </div>
 
     <ChildAllowanceCalculator />
+
+    <section class="retro-panel-muted p-4 space-y-2">
+      <p class="text-caption font-semibold text-foreground">출생연도별로 더 정확히 확인하기</p>
+      <div class="flex flex-wrap gap-2">
+        <RouterLink
+          v-for="year in CHILD_ALLOWANCE_LANDING_YEARS"
+          :key="year"
+          :to="`/child-allowance/${year}`"
+          class="rounded-full border border-border/60 px-3 py-1 text-tiny font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/8"
+        >
+          {{ year }}년생
+        </RouterLink>
+      </div>
+    </section>
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
