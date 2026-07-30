@@ -23,6 +23,8 @@ describe("collapseTimelineStages", () => {
 
   it("formatMonthRange는 단일 개월이면 범위 표기를 하지 않는다", () => {
     const stages = collapseTimelineStages(buildTimeline("home", "metro"));
-    expect(formatMonthRange(stages[0])).toBe("0~11개월");
+    const first = stages[0];
+    expect(formatMonthRange(first)).toBe("0~11개월");
+    expect(formatMonthRange({ ...first, fromMonth: 5, toMonth: 5 })).toBe("5개월");
   });
 });

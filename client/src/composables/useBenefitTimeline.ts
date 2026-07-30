@@ -1,6 +1,7 @@
 import { computed, reactive, ref, watch } from "vue";
 import { debounce } from "@/lib/utils";
 import {
+  buildMonthlyTotal,
   buildTimeline,
   calcRemainingTotal,
   currentYearMonth,
@@ -40,10 +41,14 @@ export function useBenefitTimeline() {
     calcRemainingTotal(currentMonths.value, state.careType, state.region, state.birthOrder),
   );
   const transitions = computed(() => getUpcomingTransitions(currentMonths.value, state.careType));
+  // 타임라인 배열 인덱스 클램프 금지 — 9세(108개월) 이후는 0원이 정답이다
+  const currentMonthTotal = computed(() =>
+    buildMonthlyTotal(currentMonths.value, state.careType, state.region).total,
+  );
 
   function applyBirthMonthPreset(monthsAgo: number): void {
     state.birthYearMonth = shiftYearMonth(monthsAgo);
   }
 
-  return { state, currentMonths, timeline, remaining, transitions, applyBirthMonthPreset };
+  return { state, currentMonths, currentMonthTotal, timeline, remaining, transitions, applyBirthMonthPreset };
 }

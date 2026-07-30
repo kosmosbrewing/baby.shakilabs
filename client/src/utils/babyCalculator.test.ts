@@ -130,11 +130,22 @@ describe("calcRemainingTotal — 지난 달은 제외한다", () => {
     expect(result.firstMeetingAmount).toBe(0);
   });
 
-  it("생후 6개월이면 첫만남이용권이 잔여 총액에 포함된다", () => {
+  it("생후 6개월이면 첫만남이용권을 별도 바우처 항목으로만 노출한다", () => {
     const result = calcRemainingTotal(6, "home", "metro", "first");
     expect(result.includesFirstMeeting).toBe(true);
     expect(result.firstMeetingAmount).toBe(2_000_000);
-    expect(result.grandTotal).toBe(result.remainingMonthlyTotal + 2_000_000);
+    // 바우처는 현금 월 지원 합계에 합산하지 않는다 (리뷰 P1: 이미 수령했을 수 있음)
+    expect(Object.keys(result)).not.toContain("grandTotal");
+  });
+
+  it("월 합산·잔여 총액이 손계산 기준값과 일치한다", () => {
+    // 비수도권·가정양육: 0개월 = 부모급여 100만 + 아동수당 10.5만
+    expect(buildMonthlyTotal(0, "home", "nonMetro").total).toBe(1_105_000);
+    // 24개월 = 양육수당 10만 + 아동수당 10.5만
+    expect(buildMonthlyTotal(24, "home", "nonMetro").total).toBe(205_000);
+    // 수도권·가정양육 출생 직후 잔여 현금 총액:
+    // 12×110만 + 12×60만 + 63×20만 + 21×10만 = 35,100,000
+    expect(calcRemainingTotal(0, "home", "metro", "first").remainingMonthlyTotal).toBe(35_100_000);
   });
 });
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { mergeFaqs } from "@/lib/faqMerge";
 import { computed } from "vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
@@ -25,10 +26,12 @@ const faqItems = [
   },
 ] as const;
 
+// 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
+const mergedFaqs = mergeFaqs(faqItems, BABY_HOME_GUIDE.faqs);
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqItems.map((faq) => ({
+  mainEntity: mergedFaqs.map((faq) => ({
     "@type": "Question",
     name: faq.q,
     acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -53,7 +56,7 @@ const nextSteps = [PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, FIRST_MEETING_LI
 
     <TimelineSimulator />
 
-    <FaqAccordionPanel :items="faqItems" :extra="BABY_HOME_GUIDE.faqs" />
+    <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
 

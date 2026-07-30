@@ -104,9 +104,10 @@ export function isFirstMeetingStillValid(currentMonths: number): boolean {
 
 export interface RemainingSummary {
   remainingMonthlyTotal: number;
+  // 첫만남이용권은 현금이 아닌 바우처이고 출생 직후 이미 수령했을 수 있어
+  // 월 지원 합계(remainingMonthlyTotal)에 합산하지 않고 별도 항목으로만 노출한다.
   includesFirstMeeting: boolean;
   firstMeetingAmount: number;
-  grandTotal: number;
 }
 
 /** "지금 신청해도 받는 돈" 관점 — 이미 지난 달은 제외하고 현재 개월수부터 상한까지 합산한다. */
@@ -128,7 +129,6 @@ export function calcRemainingTotal(
     remainingMonthlyTotal,
     includesFirstMeeting,
     firstMeetingAmount,
-    grandTotal: remainingMonthlyTotal + firstMeetingAmount,
   };
 }
 

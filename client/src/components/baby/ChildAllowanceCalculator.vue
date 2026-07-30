@@ -47,6 +47,9 @@ const metrics = computed(() => [
         9세(108개월)까지 남은 총액
         <span class="font-semibold text-foreground">{{ formatWon(remainingTotal) }}</span>
       </p>
+      <p v-if="state.region === 'populationDeclineSpecial'" class="text-tiny text-muted-foreground">
+        인구감소 특별지역 12만 원은 지자체에 따라 일부가 지역화폐(상품권)로 지급될 수 있습니다.
+      </p>
       <p class="text-tiny text-muted-foreground">
         2026년 4월 시행, 1월 지급분부터 소급 적용됩니다. {{ CALCULATION_BASIS_NOTE }}
       </p>

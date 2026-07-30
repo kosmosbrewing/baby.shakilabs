@@ -9,17 +9,19 @@ import { BIRTH_MONTH_PRESETS } from "@/data/babyPresets";
 import { BIRTH_ORDER_OPTIONS, CARE_TYPE_OPTIONS, CALCULATION_BASIS_NOTE, REGION_OPTIONS } from "@/data/benefitRates2026";
 import { formatWon } from "@/lib/utils";
 
-const { state, currentMonths, timeline, remaining, transitions, applyBirthMonthPreset } = useBenefitTimeline();
+const { state, currentMonths, currentMonthTotal, timeline, remaining, transitions, applyBirthMonthPreset } = useBenefitTimeline();
 
 const metrics = computed(() => [
   {
-    label: "첫만남이용권",
-    value: remaining.value.includesFirstMeeting ? formatWon(remaining.value.firstMeetingAmount) : "사용기한 만료",
-    helper: remaining.value.includesFirstMeeting ? "출생일로부터 2년 이내 사용" : "이미 사용했다고 가정",
+    label: "첫만남이용권 (바우처)",
+    value: remaining.value.includesFirstMeeting ? formatWon(remaining.value.firstMeetingAmount) : "기한 만료",
+    helper: remaining.value.includesFirstMeeting
+      ? "미신청 시 받을 바우처 · 출생 2년 내 사용"
+      : "출생 2년 경과 — 신청·사용 불가",
   },
   {
     label: "이번 달 수령액",
-    value: formatWon(timeline.value[Math.min(Math.max(currentMonths.value, 0), timeline.value.length - 1)]?.total ?? 0),
+    value: formatWon(currentMonthTotal.value),
     helper: "부모급여·양육수당·아동수당 합산",
   },
   {
@@ -57,8 +59,11 @@ const metrics = computed(() => [
     </section>
 
     <section class="retro-panel p-4 space-y-2">
-      <p class="text-caption text-muted-foreground">지금부터 9세까지 남은 총 수령 예상액</p>
-      <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(remaining.grandTotal) }}</p>
+      <p class="text-caption text-muted-foreground">지금부터 9세까지 받을 현금 지원 총액 (월 지원 합산)</p>
+      <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(remaining.remainingMonthlyTotal) }}</p>
+      <p class="text-tiny text-muted-foreground">첫만남이용권(바우처)은 현금이 아니라 합계에 넣지 않고 아래에 따로 표시합니다.</p>
+      <p v-if="state.careType === 'daycare'" class="text-tiny text-muted-foreground">어린이집 이용 시 보육료 바우처는 별도 지원되며, 이 합계는 현금으로 받는 금액만 계산합니다.</p>
+      <p v-if="state.region === 'populationDeclineSpecial'" class="text-tiny text-muted-foreground">인구감소 특별지역 12만 원은 지자체에 따라 일부가 지역화폐로 지급될 수 있습니다.</p>
       <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
     </section>
 

@@ -4,6 +4,8 @@ export interface NextStepLink {
   title: string;
   description: string;
   href: string;
+  // 내부 링크는 RouterLink(to)로 렌더해야 base(/baby/)가 적용된다 — 생략 시 내부로 간주
+  external?: boolean;
 }
 
 export const FINANCE_CROSS_LINKS: readonly NextStepLink[] = [
@@ -11,11 +13,13 @@ export const FINANCE_CROSS_LINKS: readonly NextStepLink[] = [
     title: "육아휴직급여 계산기",
     description: "육아휴직 중 받을 수 있는 고용보험 급여액을 계산합니다.",
     href: "https://shakilabs.com/finance/parental-leave",
+    external: true,
   },
   {
     title: "연말정산 자녀 공제",
     description: "자녀 세액공제·인적공제로 얼마나 환급받을 수 있는지 계산합니다.",
     href: "https://shakilabs.com/finance/year-end-settlement",
+    external: true,
   },
 ];
 
