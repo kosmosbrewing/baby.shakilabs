@@ -20,7 +20,7 @@ const metrics = computed(() => [
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 lg:grid lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start lg:gap-4 lg:space-y-0">
     <section class="retro-panel-muted p-4 space-y-4">
       <div class="flex flex-wrap gap-2">
         <ShButton
@@ -43,6 +43,7 @@ const metrics = computed(() => [
       <ShToggleGroup label="보육 형태" v-model="state.careType" :options="CARE_TYPE_OPTIONS" />
     </section>
 
+    <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">이번 달 부모급여</p>
       <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(monthlyAmount) }}</p>
@@ -54,5 +55,6 @@ const metrics = computed(() => [
     </section>
 
     <BenefitMetricGrid :items="metrics" />
+    </div>
   </div>
 </template>

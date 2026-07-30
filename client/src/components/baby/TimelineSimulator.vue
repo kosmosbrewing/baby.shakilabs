@@ -33,8 +33,8 @@ const metrics = computed(() => [
 </script>
 
 <template>
-  <div class="space-y-4">
-    <section class="retro-panel-muted p-4 space-y-4">
+  <div class="space-y-4 lg:grid lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-start lg:gap-4 lg:space-y-0">
+    <section class="retro-panel-muted p-4 space-y-4 lg:sticky lg:top-4">
       <div class="flex flex-wrap gap-2">
         <ShButton
           v-for="preset in BIRTH_MONTH_PRESETS"
@@ -58,6 +58,7 @@ const metrics = computed(() => [
       <ShToggleGroup label="지역" v-model="state.region" :options="REGION_OPTIONS" />
     </section>
 
+    <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">지금부터 9세까지 받을 현금 지원 총액 (월 지원 합산)</p>
       <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(remaining.remainingMonthlyTotal) }}</p>
@@ -68,8 +69,9 @@ const metrics = computed(() => [
     </section>
 
     <BenefitMetricGrid :items="metrics" />
+    </div>
 
-    <section v-if="transitions.length > 0" class="retro-panel-muted p-4 space-y-3">
+    <section v-if="transitions.length > 0" class="retro-panel-muted p-4 space-y-3 lg:col-span-2">
       <p class="text-heading font-bold text-foreground">앞으로의 전환 시점</p>
       <ul class="space-y-2">
         <li v-for="t in transitions" :key="t.label" class="retro-step">
@@ -82,6 +84,8 @@ const metrics = computed(() => [
       </ul>
     </section>
 
-    <TimelineTable :entries="timeline" :current-month="currentMonths" />
+    <div class="lg:col-span-2">
+      <TimelineTable :entries="timeline" :current-month="currentMonths" />
+    </div>
   </div>
 </template>
