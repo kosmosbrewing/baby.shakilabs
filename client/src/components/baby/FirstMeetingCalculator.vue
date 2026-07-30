@@ -26,7 +26,7 @@ const metrics = computed(() => [
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 lg:grid lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start lg:gap-4 lg:space-y-0">
     <section class="retro-panel-muted p-4 space-y-4">
       <ShField>
         <ShLabel for="first-meeting-birth-date">자녀 출생일</ShLabel>
@@ -37,6 +37,7 @@ const metrics = computed(() => [
       <ShToggleGroup label="다태아 여부" v-model="state.multipleBirthCount" :options="MULTIPLE_BIRTH_OPTIONS" />
     </section>
 
+    <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">첫만남이용권 바우처 총액</p>
       <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(voucherTotal) }}</p>
@@ -48,5 +49,6 @@ const metrics = computed(() => [
     </section>
 
     <BenefitMetricGrid :items="metrics" />
+    </div>
   </div>
 </template>

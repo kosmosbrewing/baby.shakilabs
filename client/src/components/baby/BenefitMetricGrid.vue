@@ -11,8 +11,8 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-    <Card v-for="item in items" :key="item.label" class="border-border/50 bg-muted/30">
+  <div class="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))]">
+    <Card v-for="item in items" :key="item.label" class="border-border bg-card">
       <CardContent class="p-4">
         <p class="text-tiny font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {{ item.label }}
