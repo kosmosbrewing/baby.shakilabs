@@ -49,6 +49,8 @@ export const REGION_OPTIONS: ReadonlyArray<{ value: RegionTier; label: string; h
 export const FIRST_MEETING_FIRST_CHILD = 2_000_000;
 export const FIRST_MEETING_SECOND_OR_MORE = 3_000_000;
 export const FIRST_MEETING_VALID_YEARS = 2;
+// 사용기한 게이지(ShBulletProgress) 표시용 — 윤년 오차보다 "2년=730일" 단순 표기가 사용자에게 더 직관적이다.
+export const FIRST_MEETING_VALID_DAYS = FIRST_MEETING_VALID_YEARS * 365;
 
 export const CARE_TYPE_OPTIONS: ReadonlyArray<{ value: CareType; label: string }> = [
   { value: "home", label: "가정양육" },

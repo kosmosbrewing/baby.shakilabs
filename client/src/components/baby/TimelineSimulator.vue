@@ -1,15 +1,36 @@
 <script setup lang="ts">
 // 킬러 기능: 월령별 수령 타임라인 시뮬레이터 — 자녀 생년월만 입력해도 즉시 결과가 보인다 (빈 화면 금지).
 import { computed } from "vue";
-import { ShButton, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
+import { ShBreakdownBar, ShBulletProgress, ShButton, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import TimelineTable from "@/components/baby/TimelineTable.vue";
 import { useBenefitTimeline } from "@/composables/useBenefitTimeline";
 import { BIRTH_MONTH_PRESETS } from "@/data/babyPresets";
-import { BIRTH_ORDER_OPTIONS, CARE_TYPE_OPTIONS, CALCULATION_BASIS_NOTE, REGION_OPTIONS } from "@/data/benefitRates2026";
+import { BIRTH_ORDER_OPTIONS, CARE_TYPE_OPTIONS, CALCULATION_BASIS_NOTE, CHILD_ALLOWANCE_END_MONTH, REGION_OPTIONS } from "@/data/benefitRates2026";
 import { formatWon } from "@/lib/utils";
 
-const { state, currentMonths, currentMonthTotal, timeline, remaining, transitions, applyBirthMonthPreset } = useBenefitTimeline();
+const {
+  state,
+  currentMonths,
+  currentMonthTotal,
+  timeline,
+  remaining,
+  remainingBreakdown,
+  transitions,
+  applyBirthMonthPreset,
+} = useBenefitTimeline();
+
+// 아동수당 종료(9세) = CHILD_ALLOWANCE_END_MONTH + 1 개월째 — 상수 하드코딩 금지 원칙에 따라 상수에서 유도한다.
+const timelineLimit = CHILD_ALLOWANCE_END_MONTH + 1;
+
+const progressNote = computed(() => {
+  const next = transitions.value[0];
+  return next ? `다음 전환: ${next.label} (${next.monthsFromNow}개월 후)` : undefined;
+});
+
+function formatMonths(value: number): string {
+  return `${value}개월`;
+}
 
 const metrics = computed(() => [
   {
@@ -68,8 +89,24 @@ const metrics = computed(() => [
       <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
     </section>
 
+    <ShBreakdownBar
+      label="남은 현금 지원 구성"
+      :segments="remainingBreakdown.segments"
+      :format-value="formatWon"
+    />
+
     <BenefitMetricGrid :items="metrics" />
     </div>
+
+    <ShBulletProgress
+      label="지원 타임라인 진행"
+      :value="currentMonths"
+      :limit="timelineLimit"
+      limit-label="9세(아동수당 종료)"
+      :format-value="formatMonths"
+      :note="progressNote"
+      class="lg:col-span-2"
+    />
 
     <section v-if="transitions.length > 0" class="retro-panel-muted p-4 space-y-3 lg:col-span-2">
       <p class="text-heading font-bold text-foreground">앞으로의 전환 시점</p>

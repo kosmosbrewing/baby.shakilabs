@@ -9,6 +9,7 @@ import {
   monthsBetween,
   shiftYearMonth,
 } from "@/utils/babyCalculator";
+import { calcRemainingBreakdown } from "@/utils/remainingBreakdown";
 import type { BirthOrder, CareType, RegionTier } from "@/data/benefitRates2026";
 
 export interface BenefitTimelineState {
@@ -45,10 +46,23 @@ export function useBenefitTimeline() {
   const currentMonthTotal = computed(() =>
     buildMonthlyTotal(currentMonths.value, state.careType, state.region).total,
   );
+  // ShBreakdownBar용 — 남은 현금 지원을 부모급여/양육수당/아동수당으로 나눈 구성. 합계는 remaining과 항상 같다(불변식).
+  const remainingBreakdown = computed(() =>
+    calcRemainingBreakdown(currentMonths.value, state.careType, state.region),
+  );
 
   function applyBirthMonthPreset(monthsAgo: number): void {
     state.birthYearMonth = shiftYearMonth(monthsAgo);
   }
 
-  return { state, currentMonths, currentMonthTotal, timeline, remaining, transitions, applyBirthMonthPreset };
+  return {
+    state,
+    currentMonths,
+    currentMonthTotal,
+    timeline,
+    remaining,
+    remainingBreakdown,
+    transitions,
+    applyBirthMonthPreset,
+  };
 }

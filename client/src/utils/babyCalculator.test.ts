@@ -6,6 +6,7 @@ import {
   careAllowanceAmount,
   childAllowanceAmount,
   currentYearMonth,
+  daysBetween,
   firstMeetingDeadline,
   getUpcomingTransitions,
   isFirstMeetingStillValid,
@@ -164,5 +165,23 @@ describe("getUpcomingTransitions", () => {
     const transitions = getUpcomingTransitions(25, "home");
     expect(transitions.every((t) => t.atMonth > 25)).toBe(true);
     expect(transitions.map((t) => t.atMonth)).toEqual([87, 108]);
+  });
+});
+
+describe("daysBetween", () => {
+  it("출생일과 기준일이 같으면 0일이다", () => {
+    expect(daysBetween("2026-01-15", new Date(2026, 0, 15))).toBe(0);
+  });
+
+  it("날짜만 비교해 하루 단위로 경과일을 센다", () => {
+    expect(daysBetween("2026-01-01", new Date(2026, 0, 31))).toBe(30);
+  });
+
+  it("연도를 넘어가도 정확히 계산한다", () => {
+    expect(daysBetween("2025-01-01", new Date(2026, 0, 1))).toBe(365);
+  });
+
+  it("미래 출생일은 0으로 clamp한다", () => {
+    expect(daysBetween("2027-01-01", new Date(2026, 0, 1))).toBe(0);
   });
 });
