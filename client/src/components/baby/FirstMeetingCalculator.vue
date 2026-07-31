@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
+import { ShBulletProgress, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import { useFirstMeetingCalc } from "@/composables/useFirstMeetingCalc";
-import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, type BirthOrder } from "@/data/benefitRates2026";
+import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, FIRST_MEETING_VALID_DAYS, type BirthOrder } from "@/data/benefitRates2026";
 import { MULTIPLE_BIRTH_OPTIONS } from "@/data/babyPresets";
-import { formatWon } from "@/lib/utils";
+import { formatNumber, formatWon } from "@/lib/utils";
 
 // initialBirthOrder/initialMultipleBirthCount: 상황별 랜딩 페이지(예: /first-meeting/twins)가
 // 기본값을 지정할 때만 사용한다. 생략하면 기존 동작(첫째·단태아 기본)과 동일하다.
@@ -14,7 +14,7 @@ const props = defineProps<{
   initialMultipleBirthCount?: number;
 }>();
 
-const { state, voucherTotal, deadline, isStillValid } = useFirstMeetingCalc({
+const { state, voucherTotal, deadline, isStillValid, daysElapsed } = useFirstMeetingCalc({
   birthOrder: props.initialBirthOrder,
   multipleBirthCount: props.initialMultipleBirthCount,
 });
@@ -23,6 +23,10 @@ const metrics = computed(() => [
   { label: "사용 기한", value: deadline.value, helper: "출생일로부터 2년" },
   { label: "사용 가능 여부", value: isStillValid.value ? "사용 가능" : "기한 만료", helper: "국민행복카드 바우처" },
 ]);
+
+function formatDays(value: number): string {
+  return `${formatNumber(value)}일`;
+}
 </script>
 
 <template>
@@ -49,6 +53,15 @@ const metrics = computed(() => [
     </section>
 
     <BenefitMetricGrid :items="metrics" />
+
+    <ShBulletProgress
+      v-if="isStillValid"
+      label="바우처 사용기한 게이지"
+      :value="daysElapsed"
+      :limit="FIRST_MEETING_VALID_DAYS"
+      limit-label="사용기한 만료"
+      :format-value="formatDays"
+    />
     </div>
   </div>
 </template>

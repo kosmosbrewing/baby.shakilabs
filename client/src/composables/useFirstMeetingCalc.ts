@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch } from "vue";
 import { debounce } from "@/lib/utils";
-import { calcFirstMeetingVoucher, firstMeetingDeadline, isFirstMeetingStillValid, monthsBetween } from "@/utils/babyCalculator";
+import { calcFirstMeetingVoucher, daysBetween, firstMeetingDeadline, isFirstMeetingStillValid, monthsBetween } from "@/utils/babyCalculator";
 import type { BirthOrder } from "@/data/benefitRates2026";
 
 export interface FirstMeetingState {
@@ -42,6 +42,8 @@ export function useFirstMeetingCalc(initial: FirstMeetingInitialState = {}) {
   const deadline = computed(() => firstMeetingDeadline(debouncedBirthDate.value));
   const currentMonths = computed(() => monthsBetween(debouncedBirthDate.value.slice(0, 7)));
   const isStillValid = computed(() => isFirstMeetingStillValid(currentMonths.value));
+  // ShBulletProgress 게이지용 — 출생일 기준 경과일수(730일 만료 기준과 함께 사용)
+  const daysElapsed = computed(() => daysBetween(debouncedBirthDate.value));
 
-  return { state, voucherTotal, deadline, isStillValid };
+  return { state, voucherTotal, deadline, isStillValid, daysElapsed };
 }

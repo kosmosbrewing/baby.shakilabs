@@ -31,6 +31,16 @@ export function currentYearMonth(referenceDate: Date = new Date()): string {
   return `${referenceDate.getFullYear()}-${String(referenceDate.getMonth() + 1).padStart(2, "0")}`;
 }
 
+/** 출생일(YYYY-MM-DD)부터 기준일까지 경과일수. 날짜만 비교해 시간대·시각 오차를 없앤다 (음수는 0으로 clamp). */
+export function daysBetween(birthDate: string, referenceDate: Date = new Date()): number {
+  const [birthYear, birthMonth, birthDay] = birthDate.split("-").map(Number);
+  if (!birthYear || !birthMonth || !birthDay) return 0;
+  const birthUtc = Date.UTC(birthYear, birthMonth - 1, birthDay);
+  const referenceUtc = Date.UTC(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
+  const diffDays = Math.round((referenceUtc - birthUtc) / 86_400_000);
+  return Math.max(0, diffDays);
+}
+
 /** "YYYY-MM"에서 monthsAgo개월 이전 시점의 "YYYY-MM" — 빠른 선택 프리셋(예: "돌(12개월)")에 사용 */
 export function shiftYearMonth(monthsAgo: number, referenceDate: Date = new Date()): string {
   const shifted = new Date(referenceDate.getFullYear(), referenceDate.getMonth() - monthsAgo, 1);
