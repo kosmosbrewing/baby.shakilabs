@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { mergeFaqs } from "@/lib/faqMerge";
 import { computed } from "vue";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
@@ -56,7 +57,17 @@ const nextSteps = [HOME_LINK, CHILD_ALLOWANCE_LINK, FIRST_MEETING_LINK, NEWBORN_
       <FreshBadge />
     </div>
 
-    <ParentalBenefitCalculator initial-care-type="daycare" />
+    <CalculatorInteractionTracker
+
+      calculator-id="parental_benefit"
+
+      page-path="/baby/parental-benefit/daycare"
+
+    >
+
+      <ParentalBenefitCalculator initial-care-type="daycare" />
+
+    </CalculatorInteractionTracker>
 
     <FaqAccordionPanel :items="mergedFaqs" />
 
