@@ -11,6 +11,8 @@ npm run typecheck  # vue-tsc
 npm run test       # vitest
 npm run build      # sitemap 생성 → vite-ssg build → 정적 산출물 검증
 npm run check      # typecheck + test + build
+npm run sbom:prod  # 프로덕션 SBOM 생성 (client/artifacts/sbom, 커밋하지 않음 · CI 아티팩트로 보관)
+npm run verify:supply-chain  # vendor tgz·README·package.json 3자 대조 + SBOM 신원 검증 (CI 필수)
 ```
 
 ## 디렉토리 맵
@@ -18,6 +20,7 @@ npm run check      # typecheck + test + build
 ```
 client/
   scripts/        seo-routes.mjs(라우트 목록) · build.mjs(sitemap+ssg) · validate-static-output.mjs
+                  sbom.mjs(SBOM 생성) · verify-sbom-identity.mjs · verify-vendor-readme.mjs(공급망 가드)
   src/
     data/         benefitRates2026.ts(2026 지원금 상수+출처) · babyPresets.ts · seoGuides.ts · crossLinks.ts
     utils/        babyCalculator.ts(순수 계산 함수) · timelineStages.ts(타임라인 압축) + *.test.ts

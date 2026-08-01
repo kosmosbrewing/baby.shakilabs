@@ -36,3 +36,21 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # 네트워크·npm 재실행 없이 1초 미만. SBOM은 재생성해서 diff하지 않고 신원 필드만 대조한다
+      # (CycloneDX metadata.timestamp·SPDX documentNamespace가 비결정적이라 재생성 후 diff는 상시 red가 된다).
+      # SBOM을 커밋하지 않는 이 저장소에서는 SBOM 검사가 no-op이고 vendor 검사만 실제로 돈다.
+      - name: Verify vendored artifacts
+        run: |
+          node scripts/verify-sbom-identity.mjs
+          node scripts/verify-vendor-readme.mjs
+
+      # 릴리스별 SBOM은 저장소에 커밋하지 않고 워크플로 아티팩트로 90일 보관한다.
+      - name: Generate production SBOM
+        run: npm run sbom:prod
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-sbom
+          path: client/artifacts/sbom/*.json

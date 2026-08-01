@@ -38,3 +38,8 @@ coverage/
 *.local
 .vercel/
 client/.vercel/
+
+# 생성 산출물은 커밋하지 않는다. 2026-03-16 신규 앱 스캐폴딩 때 seller 워킹트리를 통째로
+# 복사하면서 seller의 untracked SBOM이 house·biz·loan Initial commit에 함께 박힌 사고가 있었다.
+# baby는 SBOM을 커밋하지 않고 CI 아티팩트로만 보관한다(90일) — 저장소에 비결정적 산출물을 남기지 않는다.
+client/artifacts/

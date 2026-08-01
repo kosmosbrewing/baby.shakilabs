@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "node scripts/build.mjs",
     "verify:static": "node scripts/validate-static-output.mjs",
+    "sbom:prod": "node scripts/sbom.mjs",
+    "verify:supply-chain": "node scripts/verify-sbom-identity.mjs && node scripts/verify-vendor-readme.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -14,7 +16,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@shakilabs/ui": "file:vendor/shakilabs-ui-0.3.10.tgz",
+    "@shakilabs/ui": "file:vendor/shakilabs-ui-0.3.11.tgz",
     "@unhead/vue": "^2.1.10",
     "autoprefixer": "^10.4.24",
     "class-variance-authority": "^0.7.1",
