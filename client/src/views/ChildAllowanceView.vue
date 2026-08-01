@@ -2,6 +2,7 @@
 import { mergeFaqs } from "@/lib/faqMerge";
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
+import CalculatorInteractionTracker from "@/components/analytics/CalculatorInteractionTracker.vue";
 import SEOHead from "@/components/common/SEOHead.vue";
 import FaqAccordionPanel from "@/components/common/FaqAccordionPanel.vue";
 import SeoRichGuide from "@/components/common/SeoRichGuide.vue";
@@ -64,7 +65,17 @@ const nextSteps = [
       <FreshBadge />
     </div>
 
-    <ChildAllowanceCalculator />
+    <CalculatorInteractionTracker
+
+      calculator-id="child_allowance"
+
+      page-path="/baby/child-allowance"
+
+    >
+
+      <ChildAllowanceCalculator />
+
+    </CalculatorInteractionTracker>
 
     <section class="retro-panel-muted p-4 space-y-2">
       <p class="text-caption font-semibold text-foreground">출생연도별로 더 정확히 확인하기</p>
