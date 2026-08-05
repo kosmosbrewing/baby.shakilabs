@@ -74,6 +74,12 @@ const nextSteps = [
 
     <NextStepsLinks :links="nextSteps" />
 
-    <SeoRichGuide :title="BABY_HOME_GUIDE.title" :intro="BABY_HOME_GUIDE.intro" :sections="BABY_HOME_GUIDE.sections" :disclaimer="BABY_HOME_GUIDE.disclaimer" />
+    <SeoRichGuide
+      :title="BABY_HOME_GUIDE.title"
+      :intro="BABY_HOME_GUIDE.intro"
+      :sections="BABY_HOME_GUIDE.sections"
+      :sources="BABY_HOME_GUIDE.sources"
+      :disclaimer="BABY_HOME_GUIDE.disclaimer"
+    />
   </div>
 </template>
