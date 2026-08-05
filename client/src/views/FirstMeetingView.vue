@@ -85,6 +85,7 @@ const nextSteps = [
       :title="FIRST_MEETING_GUIDE.title"
       :intro="FIRST_MEETING_GUIDE.intro"
       :sections="FIRST_MEETING_GUIDE.sections"
+      :sources="FIRST_MEETING_GUIDE.sources"
       :disclaimer="FIRST_MEETING_GUIDE.disclaimer"
     />
   </div>

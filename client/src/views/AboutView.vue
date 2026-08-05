@@ -40,6 +40,14 @@ import { CALCULATION_BASIS_NOTE, LOCAL_BIRTH_SUPPORT_URL } from "@/data/benefitR
           <a :href="LOCAL_BIRTH_SUPPORT_URL" class="retro-link" target="_blank" rel="noopener noreferrer">정부24 통합 신청 페이지</a>에서 확인하세요.
         </p>
         <p class="text-caption leading-relaxed text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
+        <div class="retro-panel-muted space-y-2 p-4">
+          <p class="text-caption font-bold text-foreground">운영: ShakiLabs · 문의: skdba1313@gmail.com</p>
+          <p class="text-caption leading-relaxed text-muted-foreground">
+            모든 지원금 단가와 지급 조건은 보건복지부 고시, 복지로(bokjiro.go.kr)·정부24(gov.kr) 안내 등
+            정부 1차 자료와 대조해 검증하며, 고시가 바뀌면 확인일을 명시해 갱신합니다. 오류 제보를
+            보내주시면 확인 후 신속히 반영합니다.
+          </p>
+        </div>
       </div>
     </div>
   </div>

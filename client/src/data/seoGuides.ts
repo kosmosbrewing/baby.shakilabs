@@ -21,11 +21,18 @@ export interface GuideFaq {
   a: string;
 }
 
+// 공공기관 공식 출처 링크 — 콘텐츠 신뢰도(E-E-A-T) 근거로 가이드 하단에 노출한다
+export interface GuideSource {
+  label: string;
+  url: string;
+}
+
 export interface GuideData {
   title: string;
   intro: string;
   sections?: GuideSection[];
   faqs?: GuideFaq[];
+  sources?: GuideSource[];
   disclaimer?: string;
 }
 
@@ -67,6 +74,20 @@ export const BABY_HOME_GUIDE: GuideData = {
     {
       q: "온라인으로도 신청할 수 있나요?",
       a: `네, ${APPLICATION_CHANNELS[1]}이나 ${APPLICATION_CHANNELS[2]}에서 온라인으로 신청할 수 있고, ${APPLICATION_CHANNELS[0]} 신청도 가능합니다.`,
+    },
+  ],
+  sources: [
+    {
+      label: "복지로 — 부모급여·아동수당·첫만남이용권 안내와 온라인 신청",
+      url: "https://www.bokjiro.go.kr",
+    },
+    {
+      label: "보건복지부 — 출산·양육 지원 정책 고시와 보도자료",
+      url: "https://www.mohw.go.kr",
+    },
+    {
+      label: "정부24 — 행복출산 원스톱 서비스 (출산 지원 통합 신청)",
+      url: "https://www.gov.kr",
     },
   ],
   disclaimer: COMMON_DISCLAIMER,
@@ -172,6 +193,16 @@ export const FIRST_MEETING_GUIDE: GuideData = {
     {
       q: "첫만남이용권을 쓸 수 없는 업종은 구체적으로 어디인가요?",
       a: `${FIRST_MEETING_EXCLUDED_CATEGORIES.join(", ")}에서는 사용할 수 없습니다. 그 외 병원·산후조리원·유아용품점 등에서는 정상적으로 사용 가능합니다.`,
+    },
+  ],
+  sources: [
+    {
+      label: "복지로 — 첫만남이용권 지원 대상·신청 방법 안내",
+      url: "https://www.bokjiro.go.kr",
+    },
+    {
+      label: "정부24 — 행복출산 원스톱 서비스 (출생신고와 함께 통합 신청)",
+      url: "https://www.gov.kr",
     },
   ],
   disclaimer: COMMON_DISCLAIMER,

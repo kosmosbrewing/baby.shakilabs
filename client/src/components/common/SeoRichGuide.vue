@@ -9,10 +9,16 @@ export interface GuideSection {
   body: string;
 }
 
+export interface GuideSource {
+  label: string;
+  url: string;
+}
+
 defineProps<{
   title: string;
   intro: string;
   sections?: GuideSection[];
+  sources?: GuideSource[];
   disclaimer?: string;
 }>();
 </script>
@@ -29,6 +35,21 @@ defineProps<{
         <h3 class="text-base font-semibold text-foreground">{{ s.h2 }}</h3>
         <p class="text-sm leading-relaxed text-muted-foreground">{{ s.body }}</p>
       </article>
+    </div>
+
+    <!-- 외부 공식 출처는 RouterLink가 아닌 일반 <a>를 쓴다 (내부 링크만 RouterLink 필수 — base /baby/ 우회 404 이력) -->
+    <div v-if="sources && sources.length > 0" class="space-y-2">
+      <h3 class="text-base font-semibold text-foreground">공식 출처</h3>
+      <ul class="ml-4 list-disc space-y-1 text-sm text-muted-foreground">
+        <li v-for="(src, i) in sources" :key="`src-${i}`">
+          <a
+            :href="src.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline underline-offset-2 hover:text-foreground"
+          >{{ src.label }}</a>
+        </li>
+      </ul>
     </div>
 
     <p v-if="disclaimer" class="border-t border-border/40 pt-3 text-xs text-muted-foreground">
