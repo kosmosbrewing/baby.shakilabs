@@ -8,9 +8,16 @@ import NextStepsLinks from "@/components/common/NextStepsLinks.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ProcedureStepList from "@/components/baby/ProcedureStepList.vue";
+import GuideDataTable from "@/components/baby/GuideDataTable.vue";
 import type { ProcedureStep } from "@/components/baby/procedureStep";
-import { DAYCARE_TRANSITION_GUIDE } from "@/data/procedureGuides";
-import { CARE_ALLOWANCE_START_MONTH } from "@/data/benefitRates2026";
+import { DAYCARE_TRANSITION_GUIDE, DAYCARE_TRANSITION_TABLE } from "@/data/procedureGuides";
+import {
+  CARE_ALLOWANCE_END_MONTH,
+  CARE_ALLOWANCE_MONTHLY,
+  CARE_ALLOWANCE_START_MONTH,
+  FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE,
+  PARENTAL_BENEFIT_DAYCARE_CASH,
+} from "@/data/benefitRates2026";
 import {
   CHILD_ALLOWANCE_LINK,
   FINANCE_CROSS_LINKS,
@@ -19,11 +26,12 @@ import {
   PARENTAL_BENEFIT_DAYCARE_LINK,
 } from "@/data/crossLinks";
 
+// "왜 이 순서인가요?" 라벨은 페이지당 1개 단계(입소 등록)에만 둔다 — 소제목 중복 이력(감사 지적) 방지.
 const steps: readonly ProcedureStep[] = [
   {
     order: 1,
-    title: "어린이집 입소 등록",
-    description: "어린이집 입소가 확정되면 보육료 바우처가 우선 지원되고, 부모급여는 그 순간부터 현금 차액만 지급됩니다.",
+    title: "어린이집 입소 등록(보육료 자격 변경)",
+    description: `어린이집 입소가 확정되면 행정복지센터나 복지로에서 보육료(바우처) 자격으로 변경 신청합니다. 변경 시점부터 보육료 바우처가 우선 지원되고 부모급여는 현금 차액만 지급됩니다 — 0세는 월 ${PARENTAL_BENEFIT_DAYCARE_CASH.age0 / 10_000}만원, 1세는 차액이 없어 0원입니다.`,
     why: "보육료와 부모급여가 중복 지원되지 않도록 입소 등록 시점을 기준으로 지급 방식이 자동 전환되기 때문입니다.",
     linkTo: "/parental-benefit/daycare",
     linkLabel: "어린이집 이용 시 부모급여",
@@ -31,19 +39,20 @@ const steps: readonly ProcedureStep[] = [
   {
     order: 2,
     title: "가정양육수당 해당 여부 확인",
-    description: `가정양육수당은 ${CARE_ALLOWANCE_START_MONTH}개월 이후 어린이집을 이용하지 않을 때만 지급됩니다. 어린이집 이용 중에는 해당하지 않습니다.`,
+    description: `가정양육수당(월 ${CARE_ALLOWANCE_MONTHLY / 10_000}만원)은 ${CARE_ALLOWANCE_START_MONTH}~${CARE_ALLOWANCE_END_MONTH}개월 아동이 어린이집을 이용하지 않을 때만 지급됩니다. 입소하면 양육수당 대신 보육료 바우처가 지원되고, 퇴소 후 가정양육으로 돌아오면 자격 변경 신청으로 다시 받을 수 있습니다.`,
     linkTo: "/parental-benefit",
     linkLabel: "부모급여 계산기",
   },
   {
     order: 3,
     title: "종일제 아이돌봄 이용 여부 확인",
-    description: "종일제 아이돌봄서비스를 함께 쓰고 있다면 부모급여(가정양육 지원)와 중복 지원되지 않으므로 둘 중 하나를 선택해야 합니다.",
+    description: `${FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE} 어린이집 입소를 계기로 아이돌봄 이용을 정리할지, 시간제로 전환할지 함께 결정하세요.`,
   },
   {
     order: 4,
     title: "아동수당은 그대로 유지",
-    description: "아동수당은 어린이집 이용 여부와 무관하게 계속 지급되므로 별도로 전환 신청할 필요가 없습니다.",
+    description:
+      "아동수당(지역별 월 10만~12만원)은 어린이집 이용 여부와 무관하게 9세 미만까지 계속 지급되므로 별도 전환 신청이 필요 없습니다. 지급받는 계좌나 주소가 바뀌었다면 변경 신고만 해두면 됩니다.",
     linkTo: "/child-allowance",
     linkLabel: "아동수당 계산기",
   },
@@ -96,6 +105,8 @@ const nextSteps = [
 
     <ProcedureStepList :steps="steps" />
 
+    <GuideDataTable :table="DAYCARE_TRANSITION_TABLE" />
+
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
@@ -104,6 +115,7 @@ const nextSteps = [
       :title="DAYCARE_TRANSITION_GUIDE.title"
       :intro="DAYCARE_TRANSITION_GUIDE.intro"
       :sections="DAYCARE_TRANSITION_GUIDE.sections"
+      :sources="DAYCARE_TRANSITION_GUIDE.sources"
       :disclaimer="DAYCARE_TRANSITION_GUIDE.disclaimer"
     />
   </div>
