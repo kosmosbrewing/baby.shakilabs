@@ -97,6 +97,19 @@ export const FIRST_MEETING_EXCLUDED_CATEGORIES = [
   "상품권류 재판매",
 ] as const;
 
+// 출생신고 법정 기한 — 출생 후 1개월(30일 표기) 이내 신고. 기한 경과 시 과태료 부과 대상이나,
+// 과태료 금액은 개정 추적 부담이 있어 본문에 수치로 표기하지 않는다 (정직성 규칙).
+// 출처: 가족관계의 등록 등에 관한 법률 제44조 (law.go.kr)
+export const BIRTH_REGISTRATION_DEADLINE_DAYS = 30;
+
+// 아동수당 소급 신청 기한 — 부모급여와 동일하게 출생 후 60일 이내 신청 시 출생월분부터 소급 지급된다.
+// 출처: 복지로(bokjiro.go.kr) 아동수당 안내, 아동수당법
+export const CHILD_ALLOWANCE_RETROACTIVE_DEADLINE_DAYS = 60;
+
+// 결핵(BCG) 예방접종 권장 기한 — 생후 4주 이내 접종. B형간염 1차는 출생 직후 의료기관 접종.
+// 출처: 질병관리청 예방접종도우미 표준예방접종일정표 (nip.kdca.go.kr)
+export const NEWBORN_BCG_DEADLINE_WEEKS = 4;
+
 // 부모급여 FAQ에 노출되는 "110만원 인상" 오보 정정 문구 (블로그발 misinformation 대응)
 export const PARENTAL_BENEFIT_MISINFO_NOTE =
   "일부 블로그·커뮤니티에 퍼진 '부모급여 110만원으로 인상'은 사실이 아닙니다. 2026년 기준 0세 부모급여는 월 100만원이며, 어린이집을 이용하면 현금 차액만 41.6만원이 지급됩니다.";
