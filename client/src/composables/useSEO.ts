@@ -12,6 +12,14 @@ type SEOOptions = {
   ogImage?: MaybeRefOrGetter<string | undefined>;
   noindex?: MaybeRefOrGetter<boolean | undefined>;
   jsonLd?: MaybeRefOrGetter<Record<string, unknown> | Record<string, unknown>[] | undefined>;
+  /**
+   * Overrides the path used for canonical / hreflang / og:url.
+   * Birth-year variant routes (e.g. /child-allowance/2024) pass their base
+   * page ("/child-allowance") because the prerendered body is nearly identical
+   * across variants — canonical consolidation instead of noindex, so ranking
+   * signals merge into the base page instead of being thrown away.
+   */
+  canonicalPath?: MaybeRefOrGetter<string | undefined>;
 };
 
 function normalizeTitle(rawTitle: string): string {
@@ -20,7 +28,14 @@ function normalizeTitle(rawTitle: string): string {
   return trimmed.includes(" | ") ? trimmed : `${trimmed}${TITLE_SUFFIX}`;
 }
 
-export function useSEO({ title, description, ogImage, noindex = false, jsonLd }: SEOOptions): void {
+export function useSEO({
+  title,
+  description,
+  ogImage,
+  noindex = false,
+  jsonLd,
+  canonicalPath,
+}: SEOOptions): void {
   const route = useRoute();
 
   useHead(() => {
@@ -35,7 +50,9 @@ export function useSEO({ title, description, ogImage, noindex = false, jsonLd }:
         ? [resolvedJsonLd]
         : [];
     const siteUrl = getSiteUrl().replace(/\/+$/, "");
-    const currentPath = route.path || "/";
+    // canonical/hreflang/og:url must always agree, so they all derive from the
+    // same resolved path (override first, actual route path otherwise).
+    const currentPath = toValue(canonicalPath) || route.path || "/";
     const currentUrl = currentPath === "/" ? siteUrl : `${siteUrl}${currentPath}`;
 
     return {

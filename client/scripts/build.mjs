@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { SEO_ROUTES } from "./seo-routes.mjs";
+import { SEO_ROUTES, SITEMAP_ROUTES } from "./seo-routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -43,8 +43,11 @@ function resolveBuildDate() {
 }
 
 function renderSitemap(buildDate) {
+  // Birth-year variants (PARAM_ROUTES) are intentionally absent: they
+  // canonicalize to /child-allowance, so listing them would send crawlers to
+  // URLs that immediately point elsewhere. They stay prerendered regardless.
   const baseUrl = "https://shakilabs.com/baby";
-  const urls = SEO_ROUTES.map((path) => {
+  const urls = SITEMAP_ROUTES.map((path) => {
     const { changefreq, priority } = getRouteConfig(path);
     const loc = path === "/" ? baseUrl : `${baseUrl}${path}`;
     return `  <url>

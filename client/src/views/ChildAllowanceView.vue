@@ -10,6 +10,7 @@ import NextStepsLinks from "@/components/common/NextStepsLinks.vue";
 import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ChildAllowanceCalculator from "@/components/baby/ChildAllowanceCalculator.vue";
+import ChildAllowanceYearOverviewTable from "@/components/baby/ChildAllowanceYearOverviewTable.vue";
 import { CHILD_ALLOWANCE_GUIDE } from "@/data/seoGuides";
 import { CHILD_ALLOWANCE_LANDING_YEARS } from "@/data/childAllowanceYearGuides";
 import {
@@ -76,6 +77,8 @@ const nextSteps = [
       <ChildAllowanceCalculator />
 
     </CalculatorInteractionTracker>
+
+    <ChildAllowanceYearOverviewTable />
 
     <section class="retro-panel-muted p-4 space-y-2">
       <p class="text-caption font-semibold text-foreground">출생연도별로 더 정확히 확인하기</p>
