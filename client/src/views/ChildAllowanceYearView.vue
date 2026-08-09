@@ -74,6 +74,7 @@ const nextSteps = computed<NextStepLink[]>(() => {
   <SEOHead
     :title="`${birthYear}년생 아동수당 | 지급 종료·남은 총액`"
     :description="`${birthYear}년생 아동수당 지급 종료 시점과 지역별 남은 총액을 계산합니다. 2026년 개편(9세 미만 확대) 영향도 함께 확인하세요.`"
+    canonical-path="/child-allowance"
     :json-ld="faqJsonLd"
   />
 
