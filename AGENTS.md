@@ -37,6 +37,7 @@ client/
 - FAQ는 `FaqAccordionPanel`의 `extra`로만 병합한다. `SeoRichGuide`에 `:faqs`를 넘기면 이중 노출된다.
 - `/child-allowance/YYYY` 9개는 canonical을 `/child-allowance`로 통합했다(`seo-routes.mjs`의 `PARAM_ROUTES`). 프리렌더는 유지하고 사이트맵에서만 뺀다 — 프리렌더에서 빼면 SPA 빈 셸 soft-404가 된다. 고유 콘텐츠가 생기면 `PARAM_ROUTES`에서 빼는 것만으로 되돌릴 수 있다.
 - 사이트맵에 실리는 라우트는 본문 1,500자 이상이어야 한다(`validate-static-output.mjs`의 `MIN_BODY_CHARS`). 새 페이지를 추가하면 빌드가 여기서 막힌다.
+- **자수는 `<main>` 안쪽만 센다.** 헤더·탭 내비·푸터는 `<main>`의 형제라 자동으로 빠진다 — 공유 UI 문구로 자수를 채울 수 없다. 자수를 손으로 잴 때도 같은 기준을 쓸 것(크롬 포함 측정은 페이지당 수백 자를 부풀려 얇은 페이지를 통과시킨다). 빌드 로그 마지막 줄이 최소 자수와 해당 라우트를 찍어 준다.
 - 연도 목록은 `childAllowanceYearGuides.ts`와 `seo-routes.mjs`에 이중으로 있다(.mjs가 TS를 import 못 함). 드리프트는 `childAllowanceYearGuides.test.ts`가 잡는다.
 - 지자체 자체 출산지원금은 수치를 넣지 않고 정부24 링크로만 안내한다 (`LOCAL_BIRTH_SUPPORT_URL`).
 - Pinia/Sentry/auth는 이식하지 않았다 (baby는 로그인 없는 정적 계산기). 도입 시 08.loan 패턴 참조.
