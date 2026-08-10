@@ -2,13 +2,21 @@
 // 주의: 이 파일의 faqs는 SeoRichGuide에는 넘기지 않고 FaqAccordionPanel의 extra로만 병합한다 (이중 노출 금지).
 import {
   APPLICATION_CHANNELS,
+  BIRTH_REGISTRATION_DEADLINE_DAYS,
+  CARE_ALLOWANCE_END_MONTH,
+  CARE_ALLOWANCE_MONTHLY,
+  CARE_ALLOWANCE_START_MONTH,
   CHILD_ALLOWANCE_END_MONTH,
   FIRST_MEETING_EXCLUDED_CATEGORIES,
+  FIRST_MEETING_VALID_DAYS,
+  FIRST_MEETING_VALID_YEARS,
   FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE,
   LOCAL_BIRTH_SUPPORT_URL,
   PARENTAL_BENEFIT_MISINFO_NOTE,
   PARENTAL_BENEFIT_PAYMENT_DAY_CASH,
   PARENTAL_BENEFIT_PAYMENT_DAY_DAYCARE_DIFF,
+  PARENTAL_BENEFIT_PHASE1_END_MONTH,
+  PARENTAL_BENEFIT_PHASE2_END_MONTH,
   PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS,
 } from "@/data/benefitRates2026";
 
@@ -111,6 +119,18 @@ export const PARENTAL_BENEFIT_GUIDE: GuideData = {
       h2: "지급일과 60일 소급 신청 기한",
       body: `가정양육 부모급여는 매월 ${PARENTAL_BENEFIT_PAYMENT_DAY_CASH}일 현금으로 지급되고, 어린이집 이용 시 보육료 차액은 익월 ${PARENTAL_BENEFIT_PAYMENT_DAY_DAYCARE_DIFF}일에 지급됩니다. 출생 후 ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일 이내에 신청하면 출생월부터 소급 지급되지만, ${PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS}일이 지나 신청하면 신청한 달부터만 지급되어 이전 달분을 받지 못합니다. ${FULL_TIME_CHILDCARE_EXCLUSIVE_NOTE}`,
     },
+    {
+      h2: "'만 0~1세'가 아니라 0~23개월입니다",
+      body: `부모급여에서 가장 많이 어긋나는 지점이 나이 기준입니다. 이 계산기는 출생월을 0개월로 세는 개월수 기준을 쓰며, 100만원 구간은 0~${PARENTAL_BENEFIT_PHASE1_END_MONTH}개월, 50만원 구간은 ${PARENTAL_BENEFIT_PHASE1_END_MONTH + 1}~${PARENTAL_BENEFIT_PHASE2_END_MONTH}개월입니다. 즉 첫 생일이 오는 달에 100만원이 끊기고 50만원 구간이 시작되며, 두 번째 생일이 오는 달에 부모급여 자체가 끝납니다. 달력상 '만 1세'와 화면의 구간 전환이 한 달 어긋나 보인다면 이 산정 방식 때문입니다.`,
+    },
+    {
+      h2: "남은 총액은 어떻게 계산하나요 (계산 방식 공개)",
+      body: `계산기는 입력한 생년월과 오늘 날짜의 개월수 차이를 구한 뒤, 그 달부터 ${PARENTAL_BENEFIT_PHASE2_END_MONTH}개월까지 각 달의 금액을 하나씩 더해 남은 총액을 냅니다. 구간이 바뀌는 달을 넘어가면 100만원과 50만원이 섞여 더해지므로, 단순히 '남은 개월수 × 이번 달 금액'으로 어림한 값과는 차이가 납니다. 이미 지급받은 과거분은 포함하지 않고 앞으로 받을 금액만 보여 주며, 보육 형태를 어린이집으로 바꾸면 같은 개월수라도 현금 차액 기준으로 다시 합산합니다.`,
+    },
+    {
+      h2: "부모급여가 끝난 뒤에 이어지는 두 제도",
+      body: `${PARENTAL_BENEFIT_PHASE2_END_MONTH}개월로 부모급여가 끝나도 지원이 한 번에 사라지지는 않습니다. 가정양육을 계속하면 ${CARE_ALLOWANCE_START_MONTH}~${CARE_ALLOWANCE_END_MONTH}개월 동안 양육수당 월 ${(CARE_ALLOWANCE_MONTHLY / 10_000).toLocaleString("ko-KR")}만원이 이어지고, 아동수당은 보육 형태와 무관하게 ${CHILD_ALLOWANCE_END_MONTH}개월까지 계속 지급됩니다. 반대로 어린이집을 이용 중이라면 ${CARE_ALLOWANCE_START_MONTH}개월 이후 양육수당은 지급되지 않고 보육료 지원으로만 이어집니다. 홈 화면의 월별 타임라인에서 이 전환 시점을 한 번에 확인할 수 있습니다.`,
+    },
   ],
   faqs: [
     {
@@ -208,6 +228,18 @@ export const FIRST_MEETING_GUIDE: GuideData = {
     {
       h2: "신청 경로 3종",
       body: `첫만남이용권도 ${APPLICATION_CHANNELS.join(", ")} 중 어디서든 신청할 수 있으며, 출생신고와 함께 신청하는 경우가 많습니다.`,
+    },
+    {
+      h2: "다태아는 어떻게 세나요 (계산 방식 공개)",
+      body: "계산기는 출생 순위와 다태아 수를 각각 받아, 다태아 중 첫 아이에게 선택한 순위를 적용하고 나머지 아이는 그다음 순위로 세어 합산합니다. 첫째가 쌍둥이면 200만원+300만원으로 500만원, 이미 첫째가 있는 집에 쌍둥이가 태어나면 둘째·셋째로 300만원+300만원이 되는 식입니다. 다태아 수를 바꾸면 총액이 즉시 다시 계산되므로, 출산 전 예상 금액을 미리 확인해 둘 수 있습니다.",
+    },
+    {
+      h2: `사용기한 게이지는 ${FIRST_MEETING_VALID_DAYS}일 기준입니다`,
+      body: `화면의 사용기한 게이지는 ${FIRST_MEETING_VALID_YEARS}년을 ${FIRST_MEETING_VALID_DAYS}일로 환산해 출생일부터 지난 날수를 표시합니다. 윤년이 끼면 실제 만료일과 하루 정도 차이가 날 수 있어, 게이지는 남은 기간을 가늠하는 용도로만 보고 실제 잔액과 만료일은 국민행복카드 발급 카드사 앱이나 고객센터에서 확인하는 편이 안전합니다. 기한이 지나면 잔액이 소멸하고 환급이나 연장이 되지 않기 때문에, 잔액이 남았다면 만료 전에 사용 계획을 세워 두는 것이 좋습니다.`,
+    },
+    {
+      h2: "출생신고와 함께 신청하면 놓치지 않습니다",
+      body: `출생신고는 출생 후 ${BIRTH_REGISTRATION_DEADLINE_DAYS}일 이내에 해야 하는 법정 절차이고, 첫만남이용권·부모급여·아동수당은 정부24 행복출산 원스톱 서비스에서 출생신고와 함께 한 번에 신청할 수 있습니다. 사용기한이 출생일부터 시작하는 만큼 신청이 늦어질수록 쓸 수 있는 기간이 줄어들므로, 출생신고 시점에 세 제도를 같이 접수해 두는 편이 유리합니다. 지자체 자체 출산지원금도 같은 창구에서 안내받을 수 있으니 거주지 기준으로 함께 확인하세요(${LOCAL_BIRTH_SUPPORT_URL}).`,
     },
   ],
   faqs: [

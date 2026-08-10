@@ -58,12 +58,16 @@ function bodyTextLength(html, route) {
   body = body.replace(/<(script|style|svg|noscript)\b[\s\S]*?<\/\1>/gi, " ");
   body = body.replace(/<!--[\s\S]*?-->/g, " ");
   body = body.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/gi, " ");
-  return body.replace(/\s+/g, " ").trim().length;
+  // 공백을 하나로 줄이는 게 아니라 전부 제거한다. 감사(playwright 실측)가 공백 제외로 재기
+  // 때문에, 공백을 세면 게이트가 감사보다 후해져서 통과한 페이지가 감사에서 얇게 나온다.
+  // 실측 예: /terms 는 공백 포함 1,500자로 게이트를 통과했지만 감사 기준으론 1,238자였다.
+  return body.replace(/\s+/g, "").length;
 }
 
 // Route -> <main> char count, reported at the end so the margin above the
 // threshold is visible in CI instead of only surfacing once a page breaks it.
 const measuredBodyChars = new Map();
+const thinRoutes = [];
 
 function validateRoute(route) {
   const outputPath = routeOutputPath(route);
@@ -90,10 +94,11 @@ function validateRoute(route) {
   if (canonicalPath === route) {
     const bodyChars = bodyTextLength(html, route);
     measuredBodyChars.set(route, bodyChars);
-    assert(
-      bodyChars >= MIN_BODY_CHARS,
-      `Thin content for ${route}: ${bodyChars} chars < ${MIN_BODY_CHARS}`,
-    );
+    // 여기서 바로 throw하지 않고 모아서 보고한다. 첫 라우트에서 멈추면 얇은 페이지를 한 번에
+    // 하나씩만 알게 돼 빌드를 n번 돌려야 한다.
+    if (bodyChars < MIN_BODY_CHARS) {
+      thinRoutes.push(`${route} (${bodyChars} < ${MIN_BODY_CHARS})`);
+    }
   }
 }
 
@@ -122,12 +127,33 @@ validateVercelConfig(resolve(projectRoot, "vercel.json"));
 // validateRoute also runs for PARAM_ROUTES: their static HTML must keep
 // existing (soft-404 guard) even though they are absent from the sitemap.
 SEO_ROUTES.forEach(validateRoute);
+assert(
+  thinRoutes.length === 0,
+  `Thin content (<main>, 공백 제외) on ${thinRoutes.length} route(s):\n  ${thinRoutes.join("\n  ")}`,
+);
 validateSitemap();
 
 const notFoundPath = resolve(distRoot, "404.html");
 assert(existsSync(notFoundPath), "Missing custom 404.html output");
 const notFoundHtml = readFileSync(notFoundPath, "utf8");
 assert(/name="robots" content="noindex,nofollow"/.test(notFoundHtml), "404.html must be noindex,nofollow");
+// 본문이 없는 화면에 광고를 실으면 Google "Valuable Inventory" 정책 위반이다. noindex는 색인만
+// 막을 뿐이고 정책은 로더의 존재 자체를 본다. 게다가 이 도메인의 공개 문서(nutri /disclosure)가
+// "오류·404·noindex 화면에는 광고를 두지 않습니다"라고 명문화하고 있어, 로더가 남으면 자사 문서와
+// 모순된다. build.mjs의 removeAdsLoaderFromNotFound()가 이 상태를 만든다.
+assert(
+  !/adsbygoogle|googlesyndication/i.test(notFoundHtml),
+  "404.html must not load the AdSense script (Valuable Inventory policy)",
+);
+// 역방향 검증: 스트립이 404를 넘어 정상 라우트까지 번지면 광고 수익이 조용히 0이 된다.
+// 콘텐츠가 있는 화면에서는 로더가 반드시 살아 있어야 한다.
+SEO_ROUTES.forEach((route) => {
+  const html = readFileSync(routeOutputPath(route), "utf8");
+  assert(
+    /googlesyndication/i.test(html),
+    `Content route ${route} lost the AdSense loader (strip over-reached past 404)`,
+  );
+});
 
 const thinnest = [...measuredBodyChars.entries()].sort((a, b) => a[1] - b[1])[0];
 

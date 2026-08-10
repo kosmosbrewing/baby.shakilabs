@@ -1,11 +1,15 @@
 <script setup lang="ts">
+// 방침 본문도 이 앱 고유 서술로 유지한다 — 다른 앱과 같은 문단을 쓰면 준중복 정책 문서가 된다.
+// 이 앱은 아동 관련 입력을 다루므로 "무엇을 받고 무엇을 안 받는지"를 항목 단위로 명시한다.
+import { RouterLink } from "vue-router";
 import SEOHead from "@/components/common/SEOHead.vue";
+import { FIRST_MEETING_VALID_DAYS } from "@/data/benefitRates2026";
 </script>
 
 <template>
   <SEOHead
     title="개인정보 처리방침 | shakilabs.com/baby"
-    description="ShakiLabs 육아·출산 지원금 계산기의 개인정보 처리방침입니다. 계산 입력값의 브라우저 내 처리 원칙, 아동 개인정보 미수집, 쿠키와 제3자 광고(Google AdSense), 이용자의 권리를 안내합니다."
+    description="육아·출산 지원금 계산기의 개인정보 처리방침입니다. 계산기가 받는 입력 항목과 브라우저 내 처리 원칙, 아동 개인정보 미수집, 쿠키와 제3자 광고(Google AdSense), 맞춤 광고 해제 방법과 이용자의 권리를 안내합니다."
   />
 
   <div class="container space-y-5 py-5">
@@ -15,46 +19,58 @@ import SEOHead from "@/components/common/SEOHead.vue";
       </div>
       <div class="retro-panel-content space-y-5 text-caption leading-relaxed text-muted-foreground">
         <p>
-          ShakiLabs 육아·출산 지원금 계산기(shakilabs.com/baby, 이하 "서비스")는 이용자의 개인정보를
-          소중히 여기며, 개인정보 보호 관련 법령을 준수합니다. 본 방침은 서비스가 어떤 정보를 수집하고
-          어떻게 이용하는지, 그리고 이용자가 어떤 권리를 행사할 수 있는지를 설명합니다.
+          ShakiLabs 육아·출산 지원금 계산기(shakilabs.com/baby, 이하 "서비스")는 아이와 관련된 정보를
+          다루는 도구인 만큼, 무엇을 받고 무엇을 받지 않는지를 항목 단위로 밝힙니다. 본 방침은 서비스가
+          처리하는 값, 처리 위치, 이용자가 행사할 수 있는 권리를 설명합니다.
         </p>
 
         <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">1. 수집하지 않는 정보 — 계산 입력값</h2>
+          <h2 class="text-body font-bold text-foreground">1. 계산기가 받는 값과 처리 위치</h2>
           <p>
-            자녀 생년월, 거주 지역 유형, 보육 형태(가정양육·어린이집), 출생 순위, 다태아 수 등 이용자가
-            계산기에 입력하는 모든 값은 이용자의 브라우저 안에서만 연산되며, 서버로 전송되지 않고 어떠한
-            데이터베이스에도 저장되지 않습니다. 서비스는 회원가입 절차가 없어 이름, 이메일 주소, 연락처
-            같은 계정 정보도 수집하지 않습니다. 화면 테마(밝게·어둡게) 설정만 이용자 기기의 브라우저
-            저장소(localStorage)에 보관되며, 이 값 역시 기기 밖으로 전송되지 않고 브라우저 데이터 삭제로
+            서비스가 입력받는 항목은 자녀 생년월(연·월), 첫만남이용권 사용기한
+            계산용 출생일(연·월·일), 출생 순위(첫째·둘째 이상), 다태아 수, 거주 지역
+            유형(수도권·비수도권·인구감소 우대·인구감소 특별), 보육 형태(가정양육·어린이집)가
+            전부입니다. 이 값들은 이용자의 브라우저 안에서만 연산되며 서버로 전송되지 않고 어떠한
+            데이터베이스에도 저장되지 않습니다. 첫만남이용권 계산기만 날짜까지 받는 이유는 사용기한을
+            출생일로부터 {{ FIRST_MEETING_VALID_DAYS }}일로 계산해야 하기 때문이며, 그 값 역시 화면을
+            벗어나지 않습니다.
+          </p>
+        </section>
+
+        <section class="space-y-2">
+          <h2 class="text-body font-bold text-foreground">2. 받지 않는 정보 — 아동을 식별하는 값</h2>
+          <p>
+            서비스는 아동을 식별할 수 있는 정보를 일절 입력받지 않습니다. 아이의 이름, 주민등록번호,
+            사진, 주소, 보호자의 연락처와 계좌 정보는 어느 화면에서도 요구하지 않으며, 회원가입 절차가
+            없어 계정 정보도 존재하지 않습니다. 거주 지역도 시·군·구가 아니라 아동수당 금액 구간을
+            고르기 위한 네 가지 유형 중 하나만 선택받으므로 거주지를 특정할 수 없습니다. 또한 서비스는
+            보호자를 대상으로 하는 정보 제공 도구로, 아동으로부터 직접 정보를 수집하지 않습니다.
+          </p>
+        </section>
+
+        <section class="space-y-2">
+          <h2 class="text-body font-bold text-foreground">3. 기기에 남는 값 (브라우저 저장소)</h2>
+          <p>
+            화면 테마(밝게·어둡게) 설정만 이용자 기기의 브라우저 저장소(localStorage)에 보관됩니다. 계산
+            입력값은 저장하지 않으므로 페이지를 새로 고치면 기본값으로 돌아가며, 같은 기기를 함께 쓰는
+            사람에게 이전 계산 내역이 남지 않습니다. 저장된 테마 값은 브라우저의 사이트 데이터 삭제로
             언제든 제거할 수 있습니다.
           </p>
         </section>
 
         <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">2. 아동의 개인정보를 수집하지 않습니다</h2>
-          <p>
-            서비스는 육아 지원금을 계산하는 도구이지만, 아동을 식별할 수 있는 어떠한 개인정보(이름,
-            주민등록번호, 사진, 정확한 생년월일 등)도 입력받거나 수집하지 않습니다. 계산에 사용하는 자녀
-            생년월은 지원금 지급 개월수를 산출하기 위한 값으로만 브라우저 안에서 쓰인 뒤 버려집니다. 또한
-            서비스는 보호자를 대상으로 하는 정보 제공 도구로, 만 14세 미만 아동을 이용 대상으로 하지
-            않으며 아동으로부터 직접 정보를 수집하지 않습니다.
-          </p>
-        </section>
-
-        <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">3. 자동으로 수집되는 정보</h2>
+          <h2 class="text-body font-bold text-foreground">4. 자동으로 수집되는 접속 기록</h2>
           <p>
             서비스 품질 개선과 트래픽 분석을 위해 방문 페이지 주소, 접속 일시, 브라우저·기기 유형,
             대략적인 접속 지역 등 개인을 직접 식별할 수 없는 접속 기록이 자동으로 수집될 수 있습니다. 이
-            정보는 Google Analytics 등 분석 도구를 통해 익명화된 통계 형태로만 처리되며, 특정 개인을
-            추적하거나 식별하는 목적으로 사용하지 않습니다.
+            정보는 Google Analytics 등 분석 도구를 통해 익명화된 통계로만 처리되며, 어떤 계산기를 얼마나
+            이용했는지와 같은 집계 지표를 확인하는 데 쓰입니다. 이때에도 이용자가 입력한 생년월·출생일
+            같은 계산 값은 함께 전송되지 않습니다.
           </p>
         </section>
 
         <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">4. 쿠키와 제3자 광고 (Google AdSense)</h2>
+          <h2 class="text-body font-bold text-foreground">5. 쿠키와 제3자 광고 (Google AdSense)</h2>
           <p>
             서비스는 무료 운영을 위해 Google AdSense 광고를 게재합니다. 이와 관련하여 다음 사항을
             알려드립니다.
@@ -85,20 +101,40 @@ import SEOHead from "@/components/common/SEOHead.vue";
               거부할 수 있습니다.
             </li>
           </ul>
-          <p>맞춤 광고를 해제해도 서비스의 모든 계산 기능은 동일하게 이용할 수 있습니다.</p>
-        </section>
-
-        <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">5. 제3자 제공과 처리 위탁</h2>
           <p>
-            서비스는 법령에 근거한 경우를 제외하고 수집된 정보를 제3자에게 제공하지 않습니다. 다만
-            광고(Google AdSense)와 트래픽 분석(Google Analytics) 도구는 각 사업자의 쿠키를 통해 정보를
-            처리하며, 이 경우 해당 사업자의 개인정보 처리방침이 적용됩니다.
+            맞춤 광고를 해제해도 서비스의 모든 계산 기능은 동일하게 이용할 수 있습니다. 광고 게재에 관한
+            운영자의 책임 범위는
+            <RouterLink to="/terms" class="underline underline-offset-2 hover:text-foreground">
+              이용약관 제7조
+            </RouterLink>
+            에서 함께 확인할 수 있습니다.
           </p>
         </section>
 
         <section class="space-y-2">
-          <h2 class="text-body font-bold text-foreground">6. 방침의 변경과 문의</h2>
+          <h2 class="text-body font-bold text-foreground">6. 제3자 제공과 처리 위탁</h2>
+          <p>
+            서비스는 법령에 근거한 경우를 제외하고 수집된 정보를 제3자에게 제공하지 않습니다. 광고(Google
+            AdSense)와 트래픽 분석(Google Analytics) 도구는 각 사업자의 쿠키를 통해 정보를 처리하며, 이
+            경우 해당 사업자의 개인정보 처리방침이 함께 적용됩니다. 서비스는 지원금 신청을 대행하지
+            않으므로, 이용자의 정보를 복지로·정부24·지자체 등 행정기관으로 전달하는 절차도 존재하지
+            않습니다.
+          </p>
+        </section>
+
+        <section class="space-y-2">
+          <h2 class="text-body font-bold text-foreground">7. 이용자의 권리와 보관 기간</h2>
+          <p>
+            서비스는 계산 입력값을 저장하지 않으므로 열람·정정·삭제를 요청할 대상 데이터가 서버에
+            존재하지 않으며, 별도의 보관 기간도 두지 않습니다. 기기에 남는 값은 브라우저 저장소의 테마
+            설정뿐이라 이용자가 직접 삭제할 수 있고, 맞춤 광고 쿠키는 위 5항의 링크로 해제할 수 있습니다.
+            그 밖에 개인정보 처리와 관련해 확인이 필요한 사항은 아래 연락처로 문의하시면 확인 후
+            답변드립니다.
+          </p>
+        </section>
+
+        <section class="space-y-2">
+          <h2 class="text-body font-bold text-foreground">8. 방침의 변경과 문의</h2>
           <p>
             본 방침이 변경되는 경우 이 페이지를 통해 게시합니다. 개인정보 처리에 관한 문의는 아래 연락처로
             보내주시면 영업일 기준 24~48시간 이내에 답변드립니다.

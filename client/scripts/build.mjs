@@ -82,6 +82,34 @@ function removeRenderedNoscriptFallbacks() {
   }
 }
 
+// index.html이 AdSense 로더를 head에 정적으로 싣기 때문에 vite-ssg가 뽑는 404.html도
+// 그대로 물려받는다. 404는 본문이 수십 자뿐인 화면이라 Google "Valuable Inventory" 정책
+// (게시자 콘텐츠가 없는 화면에 광고 금지)에 저촉되고, 자동 광고가 실제로 ins 슬롯까지
+// 만든다. 정상 라우트의 광고 배선은 그대로 두고 404 산출물에서만 로더를 걷어낸다.
+// noindex만으로는 부족하다 — 정책은 색인 여부가 아니라 로더의 존재를 본다.
+function removeAdsLoaderFromNotFound() {
+  const outputPath = routeOutputPath("/404");
+  if (!existsSync(outputPath)) {
+    throw new Error("404.html missing before ad loader strip");
+  }
+
+  const html = readFileSync(outputPath, "utf8");
+  const nextHtml = html.replace(
+    /\n?\s*<script[^>]*(?:googlesyndication|adsbygoogle)[^>]*>\s*<\/script>/gi,
+    "",
+  );
+
+  // 셀렉터가 드리프트하면(예: 로더 태그 속성 변경) 조용히 통과하는 대신 빌드를 멈춘다.
+  // 이 스트립이 무력화되면 404에 광고가 되살아나는데, 게이트가 잡기 전에 알아채는 편이 낫다.
+  if (nextHtml === html) {
+    throw new Error(
+      "404.html: AdSense loader not found — the strip selector drifted from index.html",
+    );
+  }
+
+  writeFileSync(outputPath, nextHtml, "utf8");
+}
+
 const buildDate = resolveBuildDate();
 
 mkdirSync(dirname(sitemapPath), { recursive: true });
@@ -101,6 +129,7 @@ if (result.status !== 0) {
 }
 
 removeRenderedNoscriptFallbacks();
+removeAdsLoaderFromNotFound();
 
 const validationResult = spawnSync(
   process.execPath,
