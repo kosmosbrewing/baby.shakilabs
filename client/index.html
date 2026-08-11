@@ -114,7 +114,11 @@
         --card: 217 33% 17%;
         --card-foreground: 210 40% 96%;
         --primary: 330 78% 62%;
-        --primary-foreground: 0 0% 100%;
+        /* 다크 primary(마젠타)는 밝은 색이라 흰색 전경이 3.37:1밖에 안 나온다.
+           브랜드 hue(330)는 그대로 두고 전경만 어둡게 — DESIGN_TOKENS.md 파생 공식 `{H} {S}% 10%`.
+           브라우저 실측: 내비 idle 2.93→4.63, active 3.37→5.41, 모바일 활성탭 2.81→6.47,
+           retro-step-index·선택된 preset-chip 3.37→5.41. */
+        --primary-foreground: 330 70% 10%;
         --secondary: 330 12% 19%;
         --secondary-foreground: 210 40% 96%;
         --accent: 330 16% 23%;
