@@ -42,9 +42,13 @@
 
 @layer base {
   :root {
-    --status-success: 148 61% 36%;
-    --status-warning: 43 88% 43%;
-    --status-caution: 28 82% 48%;
+    /* 라이트 의미색은 흰 카드 위 본문 텍스트로 쓰이므로 4.5:1을 넘겨야 한다.
+       기존 값은 success 3.86 / warning 2.60 / caution 3.17로 전부 미달이었다.
+       finance·house가 이미 쓰는 통과값으로 통일 (각각 7.20 / 7.04 / 7.02). */
+    --status-success: 142 64% 24%;
+    --status-warning: 24 83% 31%;
+    --status-caution: 17 79% 34%;
+    /* danger 4.73 / info 5.10 — 이미 통과하므로 시각 변화를 피해 유지한다. */
     --status-danger: 0 70% 52%;
     --status-info: 212 83% 45%;
   }
