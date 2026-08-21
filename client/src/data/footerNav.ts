@@ -24,5 +24,8 @@ export const POLICY_LINKS: readonly SiteFooterLink[] = [
   { to: "/about", label: "사이트 안내" },
   { to: "/terms", label: "이용약관" },
   { to: "/privacy", label: "개인정보 처리방침" },
+  // 블로그는 root 앱(shakilabs.com/blog) 소유라 이 앱 라우터에 없다. href를 주면
+  // ShSiteFooter가 RouterLink 대신 <a href>로 렌더해 /baby/blog로 깨지지 않는다.
+  { to: "", href: "/blog", label: "블로그" },
   { to: "", href: "mailto:skdba1313@gmail.com", label: "문의" },
 ];
