@@ -9,6 +9,7 @@ import {
   canonicalPathFor,
 } from "./seo-routes.mjs";
 import { verifyTokenContrast } from "./verify-token-contrast.mjs";
+import { validateUtilitiesAreGenerated } from "./validate-tailwind-utilities.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -266,6 +267,8 @@ SEO_ROUTES.forEach((route) => {
   );
 });
 
+const utilityCount = validateUtilitiesAreGenerated({ projectRoot, distRoot });
+
 const thinnest = [...measuredBodyChars.entries()].sort((a, b) => a[1] - b[1])[0];
 
 console.log(
@@ -280,3 +283,4 @@ console.log(
   `Router↔sitemap cross-check: ${routerRouteCount} static router routes vs ${sitemapUrls.size} sitemap URLs (both directions).`,
 );
 console.log(`Token contrast: ${contrastPairCount} pairs (light + dark, incl. alpha tints) ≥ 4.5:1.`);
+console.log(`Colour utilities generated: ${utilityCount} checked against the built CSS.`);

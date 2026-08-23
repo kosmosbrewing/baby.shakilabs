@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="border-b border-border bg-primary/8">
+  <header class="border-b border-border bg-primary/[8%]">
     <div class="container pt-2.5 pb-2.5">
       <div class="overflow-hidden">
         <div class="retro-titlebar h-11 border-b-0 bg-transparent px-1.5 sm:px-2">
