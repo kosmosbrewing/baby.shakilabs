@@ -1,7 +1,14 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SEO_ROUTES, SITEMAP_ROUTES, PARAM_ROUTES, canonicalPathFor } from "./seo-routes.mjs";
+import {
+  SEO_ROUTES,
+  SITEMAP_ROUTES,
+  PARAM_ROUTES,
+  CHILD_ALLOWANCE_LANDING_YEARS,
+  canonicalPathFor,
+} from "./seo-routes.mjs";
+import { verifyTokenContrast } from "./verify-token-contrast.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -120,6 +127,108 @@ function validateSitemap() {
     actualUrls.every((url) => !variantUrls.has(url)),
     "Sitemap must not list canonicalized birth-year variant routes",
   );
+  return new Set(actualUrls);
+}
+
+function canonicalUrlFor(route) {
+  return route === "/" ? canonicalBase : `${canonicalBase}${route}`;
+}
+
+// 라우터에 선언된 경로를 뜯어 { path, redirect } 목록으로 돌려준다.
+// 라우터 파일이 진실의 원천이라 소스를 직접 읽는다 — SEO_ROUTES는 사람이 손으로 맞추는
+// 사본이고, car(#46)·travel(#45)에서 터진 결함이 바로 그 사본이 원본과 어긋난 사고였다.
+//
+// baby는 연도 랜딩 9개를 `path: \`/child-allowance/${year}\`` 템플릿으로 map해서 만든다.
+// 따옴표 경로만 긁으면 그 9개가 조용히 빠지므로 템플릿 형태도 같이 잡아 연도 배열로 전개한다.
+function parseRouterRoutes(source, years) {
+  const marker = "export const routes";
+  const start = source.indexOf(marker);
+  // 폴백 금지: 추출에 실패하면 통과가 아니라 즉시 실패다.
+  assert(start !== -1, "router/index.ts must export a `routes` array");
+  const body = source.slice(start);
+
+  const marks = [...body.matchAll(/path:\s*(?:"([^"]+)"|`([^`]+)`)/g)].map((match) => ({
+    literal: match[1],
+    template: match[2],
+    index: match.index,
+  }));
+  assert(marks.length > 0, "router/index.ts: no route paths could be parsed");
+
+  return marks.flatMap((mark, i) => {
+    const scope = body.slice(mark.index, marks[i + 1]?.index ?? body.length);
+    const redirect = /redirect:/.test(scope);
+    if (mark.literal !== undefined) return [{ path: mark.literal, redirect }];
+
+    // 템플릿 경로는 `${year}` 하나만 지원한다. 다른 보간이 생기면 조용히 넘기지 않고 멈춘다.
+    const placeholders = [...mark.template.matchAll(/\$\{([^}]+)\}/g)].map((m) => m[1].trim());
+    assert(
+      placeholders.length === 1 && placeholders[0] === "year",
+      `router/index.ts: unsupported template path \`${mark.template}\``,
+    );
+    return years.map((year) => ({ path: mark.template.replace("${year}", String(year)), redirect }));
+  });
+}
+
+// 회귀 게이트: 라우터 ↔ 사이트맵 양방향 대조.
+//
+// 왜 필요한가: car에서 "/"가 SEO_ROUTES에서 빠져 있어도 빌드는 통과했고 프리렌더도 됐고
+// 라이브도 200을 돌려줬다. 사이트맵에서만 조용히 사라져 앱에서 가장 권위 높은 URL이
+// 색인 후보 밖에 있었다. 사람이 XML을 세는 것 말고는 잡을 방법이 없던 결함이다.
+//
+// 양방향인 이유: 자기 canonical이 아닌 라우트(리다이렉트, 그리고 baby의 연도 변종)는
+// 사이트맵에 실으면 안 된다. "빠진 것만 검사"하면 홈을 리다이렉트로 되돌린 뒤 사이트맵에
+// URL만 남기는, 원래보다 나쁜 모순 상태를 통과시키게 된다.
+function validateRouterRoutesAreListed(sitemapUrls) {
+  const routerSource = readFileSync(resolve(projectRoot, "src", "router", "index.ts"), "utf8");
+  const guidesSource = readFileSync(
+    resolve(projectRoot, "src", "data", "childAllowanceYearGuides.ts"),
+    "utf8",
+  );
+
+  // 연도 목록은 TS(라우터가 쓰는 원본)와 seo-routes.mjs(사이트맵이 쓰는 사본) 두 벌이다.
+  // .mjs가 TS를 import할 수 없어 생긴 구조적 중복이라, 둘이 어긋나는 순간을 여기서 잡는다.
+  const declared = guidesSource.match(/CHILD_ALLOWANCE_LANDING_YEARS[^=]*=\s*\[([^\]]+)\]/);
+  assert(declared, "childAllowanceYearGuides.ts must declare CHILD_ALLOWANCE_LANDING_YEARS");
+  const tsYears = declared[1].split(",").map((v) => v.trim()).filter(Boolean).map(Number);
+  assert(
+    tsYears.join() === [...CHILD_ALLOWANCE_LANDING_YEARS].join(),
+    `Year list drift: router data has [${tsYears}] but seo-routes.mjs has [${CHILD_ALLOWANCE_LANDING_YEARS}]`,
+  );
+
+  const routerRoutes = parseRouterRoutes(routerSource, tsYears);
+  const indexRoute = routerRoutes.find((route) => route.path === "/");
+  assert(indexRoute, "router/index.ts must register an index route");
+  assert(
+    !indexRoute.redirect,
+    "Index route must render its own view: a redirect home canonicalizes to the target page, " +
+      "and a page that points its canonical elsewhere cannot be listed in the sitemap",
+  );
+
+  const staticRoutes = routerRoutes.filter((r) => !r.redirect && !r.path.includes(":"));
+  assert(
+    staticRoutes.length === SEO_ROUTES.length,
+    `Router declares ${staticRoutes.length} static routes but SEO_ROUTES has ${SEO_ROUTES.length}`,
+  );
+
+  for (const route of staticRoutes) {
+    const url = canonicalUrlFor(route.path);
+    if (canonicalPathFor(route.path) === route.path) {
+      assert(sitemapUrls.has(url), `Router route is missing from the sitemap: ${url}`);
+    } else {
+      assert(
+        !sitemapUrls.has(url),
+        `Sitemap lists a route that canonicalizes elsewhere: ${url} -> ${canonicalPathFor(route.path)}`,
+      );
+    }
+  }
+
+  // 반대 방향: 사이트맵에만 있고 라우터에는 없는 URL은 404를 광고하는 셈이다.
+  const routerUrls = new Set(staticRoutes.map((route) => canonicalUrlFor(route.path)));
+  for (const url of sitemapUrls) {
+    assert(routerUrls.has(url), `Sitemap advertises a URL with no router route: ${url}`);
+  }
+
+  return staticRoutes.length;
 }
 
 validateVercelConfig(resolve(repositoryRoot, "vercel.json"));
@@ -131,7 +240,9 @@ assert(
   thinRoutes.length === 0,
   `Thin content (<main>, 공백 제외) on ${thinRoutes.length} route(s):\n  ${thinRoutes.join("\n  ")}`,
 );
-validateSitemap();
+const sitemapUrls = validateSitemap();
+const routerRouteCount = validateRouterRoutesAreListed(sitemapUrls);
+const contrastPairCount = verifyTokenContrast({ distRoot, assert });
 
 const notFoundPath = resolve(distRoot, "404.html");
 assert(existsSync(notFoundPath), "Missing custom 404.html output");
@@ -165,3 +276,7 @@ console.log(
 console.log(
   `<main> body chars: min ${thinnest[1]} (${thinnest[0]}), threshold ${MIN_BODY_CHARS}.`,
 );
+console.log(
+  `Router↔sitemap cross-check: ${routerRouteCount} static router routes vs ${sitemapUrls.size} sitemap URLs (both directions).`,
+);
+console.log(`Token contrast: ${contrastPairCount} pairs (light + dark, incl. alpha tints) ≥ 4.5:1.`);
