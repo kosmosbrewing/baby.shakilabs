@@ -87,7 +87,7 @@ const nextSteps = [
           v-for="year in CHILD_ALLOWANCE_LANDING_YEARS"
           :key="year"
           :to="`/child-allowance/${year}`"
-          class="rounded-full border border-border/60 px-3 py-1 text-tiny font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/8"
+          class="rounded-full border border-border/60 px-3 py-1 text-tiny font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/[8%]"
         >
           {{ year }}년생
         </RouterLink>

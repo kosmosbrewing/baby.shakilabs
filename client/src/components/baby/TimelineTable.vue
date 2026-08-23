@@ -45,7 +45,7 @@ function isCurrentStage(fromMonth: number, toMonth: number): boolean {
       <ShTableRow
         v-for="stage in stages"
         :key="`${stage.fromMonth}-${stage.toMonth}`"
-        :class="isCurrentStage(stage.fromMonth, stage.toMonth) ? 'bg-primary/8' : undefined"
+        :class="isCurrentStage(stage.fromMonth, stage.toMonth) ? 'bg-primary/[8%]' : undefined"
       >
         <ShTableCell emphasis>
           {{ formatMonthRange(stage) }}
