@@ -37,6 +37,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      # lastmod 원장은 빌드가 다시 쓴다. 커밋된 것과 어긋나면 사이트맵이 "오늘"로 재스탬프되므로
+      # 여기서 red를 낸다. 이 검사는 시계 의존 지문(예: 프리렌더된 date 입력 기본값)도 잡는다 —
+      # 커밋한 날과 CI가 도는 날이 다르면 그런 지문은 여기서 반드시 diff로 드러난다.
+      # 빌드가 아니라 CI에만 걸어 Vercel 배포가 이것 때문에 실패하지는 않게 한다.
+      - name: Verify sitemap lastmod ledger is committed
+        run: git diff --exit-code public/sitemap.xml scripts/sitemap-lastmod.json
+
       # 네트워크·npm 재실행 없이 1초 미만. SBOM은 재생성해서 diff하지 않고 신원 필드만 대조한다
       # (CycloneDX metadata.timestamp·SPDX documentNamespace가 비결정적이라 재생성 후 diff는 상시 red가 된다).
       # SBOM을 커밋하지 않는 이 저장소에서는 SBOM 검사가 no-op이고 vendor 검사만 실제로 돈다.
