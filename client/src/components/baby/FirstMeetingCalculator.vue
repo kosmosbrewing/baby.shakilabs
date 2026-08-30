@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CountUpAmount from "@/components/common/CountUpAmount.vue";
 import { computed } from "vue";
 import { ShBulletProgress, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
@@ -44,7 +45,7 @@ function formatDays(value: number): string {
     <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">첫만남이용권 바우처 총액</p>
-      <p class="text-display font-bold text-primary tabular-nums">{{ formatWon(voucherTotal) }}</p>
+      <p class="text-display font-bold text-primary tabular-nums"><CountUpAmount :value="formatWon(voucherTotal)" /></p>
       <p class="text-caption text-muted-foreground">
         현금이 아닌 국민행복카드 바우처이며, <span class="font-semibold text-foreground">{{ deadline }}</span
         >까지 사용해야 합니다.
