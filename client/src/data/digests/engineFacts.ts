@@ -11,6 +11,7 @@ import {
   careAllowanceAmount,
   childAllowanceAmount,
   firstMeetingDeadline,
+  firstMeetingValidDays,
   parentalBenefitAmount,
 } from "@/utils/babyCalculator";
 import { calcRemainingBreakdown } from "@/utils/remainingBreakdown";
@@ -189,4 +190,5 @@ export const voucherPerChild = (order: BirthOrder, count: number): number =>
 
 export const voucher = calcFirstMeetingVoucher;
 export const deadlineOf = firstMeetingDeadline;
+export const validDaysOf = firstMeetingValidDays;
 export { PARENTAL_BENEFIT_PHASE1_END_MONTH, CHILD_ALLOWANCE_END_MONTH, CARE_ALLOWANCE_END_MONTH };

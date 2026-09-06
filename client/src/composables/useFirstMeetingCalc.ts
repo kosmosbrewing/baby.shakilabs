@@ -1,20 +1,19 @@
 import { computed, reactive, ref, watch } from "vue";
 import { debounce } from "@/lib/utils";
-import { calcFirstMeetingVoucher, daysBetween, firstMeetingDeadline, isFirstMeetingStillValid, monthsBetween } from "@/utils/babyCalculator";
+import {
+  calcFirstMeetingVoucher,
+  dateOnlyString,
+  daysBetween,
+  firstMeetingDeadline,
+  firstMeetingValidDays,
+  isFirstMeetingStillValid,
+} from "@/utils/babyCalculator";
 import type { BirthOrder } from "@/data/benefitRates2026";
 
 export interface FirstMeetingState {
   birthDate: string; // YYYY-MM-DD — 사용기한(출생일+2년) 계산에 일자까지 필요하다
   birthOrder: BirthOrder;
   multipleBirthCount: number;
-}
-
-// toISOString()은 UTC 기준이라 한국 시간대(UTC+9) 자정 근처에는 하루 밀릴 수 있어 로컬 값으로 직접 조합한다.
-function todayDateString(): string {
-  const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${now.getFullYear()}-${month}-${day}`;
 }
 
 export interface FirstMeetingInitialState {
@@ -26,7 +25,7 @@ export interface FirstMeetingInitialState {
 // 열기 위한 파라미터. 생략하면 기존 동작(첫째·단태아 기본)과 동일하다.
 export function useFirstMeetingCalc(initial: FirstMeetingInitialState = {}) {
   const state = reactive<FirstMeetingState>({
-    birthDate: todayDateString(),
+    birthDate: dateOnlyString(),
     birthOrder: initial.birthOrder ?? "first",
     multipleBirthCount: initial.multipleBirthCount ?? 1,
   });
@@ -40,10 +39,11 @@ export function useFirstMeetingCalc(initial: FirstMeetingInitialState = {}) {
 
   const voucherTotal = computed(() => calcFirstMeetingVoucher(state.birthOrder, state.multipleBirthCount));
   const deadline = computed(() => firstMeetingDeadline(debouncedBirthDate.value));
-  const currentMonths = computed(() => monthsBetween(debouncedBirthDate.value.slice(0, 7)));
-  const isStillValid = computed(() => isFirstMeetingStillValid(currentMonths.value));
-  // ShBulletProgress 게이지용 — 출생일 기준 경과일수(730일 만료 기준과 함께 사용)
+  // 기한 표시와 유효 판정이 같은 함수(firstMeetingDeadline)에서 나와야 한 화면에서 어긋나지 않는다.
+  const isStillValid = computed(() => isFirstMeetingStillValid(debouncedBirthDate.value));
+  // ShBulletProgress 게이지 — 경과일수와 상한 모두 출생일에서 유도해 만료일과 정확히 같은 날 가득 찬다.
   const daysElapsed = computed(() => daysBetween(debouncedBirthDate.value));
+  const validDays = computed(() => firstMeetingValidDays(debouncedBirthDate.value));
 
-  return { state, voucherTotal, deadline, isStillValid, daysElapsed };
+  return { state, voucherTotal, deadline, isStillValid, daysElapsed, validDays };
 }

@@ -7,7 +7,7 @@ import {
   CARE_ALLOWANCE_END_MONTH,
   CARE_ALLOWANCE_START_MONTH,
   CHILD_ALLOWANCE_END_MONTH,
-  FIRST_MEETING_VALID_DAYS,
+  FIRST_MEETING_VALID_YEARS,
   LOCAL_BIRTH_SUPPORT_URL,
   PARENTAL_BENEFIT_PHASE2_END_MONTH,
 } from "@/data/benefitRates2026";
@@ -49,9 +49,9 @@ import {
             <li>부모급여 계산기: 자녀 생년월, 보육 형태</li>
             <li>아동수당 계산기: 자녀 생년월, 거주 지역 유형</li>
             <li>
-              첫만남이용권 계산기: 자녀 출생일(연·월·일), 출생 순위, 다태아 수 — 사용기한을
-              출생일로부터 {{ FIRST_MEETING_VALID_DAYS }}일로 계산해야 해서 이 도구만 날짜까지
-              입력받습니다
+              첫만남이용권 계산기: 자녀 출생일(연·월·일), 출생 순위, 다태아 수 — 사용기한이
+              출생한 날부터 {{ FIRST_MEETING_VALID_YEARS }}년이 되는 날까지라 일자가 있어야
+              만료일을 낼 수 있어서 이 도구만 날짜까지 입력받습니다
             </li>
           </ul>
           <p>

@@ -4,7 +4,7 @@ import { computed } from "vue";
 import { ShBulletProgress, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
 import { useFirstMeetingCalc } from "@/composables/useFirstMeetingCalc";
-import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, FIRST_MEETING_VALID_DAYS, type BirthOrder } from "@/data/benefitRates2026";
+import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, type BirthOrder } from "@/data/benefitRates2026";
 import { MULTIPLE_BIRTH_OPTIONS } from "@/data/babyPresets";
 import { formatNumber, formatWon } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ const props = defineProps<{
   initialMultipleBirthCount?: number;
 }>();
 
-const { state, voucherTotal, deadline, isStillValid, daysElapsed } = useFirstMeetingCalc({
+const { state, voucherTotal, deadline, isStillValid, daysElapsed, validDays } = useFirstMeetingCalc({
   birthOrder: props.initialBirthOrder,
   multipleBirthCount: props.initialMultipleBirthCount,
 });
@@ -59,7 +59,7 @@ function formatDays(value: number): string {
       v-if="isStillValid"
       label="바우처 사용기한 게이지"
       :value="daysElapsed"
-      :limit="FIRST_MEETING_VALID_DAYS"
+      :limit="validDays"
       limit-label="사용기한 만료"
       :format-value="formatDays"
     />

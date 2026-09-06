@@ -44,13 +44,17 @@ export const REGION_OPTIONS: ReadonlyArray<{ value: RegionTier; label: string; h
   { value: "populationDeclineSpecial", label: "인구감소 특별", helper: "특별 지원 등급 (지역화폐 포함 가능)" },
 ];
 
-// 첫만남이용권: 국민행복카드 바우처(현금 아님), 출생일로부터 2년 이내 사용
-// 첫째 200만원, 둘째 이상 300만원 — 출처: socialservice.or.kr p_sn=69
+// 첫만남이용권: 국민행복카드 바우처(현금 아님)
+// 금액 근거: 저출산ㆍ고령사회기본법 시행령 제1조의2제1항 —
+//   "1. 첫째 출생아동의 경우: 200만원의 첫만남이용권 / 2. 둘째 이후 출생아동의 경우: 300만원의 첫만남이용권"
+// (법 제10조제3항은 "200만원 이상"의 지급 근거, 구체 금액은 시행령이 정한다. law.go.kr)
 export const FIRST_MEETING_FIRST_CHILD = 2_000_000;
 export const FIRST_MEETING_SECOND_OR_MORE = 3_000_000;
+// 사용기한 근거: 같은 시행령 제1조의2제6항 —
+//   "첫만남이용권의 사용 기한은 출생아동이 출생한 날부터 2년이 되는 날까지로 한다."
+// 기산점은 신고일이 아니라 "출생한 날"이고, 만료일 당일까지 포함한다.
+// 만료일 계산(윤년 2/29 포함)은 babyCalculator.firstMeetingDeadline이 민법 제160조제3항에 따라 처리한다.
 export const FIRST_MEETING_VALID_YEARS = 2;
-// 사용기한 게이지(ShBulletProgress) 표시용 — 윤년 오차보다 "2년=730일" 단순 표기가 사용자에게 더 직관적이다.
-export const FIRST_MEETING_VALID_DAYS = FIRST_MEETING_VALID_YEARS * 365;
 
 export const CARE_TYPE_OPTIONS: ReadonlyArray<{ value: CareType; label: string }> = [
   { value: "home", label: "가정양육" },

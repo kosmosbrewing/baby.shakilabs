@@ -3,7 +3,7 @@
 // 이 앱은 아동 관련 입력을 다루므로 "무엇을 받고 무엇을 안 받는지"를 항목 단위로 명시한다.
 import { RouterLink } from "vue-router";
 import SEOHead from "@/components/common/SEOHead.vue";
-import { FIRST_MEETING_VALID_DAYS } from "@/data/benefitRates2026";
+import { FIRST_MEETING_VALID_YEARS } from "@/data/benefitRates2026";
 </script>
 
 <template>
@@ -31,9 +31,9 @@ import { FIRST_MEETING_VALID_DAYS } from "@/data/benefitRates2026";
             계산용 출생일(연·월·일), 출생 순위(첫째·둘째 이상), 다태아 수, 거주 지역
             유형(수도권·비수도권·인구감소 우대·인구감소 특별), 보육 형태(가정양육·어린이집)가
             전부입니다. 이 값들은 이용자의 브라우저 안에서만 연산되며 서버로 전송되지 않고 어떠한
-            데이터베이스에도 저장되지 않습니다. 첫만남이용권 계산기만 날짜까지 받는 이유는 사용기한을
-            출생일로부터 {{ FIRST_MEETING_VALID_DAYS }}일로 계산해야 하기 때문이며, 그 값 역시 화면을
-            벗어나지 않습니다.
+            데이터베이스에도 저장되지 않습니다. 첫만남이용권 계산기만 날짜까지 받는 이유는 사용기한이
+            출생한 날부터 {{ FIRST_MEETING_VALID_YEARS }}년이 되는 날까지여서 일자가 있어야 만료일을
+            낼 수 있기 때문이며, 그 값 역시 화면을 벗어나지 않습니다.
           </p>
         </section>
 

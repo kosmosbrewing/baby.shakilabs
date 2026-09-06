@@ -5,7 +5,6 @@ import { COMMON_DISCLAIMER } from "@/data/seoGuides";
 import {
   FIRST_MEETING_FIRST_CHILD,
   FIRST_MEETING_SECOND_OR_MORE,
-  FIRST_MEETING_VALID_DAYS,
   FIRST_MEETING_VALID_YEARS,
 } from "@/data/benefitRates2026";
 import { calcRemainingTotal } from "@/utils/babyCalculator";
@@ -16,6 +15,7 @@ import {
   deadlineOf,
   monthlyAt,
   remainingDropSizes,
+  validDaysOf,
   voucher,
   voucherPerChild,
 } from "@/data/digests/engineFacts";
@@ -24,7 +24,7 @@ import { buildBasisSection } from "@/data/digests/digestBasis";
 
 // 다태아 선택지 — 화면(MULTIPLE_BIRTH_OPTIONS)과 같은 값이지만 참조를 공유하지 않는 독립 리터럴.
 // 참조를 공유하면 "화면 선택지 == 다이제스트 전제" 검사가 자기 자신과의 비교가 되어 red가 나지 않는다.
-export const MULTIPLE_BIRTH_COUNTS = [1, 2, 3] as const;
+export const MULTIPLE_BIRTH_COUNTS = [1, 2, 3, 4, 5] as const;
 
 const validLastMonth = FIRST_MEETING_VALID_YEARS * 12 - 1;
 const expiryMonth = validLastMonth + 1;
@@ -53,6 +53,14 @@ const careLifetime = careAllowanceLifetime();
 const voucherMin = voucher("first", MULTIPLE_BIRTH_COUNTS[0]);
 const voucherMax = voucher("secondOrMore", MULTIPLE_BIRTH_COUNTS[MULTIPLE_BIRTH_COUNTS.length - 1]);
 const sampleBirthDate = "2026-03-15";
+// 게이지 상한이 실제로 몇 가지 값을 갖는지는 상수를 읽어서가 아니라 출생일을 훑어서 얻는다.
+// 2026년 366일치를 전수 호출하면 730일과 731일 두 값만 관측된다.
+const validDaysScan = Array.from({ length: 366 }, (_, offset) =>
+  validDaysOf(new Date(Date.UTC(2026, 0, 1 + offset)).toISOString().slice(0, 10)),
+);
+const validDaysMin = Math.min(...validDaysScan);
+const validDaysMax = Math.max(...validDaysScan);
+const leapBirthDate = "2024-02-29";
 
 export const FIRST_MEETING_DIGEST: GuideData = {
   title: "첫만남이용권 계산 엔진에서 나온 발견 9가지",
@@ -61,7 +69,7 @@ export const FIRST_MEETING_DIGEST: GuideData = {
   sections: [
     {
       h2: "이 계산기에서 날짜로 기한이 정해지는 항목은 첫만남이용권뿐이다",
-      body: `부모급여·양육수당·아동수당은 모두 개월수 경계로 금액이 정해지지만 첫만남이용권만 출생일에 ${FIRST_MEETING_VALID_YEARS}년을 더한 날짜가 기한입니다. 그래서 같은 개월수라도 태어난 날에 따라 남은 기간이 다르고, ${sampleBirthDate}에 태어난 아이의 기한은 ${deadlineOf(sampleBirthDate)}입니다. 화면의 사용기한 게이지는 ${FIRST_MEETING_VALID_YEARS}년을 ${FIRST_MEETING_VALID_DAYS}일로 환산해 표시하므로 윤년이 낀 해에는 실제 만료일과 하루 정도 어긋날 수 있고, 정확한 잔액과 만료일은 국민행복카드 발급 카드사에서 확인하는 편이 안전합니다.`,
+      body: `부모급여·양육수당·아동수당은 모두 개월수 경계로 금액이 정해지지만 첫만남이용권만 출생일에 ${FIRST_MEETING_VALID_YEARS}년을 더한 날짜가 기한입니다. 그래서 같은 개월수라도 태어난 날에 따라 남은 기간이 다르고, ${sampleBirthDate}에 태어난 아이의 기한은 ${deadlineOf(sampleBirthDate)}, 게이지 상한은 ${validDaysOf(sampleBirthDate)}일입니다. 이 상한은 ${FIRST_MEETING_VALID_YEARS}년을 고정 일수로 환산한 값이 아니라 만료일까지의 실제 날수라, 2026년 출생일 366일치를 전부 호출해 봐도 값은 ${validDaysMin}일과 ${validDaysMax}일 둘뿐입니다 — 갈리는 기준은 두 해 사이에 2월 29일이 끼는지 하나입니다. 그 2월 29일에 태어난 아이는 2년 뒤 같은 날짜가 없어 기한이 ${deadlineOf(leapBirthDate)}이 되는데(${leapBirthDate} 출생 기준), 3월 1일로 넘어가지 않는 것은 민법 제160조제3항이 최종의 월에 해당일이 없으면 그 월의 말일로 기간이 만료한다고 정하기 때문입니다.`,
     },
     {
       h2: `${expiryMonth}개월에 사라지는 금액이 이 계산기에서 가장 큰 한 칸이다`,
@@ -73,7 +81,7 @@ export const FIRST_MEETING_DIGEST: GuideData = {
     },
     {
       h2: "1인당으로 보면 첫 출산 쌍둥이가 둘째 단태아보다 적다",
-      body: `첫 출산 쌍둥이의 총액은 ${formatWon(firstTwins)}으로 둘째 단태아 ${formatWon(secondSingle)}보다 ${formatWon(firstTwins - secondSingle)} 많지만, 아이 한 명당으로 나누면 ${formatWon(voucherPerChild("first", 2))} 대 ${formatWon(voucherPerChild("secondOrMore", 1))}으로 순위가 뒤집힙니다. 첫 출산 쌍둥이는 두 아이 중 한 명이 첫째 단가 ${formatWon(FIRST_MEETING_FIRST_CHILD)}을 받기 때문입니다. 아이를 한 명 더 늘려 첫 출산 삼둥이 ${formatWon(voucher("first", 3))}과 둘째 이상 쌍둥이 ${formatWon(secondTwins)}을 견줘도 마찬가지여서, 총액은 ${formatWon(voucher("first", 3) - secondTwins)} 앞서지만 1인당은 ${formatWon(voucherPerChild("first", 3))} 대 ${formatWon(voucherPerChild("secondOrMore", 2))}으로 다시 뒤집힙니다. 둘째 이상끼리는 아이 수가 몇이든 1인당이 ${formatWon(voucherPerChild("secondOrMore", 1))}으로 같아 이런 역전이 생기지 않습니다.`,
+      body: `첫 출산 쌍둥이의 총액은 ${formatWon(firstTwins)}으로 둘째 단태아 ${formatWon(secondSingle)}보다 ${formatWon(firstTwins - secondSingle)} 많지만, 아이 한 명당으로 나누면 ${formatWon(voucherPerChild("first", 2))} 대 ${formatWon(voucherPerChild("secondOrMore", 1))}으로 순위가 뒤집힙니다. 첫 출산 쌍둥이는 두 아이 중 한 명이 첫째 단가 ${formatWon(FIRST_MEETING_FIRST_CHILD)}을 받기 때문입니다. 아이를 한 명 더 늘려 첫 출산 세쌍둥이 ${formatWon(voucher("first", 3))}과 둘째 이상 쌍둥이 ${formatWon(secondTwins)}을 견줘도 마찬가지여서, 총액은 ${formatWon(voucher("first", 3) - secondTwins)} 앞서지만 1인당은 ${formatWon(voucherPerChild("first", 3))} 대 ${formatWon(voucherPerChild("secondOrMore", 2))}으로 다시 뒤집힙니다. 둘째 이상끼리는 아이 수가 몇이든 1인당이 ${formatWon(voucherPerChild("secondOrMore", 1))}으로 같아 이런 역전이 생기지 않습니다.`,
     },
     {
       h2: `첫 출산은 아이가 늘수록 1인당이 오르지만 ${formatWon(FIRST_MEETING_SECOND_OR_MORE)}에는 닿지 않는다`,

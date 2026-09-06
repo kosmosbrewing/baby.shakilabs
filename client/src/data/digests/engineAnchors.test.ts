@@ -123,10 +123,18 @@ describe("첫만남이용권 앵커", () => {
     expect(calcFirstMeetingVoucher("secondOrMore", 1)).toBe(3_000_000);
     expect(calcFirstMeetingVoucher("secondOrMore", 2)).toBe(6_000_000);
     expect(calcFirstMeetingVoucher("secondOrMore", 3)).toBe(9_000_000);
+    // 화면 선택지를 4·5까지 늘린 뒤의 두 칸 — "삼둥이 이상"이 값 3에 고정돼 있던 시절에는
+    // 네쌍둥이 가정이 3,000,000원 적게 계산됐다.
+    expect(calcFirstMeetingVoucher("first", 4)).toBe(11_000_000);
+    expect(calcFirstMeetingVoucher("first", 5)).toBe(14_000_000);
+    expect(calcFirstMeetingVoucher("secondOrMore", 4)).toBe(12_000_000);
+    expect(calcFirstMeetingVoucher("secondOrMore", 5)).toBe(15_000_000);
   });
 
   it("사용기한 경계와 잔액 절벽", () => {
     expect(firstMeetingDeadline("2026-03-15")).toBe("2028-03-15");
+    // 산문이 인용하는 윤년 사례 — 민법 제160조제3항에 따라 3월 1일이 아니라 2월 말일이다.
+    expect(firstMeetingDeadline("2024-02-29")).toBe("2026-02-28");
     expect(calcRemainingTotal(23, "home", "metro", "first", 1)).toEqual({
       remainingMonthlyTotal: 15_300_000,
       includesFirstMeeting: true,
@@ -152,6 +160,6 @@ describe("기준 입력의 독립성", () => {
 
   it("다이제스트가 전제한 다태아 선택지가 화면 선택지와 같다", () => {
     expect([...MULTIPLE_BIRTH_COUNTS]).toEqual(MULTIPLE_BIRTH_OPTIONS.map((option) => option.value));
-    expect([...MULTIPLE_BIRTH_COUNTS]).toEqual([1, 2, 3]);
+    expect([...MULTIPLE_BIRTH_COUNTS]).toEqual([1, 2, 3, 4, 5]);
   });
 });
