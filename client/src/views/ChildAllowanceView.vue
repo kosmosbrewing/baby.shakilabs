@@ -12,6 +12,7 @@ import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ChildAllowanceCalculator from "@/components/baby/ChildAllowanceCalculator.vue";
 import ChildAllowanceYearOverviewTable from "@/components/baby/ChildAllowanceYearOverviewTable.vue";
 import { CHILD_ALLOWANCE_GUIDE } from "@/data/seoGuides";
+import { CHILD_ALLOWANCE_DIGEST } from "@/data/digests";
 import { CHILD_ALLOWANCE_LANDING_YEARS } from "@/data/childAllowanceYearGuides";
 import {
   FINANCE_CROSS_LINKS,
@@ -97,6 +98,13 @@ const nextSteps = [
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
+
+    <SeoRichGuide
+      :title="CHILD_ALLOWANCE_DIGEST.title"
+      :intro="CHILD_ALLOWANCE_DIGEST.intro"
+      :sections="CHILD_ALLOWANCE_DIGEST.sections"
+      :disclaimer="CHILD_ALLOWANCE_DIGEST.disclaimer"
+    />
 
     <SeoRichGuide
       :title="CHILD_ALLOWANCE_GUIDE.title"

@@ -48,6 +48,7 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, TWINS
   <SEOHead
     title="둘째 첫만남이용권 300만원 | 첫째와 비교"
     description="2024년 1월 1일 이후 출생아부터 둘째 이상은 첫만남이용권 300만원을 받습니다. 첫째와의 차이를 바로 계산합니다."
+    canonical-path="/first-meeting"
     :json-ld="faqJsonLd"
   />
 

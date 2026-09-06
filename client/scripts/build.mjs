@@ -54,11 +54,18 @@ function resolveBuildDate() {
 // 계산기 기본 출생일을 "오늘"로 프리렌더하므로, 이걸 남기면 콘텐츠가 그대로여도 매일 지문이
 // 바뀌어 lastmod가 다시 시계를 따라간다 — 이 작업이 없애려는 바로 그 거짓 신호다.
 // 폼 컨트롤의 기본값은 크롤러가 읽는 콘텐츠가 아니므로 빼는 것이 맞다.
+//
+// month 입력(<input type="month" value="YYYY-MM">)도 같은 이유로 지운다. 이쪽은 날짜 패턴만
+// 지우던 판이라 조용히 남아 있었고, 달이 바뀔 때마다 부모급여·아동수당·첫만남 계열 8개 라우트의
+// 지문이 통째로 흔들려 lastmod가 다시 빌드일로 재스탬프됐다(실측: 08-30 원장 → 09-06 빌드에서
+// 소스 변경 0인데 8개 라우트가 changed로 잡힘). 더 긴 YYYY-MM-DD를 먼저 지워야 YYYY-MM 패턴이
+// 날짜의 앞 7자만 갉아먹는 일이 없다.
 function fingerprint(html) {
   const normalized = html
     .replace(/<script\b[^>]*\bsrc=[^>]*><\/script>/gi, "")
     .replace(/<link\b[^>]*\/assets\/[^>]*>/gi, "")
     .replace(/(<input\b[^>]*\bvalue=")\d{4}-\d{2}-\d{2}(")/gi, "$1@date$2")
+    .replace(/(<input\b[^>]*\bvalue=")\d{4}-\d{2}(")/gi, "$1@month$2")
     .trim();
   return createHash("sha256").update(normalized).digest("hex").slice(0, 16);
 }
@@ -78,9 +85,9 @@ function loadLedger() {
 }
 
 function renderSitemap(entries) {
-  // Birth-year variants (PARAM_ROUTES) are intentionally absent: they
-  // canonicalize to /child-allowance, so listing them would send crawlers to
-  // URLs that immediately point elsewhere. They stay prerendered regardless.
+  // Consolidated variants (CANONICALIZED_ROUTES) are intentionally absent:
+  // they canonicalize to their base calculator, so listing them would send
+  // crawlers to URLs that immediately point elsewhere. They stay prerendered.
   const urls = entries
     .map(
       ({ loc, lastmod, changefreq, priority }) => `  <url>

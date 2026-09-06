@@ -11,6 +11,11 @@ import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import FirstMeetingCalculator from "@/components/baby/FirstMeetingCalculator.vue";
 import { FIRST_MEETING_GUIDE } from "@/data/seoGuides";
 import {
+  SECOND_CHILD_FIRST_MEETING_GUIDE,
+  TWINS_FIRST_MEETING_GUIDE,
+} from "@/data/situationalGuides";
+import { FIRST_MEETING_DIGEST } from "@/data/digests";
+import {
   CHILD_ALLOWANCE_LINK,
   FINANCE_CROSS_LINKS,
   HOME_LINK,
@@ -31,7 +36,12 @@ const faqItems = [
 ] as const;
 
 // 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
-const mergedFaqs = mergeFaqs(faqItems, FIRST_MEETING_GUIDE.faqs);
+// /first-meeting/twins·/first-meeting/second를 canonical 통합하면서 두 페이지의 고유 FAQ도 흡수한다.
+const mergedFaqs = mergeFaqs(faqItems, [
+  ...(FIRST_MEETING_GUIDE.faqs ?? []),
+  ...(TWINS_FIRST_MEETING_GUIDE.faqs ?? []),
+  ...(SECOND_CHILD_FIRST_MEETING_GUIDE.faqs ?? []),
+]);
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -80,6 +90,13 @@ const nextSteps = [
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
+
+    <SeoRichGuide
+      :title="FIRST_MEETING_DIGEST.title"
+      :intro="FIRST_MEETING_DIGEST.intro"
+      :sections="FIRST_MEETING_DIGEST.sections"
+      :disclaimer="FIRST_MEETING_DIGEST.disclaimer"
+    />
 
     <SeoRichGuide
       :title="FIRST_MEETING_GUIDE.title"

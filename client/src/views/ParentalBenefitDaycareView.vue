@@ -48,6 +48,7 @@ const nextSteps = [HOME_LINK, CHILD_ALLOWANCE_LINK, FIRST_MEETING_LINK, NEWBORN_
   <SEOHead
     title="어린이집 이용 시 부모급여 | 0세·1세 차액 구조"
     description="어린이집을 이용하면 부모급여 현금 차액이 0세 41.6만원, 1세 0원으로 달라집니다. 전환 시점과 계산 결과를 바로 확인하세요."
+    canonical-path="/parental-benefit"
     :json-ld="faqJsonLd"
   />
 
