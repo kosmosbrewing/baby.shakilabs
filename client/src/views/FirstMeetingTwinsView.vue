@@ -48,6 +48,7 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, SECON
   <SEOHead
     title="쌍둥이 첫만남이용권 | 다태아 합산 지급액"
     description="쌍둥이·다태아는 출생 순위별로 첫만남이용권을 각각 받습니다. 첫째가 쌍둥이면 합산 얼마인지 바로 계산합니다."
+    canonical-path="/first-meeting"
     :json-ld="faqJsonLd"
   />
 

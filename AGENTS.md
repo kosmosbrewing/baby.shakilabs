@@ -35,7 +35,10 @@ client/
 - 모든 개월수는 "개월수" 기준(출생월=0개월)이며 만 나이가 아니다. `monthsBetween()` 참조.
 - 상수는 반드시 `benefitRates2026.ts`에 출처 URL 주석과 함께 추가한다. 수치를 임의로 바꾸지 말 것.
 - FAQ는 `FaqAccordionPanel`의 `extra`로만 병합한다. `SeoRichGuide`에 `:faqs`를 넘기면 이중 노출된다.
-- `/child-allowance/YYYY` 9개는 canonical을 `/child-allowance`로 통합했다(`seo-routes.mjs`의 `PARAM_ROUTES`). 프리렌더는 유지하고 사이트맵에서만 뺀다 — 프리렌더에서 빼면 SPA 빈 셸 soft-404가 된다. 고유 콘텐츠가 생기면 `PARAM_ROUTES`에서 빼는 것만으로 되돌릴 수 있다.
+- 통합 변종 12개는 canonical을 기본 계산기로 돌렸다(`seo-routes.mjs`의 `CANONICALIZED_ROUTES` 맵). `/child-allowance/YYYY` 9개는 본문 중복(최악 쌍 0.97)이 이유이고, `/first-meeting/twins`·`/first-meeting/second`·`/parental-benefit/daycare` 3개는 뒤에 있는 엔진이 2값 룩업이라 페이지마다 독립 발견 8개를 못 만들어서다(본문 유사도는 0.23~0.43로 낮다). 프리렌더는 유지하고 사이트맵에서만 뺀다 — 프리렌더에서 빼면 SPA 빈 셸 soft-404가 된다. 맵에서 빼는 것만으로 되돌릴 수 있다.
+- `/child-allowance/population-decline`은 일부러 통합하지 않았다. 지역 등급이 4값 × 108개월로 곱해지고 양육수당과 순위 역전을 만들어, 기본 페이지의 개월수 축 발견과 겹치지 않는 발견 9개를 따로 갖는다.
+- 계산기 페이지의 "발견" 문단은 `src/data/digests/`에 있다. **숫자는 전부 엔진 호출에서 나오고 산문 파일에 리터럴을 적지 않는다.** 대신 `digestProse.test.ts`가 화면에 찍히는 문자열을 하드코딩으로 붙들어, 상수를 바꾸면 산문이 스스로 다시 쓰여도 테스트가 red가 된다(이 앵커가 없으면 상수 오타가 조용히 통과한다). 무조건 표현(항상·언제나)을 쓸 때는 `digestClaims.test.ts`에 전 범위 스캔을 같이 넣어 반증이 없음을 확인한다.
+- `public/llms.txt`에 나열한 URL은 `SITEMAP_ROUTES`와 **양방향으로** 정확히 일치해야 한다(`scripts/validate-llms-txt.mjs`). 페이지를 추가·통합하면 llms.txt도 같이 고쳐야 빌드가 통과한다.
 - 사이트맵에 실리는 라우트는 본문 1,500자 이상이어야 한다(`validate-static-output.mjs`의 `MIN_BODY_CHARS`). 새 페이지를 추가하면 빌드가 여기서 막힌다.
 - **자수는 `<main>` 안쪽을 공백 제외로 센다.** 헤더·탭 내비·푸터는 `<main>`의 형제라 자동으로 빠진다 — 공유 UI 문구로 자수를 채울 수 없다. 자수를 손으로 잴 때도 같은 기준을 쓸 것(크롬 포함 측정은 페이지당 수백 자를 부풀려 얇은 페이지를 통과시키고, 공백을 세면 감사보다 후해져 `/terms`처럼 게이트를 통과하고도 감사에서 얇게 나온다). 빌드 로그 마지막 줄이 최소 자수와 해당 라우트를 찍어 준다.
 - **404에는 광고 로더가 없어야 한다.** `index.html`의 AdSense 스니펫을 `build.mjs`의 `removeAdsLoaderFromNotFound()`가 404 산출물에서만 걷어낸다(Valuable Inventory 정책 — 본문 없는 화면에 광고 금지). 게이트가 404에 로더가 없는 것과 **정상 라우트에는 로더가 남아 있는 것**을 함께 어서션한다. 로더 태그를 고치면 스트립 정규식도 같이 고쳐야 하며, 못 찾으면 빌드가 실패한다.

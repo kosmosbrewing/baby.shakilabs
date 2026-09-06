@@ -10,6 +10,8 @@ import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ParentalBenefitCalculator from "@/components/baby/ParentalBenefitCalculator.vue";
 import { PARENTAL_BENEFIT_GUIDE } from "@/data/seoGuides";
+import { PARENTAL_BENEFIT_DAYCARE_GUIDE } from "@/data/situationalGuides";
+import { PARENTAL_BENEFIT_DIGEST } from "@/data/digests";
 import {
   CHILD_ALLOWANCE_LINK,
   FINANCE_CROSS_LINKS,
@@ -31,7 +33,11 @@ const faqItems = [
 ] as const;
 
 // 화면에 실제 렌더되는 병합 FAQ와 구조화 데이터를 일치시킨다 (스키마 규칙)
-const mergedFaqs = mergeFaqs(faqItems, PARENTAL_BENEFIT_GUIDE.faqs);
+// /parental-benefit/daycare를 canonical 통합하면서 그 페이지의 고유 FAQ도 여기로 흡수한다.
+const mergedFaqs = mergeFaqs(faqItems, [
+  ...(PARENTAL_BENEFIT_GUIDE.faqs ?? []),
+  ...(PARENTAL_BENEFIT_DAYCARE_GUIDE.faqs ?? []),
+]);
 const faqJsonLd = computed(() => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -80,6 +86,13 @@ const nextSteps = [
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
+
+    <SeoRichGuide
+      :title="PARENTAL_BENEFIT_DIGEST.title"
+      :intro="PARENTAL_BENEFIT_DIGEST.intro"
+      :sections="PARENTAL_BENEFIT_DIGEST.sections"
+      :disclaimer="PARENTAL_BENEFIT_DIGEST.disclaimer"
+    />
 
     <SeoRichGuide
       :title="PARENTAL_BENEFIT_GUIDE.title"

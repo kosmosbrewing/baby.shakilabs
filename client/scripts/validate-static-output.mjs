@@ -4,12 +4,13 @@ import { fileURLToPath } from "node:url";
 import {
   SEO_ROUTES,
   SITEMAP_ROUTES,
-  PARAM_ROUTES,
+  CANONICALIZED_ROUTE_PATHS,
   CHILD_ALLOWANCE_LANDING_YEARS,
   canonicalPathFor,
 } from "./seo-routes.mjs";
 import { verifyTokenContrast } from "./verify-token-contrast.mjs";
 import { validateUtilitiesAreGenerated } from "./validate-tailwind-utilities.mjs";
+import { validateLlmsTxt } from "./validate-llms-txt.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -82,8 +83,8 @@ function validateRoute(route) {
   assert(existsSync(outputPath), `Missing static output for ${route}: ${outputPath}`);
 
   const html = readFileSync(outputPath, "utf8");
-  // Birth-year variants must canonicalize to /child-allowance (doorway
-  // consolidation); every other route stays self-canonical.
+  // Consolidated variants must canonicalize to their base calculator
+  // (doorway consolidation); every other route stays self-canonical.
   const canonicalPath = canonicalPathFor(route);
   const expectedCanonical = canonicalPath === "/" ? canonicalBase : `${canonicalBase}${canonicalPath}`;
   const actualCanonical = html.match(/<link rel="canonical" href="([^"]+)"\s*\/?>/)?.[1];
@@ -118,7 +119,7 @@ function validateSitemap() {
   const expectedUrls = SITEMAP_ROUTES.map((route) =>
     route === "/" ? canonicalBase : `${canonicalBase}${route}`,
   );
-  const variantUrls = new Set(PARAM_ROUTES.map((route) => `${canonicalBase}${route}`));
+  const variantUrls = new Set(CANONICALIZED_ROUTE_PATHS.map((route) => `${canonicalBase}${route}`));
 
   assert(
     JSON.stringify(actualUrls) === JSON.stringify(expectedUrls),
@@ -126,7 +127,7 @@ function validateSitemap() {
   );
   assert(
     actualUrls.every((url) => !variantUrls.has(url)),
-    "Sitemap must not list canonicalized birth-year variant routes",
+    "Sitemap must not list canonicalized variant routes",
   );
   return new Set(actualUrls);
 }
@@ -234,7 +235,7 @@ function validateRouterRoutesAreListed(sitemapUrls) {
 
 validateVercelConfig(resolve(repositoryRoot, "vercel.json"));
 validateVercelConfig(resolve(projectRoot, "vercel.json"));
-// validateRoute also runs for PARAM_ROUTES: their static HTML must keep
+// validateRoute also runs for CANONICALIZED_ROUTE_PATHS: their static HTML must keep
 // existing (soft-404 guard) even though they are absent from the sitemap.
 SEO_ROUTES.forEach(validateRoute);
 assert(
@@ -268,12 +269,18 @@ SEO_ROUTES.forEach((route) => {
 });
 
 const utilityCount = validateUtilitiesAreGenerated({ projectRoot, distRoot });
+const llmsUrlCount = validateLlmsTxt({
+  distRoot,
+  sitemapRoutes: SITEMAP_ROUTES,
+  canonicalizedRoutes: CANONICALIZED_ROUTE_PATHS,
+  assert,
+});
 
 const thinnest = [...measuredBodyChars.entries()].sort((a, b) => a[1] - b[1])[0];
 
 console.log(
   `Validated ${SEO_ROUTES.length} prerendered routes ` +
-    `(${SITEMAP_ROUTES.length} sitemap + ${PARAM_ROUTES.length} canonicalized variants) ` +
+    `(${SITEMAP_ROUTES.length} sitemap + ${CANONICALIZED_ROUTE_PATHS.length} canonicalized variants) ` +
     "and custom 404 output.",
 );
 console.log(
@@ -284,3 +291,4 @@ console.log(
 );
 console.log(`Token contrast: ${contrastPairCount} pairs (light + dark, incl. alpha tints) ≥ 4.5:1.`);
 console.log(`Colour utilities generated: ${utilityCount} checked against the built CSS.`);
+console.log(`llms.txt: ${llmsUrlCount} page URLs, exact two-way match with the sitemap.`);

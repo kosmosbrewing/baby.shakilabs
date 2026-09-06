@@ -10,6 +10,7 @@ import FreshBadge from "@/components/common/FreshBadge.vue";
 import CalculatorPageHeader from "@/components/baby/CalculatorPageHeader.vue";
 import ChildAllowanceCalculator from "@/components/baby/ChildAllowanceCalculator.vue";
 import { POPULATION_DECLINE_CHILD_ALLOWANCE_GUIDE } from "@/data/situationalGuides";
+import { POPULATION_DECLINE_DIGEST } from "@/data/digests";
 import { FINANCE_CROSS_LINKS, FIRST_MEETING_LINK, HOME_LINK, PARENTAL_BENEFIT_LINK } from "@/data/crossLinks";
 
 const faqItems = [
@@ -66,6 +67,13 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, FIRST_MEETING_LINK, ...FINA
     <FaqAccordionPanel :items="mergedFaqs" />
 
     <NextStepsLinks :links="nextSteps" />
+
+    <SeoRichGuide
+      :title="POPULATION_DECLINE_DIGEST.title"
+      :intro="POPULATION_DECLINE_DIGEST.intro"
+      :sections="POPULATION_DECLINE_DIGEST.sections"
+      :disclaimer="POPULATION_DECLINE_DIGEST.disclaimer"
+    />
 
     <SeoRichGuide
       :title="POPULATION_DECLINE_CHILD_ALLOWANCE_GUIDE.title"

@@ -2,36 +2,24 @@
   "schemaVersion": "sitemap-lastmod-v1",
   "routes": {
     "/": {
-      "contentHash": "07ef3fd12e519031",
-      "lastmod": "2026-08-30"
+      "contentHash": "7b6cbe73ea1313ba",
+      "lastmod": "2026-09-06"
     },
     "/parental-benefit": {
-      "contentHash": "38fece18b6c73012",
-      "lastmod": "2026-08-30"
-    },
-    "/parental-benefit/daycare": {
-      "contentHash": "f427bcf0287ffab4",
-      "lastmod": "2026-08-30"
+      "contentHash": "53b8f8110984c489",
+      "lastmod": "2026-09-06"
     },
     "/child-allowance": {
-      "contentHash": "c69464c9d588fa50",
-      "lastmod": "2026-08-30"
+      "contentHash": "96152e210ecf598b",
+      "lastmod": "2026-09-06"
     },
     "/child-allowance/population-decline": {
-      "contentHash": "57f215ac4f20b90f",
-      "lastmod": "2026-08-30"
+      "contentHash": "b3d60a723d8b9c54",
+      "lastmod": "2026-09-06"
     },
     "/first-meeting": {
-      "contentHash": "7305a795cb003dc0",
-      "lastmod": "2026-08-30"
-    },
-    "/first-meeting/twins": {
-      "contentHash": "3c085e5426143d5c",
-      "lastmod": "2026-08-30"
-    },
-    "/first-meeting/second": {
-      "contentHash": "ad360af73e1a7f72",
-      "lastmod": "2026-08-30"
+      "contentHash": "1b7683faa0ca69b2",
+      "lastmod": "2026-09-06"
     },
     "/guide/newborn-checklist": {
       "contentHash": "faae307e65b742a2",
