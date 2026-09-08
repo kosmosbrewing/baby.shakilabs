@@ -5,6 +5,7 @@ import { PARENTAL_BENEFIT_DIGEST } from "@/data/digests/parentalBenefitDigest";
 import { CHILD_ALLOWANCE_DIGEST } from "@/data/digests/childAllowanceDigest";
 import { FIRST_MEETING_DIGEST } from "@/data/digests/firstMeetingDigest";
 import { POPULATION_DECLINE_DIGEST } from "@/data/digests/populationDeclineDigest";
+import { DAYCARE_TRANSITION_DIGEST } from "@/data/digests/daycareTransitionDigest";
 
 export interface DigestEntry {
   route: string;
@@ -16,6 +17,7 @@ export const ENGINE_DIGESTS: readonly DigestEntry[] = [
   { route: "/child-allowance", digest: CHILD_ALLOWANCE_DIGEST },
   { route: "/first-meeting", digest: FIRST_MEETING_DIGEST },
   { route: "/child-allowance/population-decline", digest: POPULATION_DECLINE_DIGEST },
+  { route: "/guide/daycare-transition", digest: DAYCARE_TRANSITION_DIGEST },
 ];
 
 /** 계산 기준 문단은 발견이 아니라 각주라, 발견 수·h3 규칙 검사에서 제외한다. */
@@ -30,4 +32,5 @@ export {
   CHILD_ALLOWANCE_DIGEST,
   FIRST_MEETING_DIGEST,
   POPULATION_DECLINE_DIGEST,
+  DAYCARE_TRANSITION_DIGEST,
 };
