@@ -3,8 +3,18 @@ import { toValue, type MaybeRefOrGetter } from "vue";
 import { useRoute } from "vue-router";
 import { getSiteUrl } from "@/lib/site";
 
-const TITLE_SUFFIX = " | 육아 지원금 계산기";
-const DEFAULT_TITLE = "육아 지원금 계산기";
+// 정본 규칙(디자인 시스템 §11.1): "{페이지} | {카테고리} | ShakiLabs".
+const CATEGORY = "육아 지원금 계산기";
+const TITLE_SUFFIX = ` | ${CATEGORY} | ShakiLabs`;
+const DEFAULT_TITLE = CATEGORY;
+// 뷰에 "| shakilabs.com/baby"가 하드코딩돼 있던 잔재를 방어적으로 벗겨낸다
+// (§11.1 금지 패턴 — 정본 규칙 자체가 예로 드는 사례).
+const LEGACY_TITLE_SUFFIXES = [
+  TITLE_SUFFIX,
+  " | shakilabs.com/baby",
+  " | ShakiLabs",
+  ` | ${CATEGORY}`,
+] as const;
 
 type SEOOptions = {
   title: MaybeRefOrGetter<string>;
@@ -22,10 +32,36 @@ type SEOOptions = {
   canonicalPath?: MaybeRefOrGetter<string | undefined>;
 };
 
+// 뷰가 넘기는 title에 이미 "|"가 들어있어도(서브타이틀 병기) 배지를 건너뛰지
+// 않는다 — 예전에는 pipe 유무로 두 레시피가 섞였다(카테고리 배지 있음/없음).
+// 항상 한 레시피만 적용해 배지 유무가 페이지마다 갈리지 않게 한다.
 function normalizeTitle(rawTitle: string): string {
   const trimmed = rawTitle.trim();
-  if (!trimmed) return DEFAULT_TITLE;
-  return trimmed.includes(" | ") ? trimmed : `${trimmed}${TITLE_SUFFIX}`;
+  let baseTitle = trimmed || DEFAULT_TITLE;
+
+  for (const suffix of LEGACY_TITLE_SUFFIXES) {
+    if (baseTitle.endsWith(suffix)) {
+      baseTitle = baseTitle.slice(0, -suffix.length).trimEnd();
+      break;
+    }
+  }
+
+  if (!baseTitle) {
+    baseTitle = DEFAULT_TITLE;
+  }
+
+  // v3 §11.1의 레시피는 `{페이지} | {카테고리} | ShakiLabs` 3단이다.
+  // 페이지 이름이 자체 부제를 pipe로 달고 있으면 4단이 되어 어디까지가 페이지명인지
+  // 읽히지 않는다. 부제는 검색 키워드를 담고 있으므로 버리지 않고 구분자만 중점으로 바꾼다.
+  baseTitle = baseTitle.replace(/\s*\|\s*/g, " · ");
+
+  // 카테고리 없는 루트 예외(§11.1): 페이지 이름이 이미 카테고리로 시작하면
+  // 배지를 또 붙이지 않고 ShakiLabs만 덧붙인다.
+  if (baseTitle.startsWith(CATEGORY)) {
+    return `${baseTitle} | ShakiLabs`;
+  }
+
+  return `${baseTitle}${TITLE_SUFFIX}`;
 }
 
 export function useSEO({
