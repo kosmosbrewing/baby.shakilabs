@@ -8,7 +8,7 @@ import { FIRST_MEETING_VALID_YEARS } from "@/data/benefitRates2026";
 
 <template>
   <SEOHead
-    title="개인정보 처리방침 | shakilabs.com/baby"
+    title="개인정보 처리방침"
     description="육아·출산 지원금 계산기의 개인정보 처리방침입니다. 계산기가 받는 입력 항목과 브라우저 내 처리 원칙, 아동 개인정보 미수집, 쿠키와 제3자 광고(Google AdSense), 맞춤 광고 해제 방법과 이용자의 권리를 안내합니다."
   />
 
