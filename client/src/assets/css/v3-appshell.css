@@ -1,0 +1,119 @@
+/* v3 AppShell 마이그레이션 (BL-004/006/035) — baby
+   이 파일은 @shakilabs/ui/styles.css **뒤에** 로드된다(main.ts import 순서).
+   패키지 .sh-primary-navigation은 아직 구 문법(배경 = --sh-color-primary 풀폭)이라
+   여기서 앱 로컬로 중성화한다. 패키지 자체는 vendored라 손대지 않는다. */
+
+:root {
+  /* v3 §4.1 액센트 주입 — 기존 --primary(baby 자홍)를 지우지 않고 별도 이름으로 복제한다.
+     주입 안 해도 --sh-color-accent는 --primary로 폴백하지만, 명시해 두면 --primary가
+     나중에 바뀌어도 언더라인·결과 강조색이 조용히 같이 안 바뀐다. v3 §4.5는 baby 자홍을
+     "낮은 채도로만 칩/underline" 권고한다 — underline은 2px 선이라 채도를 그대로 둬도
+     풀폭 바만큼 화면을 지배하지 않으므로 원래 채도를 유지한다. */
+  --accent-hsl: 330 70% 40%;
+  --accent-muted-hsl: 330 70% 40%;
+
+  /* v3 §3.1 — 헤더(56px, 패키지 고정) + 2차 내비 실측 높이 + 여백 8px. */
+  --secondary-nav-h: 56px;
+}
+
+.dark {
+  --accent-hsl: 330 78% 70%;
+  --accent-muted-hsl: 330 78% 70%;
+}
+
+html {
+  scroll-padding-top: calc(var(--sh-header-h) + var(--secondary-nav-h, 0px) + 8px);
+}
+
+/* ── GlobalHeader 유틸 버튼 대비 보정 ───────────────────────────────────────
+   패키지 .design-system-theme-toggle.sh-button은 색 틴트 헤더 시절 훅이라
+   color: var(--muted-foreground)를 쓴다 — 검정 헤더 위에서 AA 미달(house/invest와 동일 원인).
+   헤더 안에서만 header-ink로 되받는다(패키지 자체는 vendored라 미변경). */
+.sh-global-header .design-system-theme-toggle.sh-button {
+  border-color: rgb(255 255 255 / 24%);
+  color: var(--sh-color-header-ink);
+}
+
+.sh-global-header .design-system-theme-toggle.sh-button:hover {
+  border-color: var(--sh-color-header-ink);
+  color: var(--sh-color-header-ink);
+}
+
+/* ── 입력 칩 2행 줄 간격 (BL-064) ───────────────────────────────────────────
+   패키지 .sh-toggle-group은 row-gap: 0(vendored, forms.css)이라 390px에서
+   5개 옵션(단태아/쌍둥이/세쌍둥이/네쌍둥이/다섯쌍둥이)이 2행으로 감싸질 때
+   실측(Chrome computed rect) 1행 하단(top+height=421)과 2행 상단(top=421)이
+   정확히 맞닿아 세로 여백 0px였다 — 선택 상태 색 자체는 AA 통과(6.64:1)지만
+   줄 사이가 붙어 가독성이 떨어졌다. space.2(8px)만큼 띄운다. */
+.sh-toggle-group {
+  row-gap: 0.5rem;
+}
+
+/* ── SecondaryNav 중성화 (BL-006/BL-035) ──────────────────────────────────
+   풀폭 브랜드색 바 → card 배경 + accent 밑줄. 배경을 accent로 채우지 않는다. */
+.sh-primary-navigation {
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.sh-primary-navigation__link {
+  color: hsl(var(--muted-foreground));
+}
+
+.sh-primary-navigation__link--active {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+}
+
+.sh-primary-navigation__link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -3px;
+}
+
+.sh-primary-navigation__link--mobile:hover,
+.sh-primary-navigation__link--mobile.sh-primary-navigation__link--active {
+  background: hsl(var(--muted) / 0.6);
+}
+
+.sh-primary-navigation__link--desktop:hover {
+  background: hsl(var(--muted) / 0.6);
+}
+
+/* 데스크톱 우측 잘림 fade는 배경색을 따라가야 한다 — 그대로 두면 자홍 그라데이션만 남는다 */
+.sh-primary-navigation__container::after {
+  background: linear-gradient(to left, hsl(var(--card)), transparent);
+}
+
+/* 활성 밑줄 = accent 2px (§4.2 "SecondaryNav 활성 underline"). currentColor를 쓰면
+   비활성/활성 텍스트가 ink라서 밑줄도 회색이 된다 — accent를 명시로 지정한다. */
+.sh-primary-navigation__link--mobile.sh-primary-navigation__link--active
+  .sh-primary-navigation__label::after,
+.sh-primary-navigation__link--desktop.sh-primary-navigation__link--active
+  .sh-primary-navigation__label::after {
+  background: hsl(var(--sh-color-accent));
+  height: 2px;
+}
+
+/* 모바일 2행 그리드 금지(§3.3) → 가로 스크롤 1행. 탭 44px는 패키지 --sh-control-height가
+   이미 보장한다(min-height). */
+@media (max-width: 639px) {
+  .sh-primary-navigation__mobile {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sh-primary-navigation__mobile::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sh-primary-navigation__link--mobile {
+    flex: 0 0 auto;
+    min-width: 44px;
+    padding-inline: 0.75rem;
+    white-space: nowrap;
+  }
+}
