@@ -25,19 +25,9 @@ html {
   scroll-padding-top: calc(var(--sh-header-h) + var(--secondary-nav-h, 0px) + 8px);
 }
 
-/* ── GlobalHeader 유틸 버튼 대비 보정 ───────────────────────────────────────
-   패키지 .design-system-theme-toggle.sh-button은 색 틴트 헤더 시절 훅이라
-   color: var(--muted-foreground)를 쓴다 — 검정 헤더 위에서 AA 미달(house/invest와 동일 원인).
-   헤더 안에서만 header-ink로 되받는다(패키지 자체는 vendored라 미변경). */
-.sh-global-header .design-system-theme-toggle.sh-button {
-  border-color: rgb(255 255 255 / 24%);
-  color: var(--sh-color-header-ink);
-}
-
-.sh-global-header .design-system-theme-toggle.sh-button:hover {
-  border-color: var(--sh-color-header-ink);
-  color: var(--sh-color-header-ink);
-}
+/* ── GlobalHeader 유틸 버튼 대비 보정 — 0.3.16에서 구조로 이관됨 ──────────────
+   패키지가 이제 `.sh-global-header__utility :is(button,a)`를 header-ink로 강제한다
+   (Wave2 §2). 앱 로컬 .design-system-theme-toggle 패치는 중복이라 제거했다. */
 
 /* ── 입력 칩 2행 줄 간격 (BL-064) ───────────────────────────────────────────
    패키지 .sh-toggle-group은 row-gap: 0(vendored, forms.css)이라 390px에서
