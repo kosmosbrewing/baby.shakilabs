@@ -3,10 +3,7 @@
 `shakilabs-ui-0.3.16.tgz` is the active exact artifact for `@shakilabs/ui` 0.3.16.
 
 - Source repository: `kosmosbrewing/00.root-shakilabs`
-- Source commit: not tracked — 0.3.16 has no corresponding commit in the local
-  `00.root-shakilabs` checkout (main or any worktree) as of this vendoring. The tgz was
-  supplied pre-built at `<scratchpad>/vendor-dist/shakilabs-ui-0.3.16.tgz` per
-  `100_MVP/docs/V3_WAVE2_RECIPE.md` §1 with the SHA-256 below as the integrity anchor.
+- Source commit: `200cf220b799f1a82dead0f86d63e580735e5e5d`
 - SHA-256: `f4bbf2c71dbe144bfaaf4c9a78ebc2cb942576e6aad16fc892716d6eceaf944b`
 - Consumed by: `client/package.json` → `"@shakilabs/ui": "file:vendor/shakilabs-ui-0.3.16.tgz"`
 - Rollback artifacts: available from Git history when needed
