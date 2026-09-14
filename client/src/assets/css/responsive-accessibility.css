@@ -5,11 +5,10 @@
   line-height: 1.4;
 }
 
-/* 하드코딩 white는 토큰을 우회해 다크에서 --primary-foreground 수정이 먹지 않게 만든다.
-   렌더 결과는 라이트에서 동일(--primary-foreground: 0 0% 100%)하고, 토큰 경유로만 바뀐다. */
-:root:not(.dark) nav[aria-label="주요 메뉴"] a {
-  color: hsl(var(--primary-foreground));
-}
+/* v3 BL-006/035로 2차 내비 배경이 --primary 풀폭에서 card(흰색)로 중성화됐다.
+   이 규칙은 그 옛 배경을 전제로 한 on-primary 텍스트 보정이라 지금 켜두면
+   흰 배경 위 흰 글자(대비 1:1)가 된다 — src/assets/css/v3-appshell.css의
+   .sh-primary-navigation__link 오버라이드로 대체됐으므로 제거한다(invest와 동일 결함). */
 
 .tabular-nums {
   overflow-wrap: normal;

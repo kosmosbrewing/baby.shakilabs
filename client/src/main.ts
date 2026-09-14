@@ -4,6 +4,7 @@ import { createScrollBehavior, routes, setupRouterGuards } from "./router";
 import "./assets/css/main.css";
 import "@shakilabs/ui/styles.css";
 import "./assets/css/responsive-accessibility.css";
+import "./assets/css/v3-appshell.css";
 import { initAnalytics, trackEvent } from "./lib/analytics";
 
 let hasRegisteredGlobalErrorTracking = false;

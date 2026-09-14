@@ -84,12 +84,13 @@
     <!-- Critical CSS: baby 테마 — rose-700 -->
     <style>
       :root {
-        --background: 210 40% 98%;
-        --foreground: 222 47% 11%;
+        /* v3 §2.1 역할 토큰 — canvas/card/ink/ink-muted/line/focus는 hex에서 역산(반올림 왕복 검증 완료) */
+        --background: 60 11.11% 96.47%; /* color.canvas #F7F7F5 */
+        --foreground: 0 0% 3.92%; /* color.ink #0A0A0A */
         --muted: 210 40% 96%;
-        --muted-foreground: 215 16% 37%;
-        --card: 0 0% 100%;
-        --card-foreground: 222 47% 11%;
+        --muted-foreground: 60 3.37% 34.9%; /* color.ink-muted #5C5C56 */
+        --card: 0 0% 100%; /* color.card #FFFFFF */
+        --card-foreground: 0 0% 3.92%;
         --primary: 330 70% 40%;
         --primary-foreground: 0 0% 100%;
         --secondary: 330 24% 94%;
@@ -103,19 +104,19 @@
            명도만 45%로 낮춰 세 표면 모두 5.30:1 이상을 확보한다. */
         --destructive: 0 72% 45%;
         --destructive-foreground: 210 40% 98%;
-        --border: 214 16% 85%;
+        --border: 60 8% 90.2%; /* color.line #E8E8E4 */
         --input: 214 16% 85%;
-        --ring: 330 70% 40%;
+        --ring: 0 0% 3.92%; /* color.focus #0A0A0A (v3 §2.1 — 포커스는 브랜드색이 아니라 ink) */
         --radius: 0.4rem;
       }
 
       .dark {
-        --background: 222 47% 11%;
-        --foreground: 210 40% 96%;
+        --background: 0 0% 7.06%; /* color.canvas dark #121212 */
+        --foreground: 0 0% 96.08%; /* color.ink dark #F5F5F5 */
         --muted: 217 33% 17%;
-        --muted-foreground: 215 20% 72%;
-        --card: 217 33% 17%;
-        --card-foreground: 210 40% 96%;
+        --muted-foreground: 60 3.33% 64.71%; /* color.ink-muted dark #A8A8A2 */
+        --card: 0 0% 10.98%; /* color.card dark #1C1C1C */
+        --card-foreground: 0 0% 96.08%;
         /* 62%는 bg 위(5.29)에서만 통과했고, text-primary가 실제로 얹히는 카드(4.38)와
            bg-primary/15 틴트 칩(픽셀 실측 4.37)에서 미달이었다. 틴트는 primary가 밝아질수록
            배경도 같이 밝아져 상쇄 폭이 커서 민무늬 카드보다 훨씬 늦게 통과한다 — 카드 기준이면
@@ -131,16 +132,16 @@
         --secondary-foreground: 210 40% 96%;
         --accent: 330 16% 23%;
         --accent-foreground: 330 74% 84%;
-        --popover: 217 33% 17%;
-        --popover-foreground: 210 40% 96%;
+        --popover: 0 0% 10.98%;
+        --popover-foreground: 0 0% 96.08%;
         /* 58%는 다크 카드 위 3.66:1이라 본문 텍스트로 못 쓴다. primary와 같은 처방 —
            토큰을 밝혀 표면 대비를 확보하고(5.03:1), 짝 전경은 흰색 대신 어둡게 내린다.
            흰색을 유지하면 68% 위에서 2.95:1로 오히려 더 나빠진다. */
         --destructive: 0 72% 68%;
         --destructive-foreground: 0 70% 10%;
-        --border: 214 16% 26%;
+        --border: 0 0% 16.47%; /* color.line dark #2A2A2A */
         --input: 214 16% 30%;
-        --ring: 330 78% 70%;
+        --ring: 0 0% 96.08%; /* color.focus dark #F5F5F5 */
       }
 
       html {
