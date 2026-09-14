@@ -83,7 +83,7 @@ const metrics = computed(() => [
     <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">지금부터 9세까지 받을 현금 지원 총액 (월 지원 합산)</p>
-      <p class="text-display font-bold text-primary tabular-nums"><CountUpAmount :value="formatWon(remaining.remainingMonthlyTotal)" /></p>
+      <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(remaining.remainingMonthlyTotal)" /></p>
       <p class="text-tiny text-muted-foreground">첫만남이용권(바우처)은 현금이 아니라 합계에 넣지 않고 아래에 따로 표시합니다.</p>
       <p v-if="state.careType === 'daycare'" class="text-tiny text-muted-foreground">어린이집 이용 시 보육료 바우처는 별도 지원되며, 이 합계는 현금으로 받는 금액만 계산합니다.</p>
       <p v-if="state.region === 'populationDeclineSpecial'" class="text-tiny text-muted-foreground">인구감소 특별지역 12만 원은 지자체에 따라 일부가 지역화폐로 지급될 수 있습니다.</p>

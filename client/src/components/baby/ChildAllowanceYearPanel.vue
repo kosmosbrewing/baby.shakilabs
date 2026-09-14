@@ -46,6 +46,9 @@ const metrics = computed(() => [
   <div class="space-y-4">
     <section class="retro-panel-muted p-4 space-y-2">
       <p class="text-caption text-muted-foreground">{{ birthYear }}년생 아동수당 지급 상태</p>
+      <!-- 숫자가 아닌 판정 텍스트라 강조 숫자 폰트(font-brand) 대상이 아니다.
+           실측(BL-020): 41-글리프 서브셋에 '급' 한 글자만 있어 적용 시 단어 내
+           한 글자만 다른 서체로 렌더돼 오히려 어색했다(글리프 감사로 확인). -->
       <p class="text-display font-bold text-primary tabular-nums">
         {{ primary.isCurrentlyEligible ? "지급 대상" : "지급 종료" }}
       </p>

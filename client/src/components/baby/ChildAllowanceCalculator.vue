@@ -47,7 +47,7 @@ const metrics = computed(() => [
     <div class="space-y-4 min-w-0">
     <section class="retro-panel p-4 space-y-2">
       <p class="text-caption text-muted-foreground">이번 달 아동수당</p>
-      <p class="text-display font-bold text-primary tabular-nums"><CountUpAmount :value="formatWon(monthlyAmount)" /></p>
+      <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(monthlyAmount)" /></p>
       <p class="text-caption text-muted-foreground">
         9세(108개월)까지 남은 총액
         <span class="font-semibold text-foreground">{{ formatWon(remainingTotal) }}</span>

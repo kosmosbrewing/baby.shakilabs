@@ -2,12 +2,14 @@
 // 히어로 금액 카운트업 — baby는 계산기 4곳의 히어로가 인라인이라 값 렌더러 하나로 공통화한다.
 // 이 컴포넌트가 앱에서 유일한 카운트업 구현이다(보조 스탯에는 쓰지 않는다).
 //
-// 정책(2026-08 복원):
-// - SSR/SSG 산출물에는 항상 최종값이 정적으로 남는다(초기 ref = props.value,
-//   애니메이션은 onMounted 이후에만 시작 → 하이드레이션 불일치 없음).
-// - 마운트 시 0→값, props 변경 시 현재 표시값→새 값으로 보간(중단 후 이어가기).
+// 정책(BL-020, 2026-09-14 수정): 이전엔 마운트 시 0→값으로 재생했으나(2026-08 복원),
+// 그러면 페이지를 열 때마다 카운트가 다시 돈다 — 로드/하이드레이션 시점엔 "값이 바뀌지
+// 않았으므로" 애니메이션이 없어야 한다(finance ResultHero.vue 계약과 동일선).
+// - SSR/SSG 산출물에는 항상 최종값이 정적으로 남는다(초기 ref = props.value이고,
+//   마운트 시 애니메이션을 트리거하지 않으므로 하이드레이션과 100% 일치).
+// - props.value가 실제로 바뀔 때만 현재 표시값→새 값으로 보간(중단 후 이어가기).
 // - prefers-reduced-motion 이면 즉시 최종값. 호출부의 tabular-nums가 폭을 잡는다.
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 
 const props = defineProps<{ value: string }>();
 
@@ -64,16 +66,14 @@ function animateTo(from: number, target: string) {
   rafId = requestAnimationFrame(tick);
 }
 
-onMounted(() => {
-  animateTo(0, props.value);
-  watch(
-    () => props.value,
-    (next) => {
-      const current = parseNum(displayValue.value)?.num ?? 0;
-      animateTo(current, next);
-    },
-  );
-});
+watch(
+  () => props.value,
+  (next, previous) => {
+    if (next === previous) return; // 같은 문자열이면 화면상 변화 없음 → 재생 안 함
+    const current = parseNum(displayValue.value)?.num ?? 0;
+    animateTo(current, next);
+  },
+);
 
 onBeforeUnmount(() => cancelAnimationFrame(rafId));
 </script>

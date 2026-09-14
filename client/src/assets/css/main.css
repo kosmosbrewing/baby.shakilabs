@@ -28,9 +28,13 @@
   font-display: swap;
 }
 
+/* 강조 숫자 전용 서브셋(BL-020). font-brand는 히어로 금액(CountUpAmount)과
+   h1 페이지 타이틀에 쓰이는데, 숫자 폰트라 타이틀의 한글 대부분은 커버 못해
+   글자 단위로 Pretendard 폴백된다 — 폰트 스택상 정상 동작이라 별도 처리 없음.
+   944KB 전체 .woff는 원본 서브셋 소스로 파일만 남기고 어디서도 참조하지 않는다. */
 @font-face {
   font-family: "GmarketSans";
-  src: url("/fonts/GmarketSansBold.woff") format("woff");
+  src: url("/fonts/GmarketSansBold-num-v1.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
