@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "fonts:subset": "node scripts/subset-fonts.mjs",
+    "fonts:verify": "node scripts/verify-fonts.mjs",
     "build": "node scripts/build.mjs",
     "verify:static": "node scripts/validate-static-output.mjs",
     "sbom:prod": "node scripts/sbom.mjs",

@@ -211,6 +211,18 @@ if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }
 
+// 폰트 서브셋 게이트(BL-020) — dist/fonts가 매니페스트와 어긋나면(문자 커버리지 누락,
+// 예산 초과, 구 파일 잔존 참조) 여기서 빌드를 멈춘다. noscript/ads 후처리보다 먼저 돌려도
+// 무방하다 — 이 검증은 CSS와 fonts/ 산출물만 본다.
+const fontVerifyResult = spawnSync(
+  process.execPath,
+  [resolve(__dirname, "verify-fonts.mjs")],
+  { cwd: projectRoot, stdio: "inherit" },
+);
+if (fontVerifyResult.status !== 0) {
+  process.exit(fontVerifyResult.status ?? 1);
+}
+
 removeRenderedNoscriptFallbacks();
 removeAdsLoaderFromNotFound();
 // 사이트맵은 산출물 후처리가 끝난 뒤에 만든다 — 지문을 그 전에 뜨면 noscript·광고 스트립
