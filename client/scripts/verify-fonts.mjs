@@ -1,13 +1,13 @@
 // 빌드 산출물(dist)이 font-subset-manifest.json과 일치하는지 게이트한다.
 // document.fonts.check()는 이 환경 Chromium에서 무엇을 물어도 true를 반환해(BL-020 §6)
-// 판정에 쓸 수 없다 — 그래서 여기서는 fontTools cmap 전수 대조로 실제 글리프 커버리지를
+// 판정에 쓸 수 없다 — 그래서 여기서는 산출물 cmap 전수 대조로 실제 글리프 커버리지를
 // 검증한다. renderedTexts(+manualAdditions)의 모든 문자가 서브셋 폰트의 cmap에 있어야
 // "제목·히어로 문구가 글자 단위로 Pretendard와 섞이지 않는다"를 증명할 수 있다.
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { clientRoot, fontJobs, manifestPath } from "./font-subset-config.mjs";
+import { woff2CodePoints } from "./woff2-cmap.mjs";
 
 function assert(condition, message) {
   if (!condition) throw new Error(`[verify-fonts] ${message}`);
@@ -68,20 +68,13 @@ const rendered = [...manifest.renderedTexts, ...Object.keys(manifest.manualAddit
 const brandJob = fontJobs.find((job) => job.publicName.startsWith("GmarketSansBold"));
 const distFontPath = resolve(distRoot, "fonts", brandJob.publicName);
 
-const python = `
-import sys, json
-from fontTools.ttLib import TTFont
-cm = set(TTFont(sys.argv[1]).getBestCmap())
-texts = json.loads(sys.argv[2])
-missing = sorted({c for text in texts for c in text if ord(c) not in cm})
-print(json.dumps(missing))
-`;
-const output = execFileSync(
-  "python3",
-  ["-c", python, distFontPath, JSON.stringify(rendered)],
-  { encoding: "utf8" },
-);
-const missing = JSON.parse(output.trim());
+// cmap은 python fontTools가 아니라 순수 Node로 읽는다 — 이 게이트는 `npm run build`에
+// 얹혀 Vercel에서도 도는데 그쪽 빌드 이미지에 fontTools(pip 패키지)가 없다.
+// python을 부르면 게이트가 아니라 배포 장애가 된다.
+const codePoints = woff2CodePoints(readFileSync(distFontPath));
+const missing = [
+  ...new Set(rendered.flatMap((text) => [...text])),
+].filter((character) => !codePoints.has(character.codePointAt(0))).sort();
 assert(
   missing.length === 0,
   `cmap coverage gap — missing glyphs for: ${JSON.stringify(missing)} (run npm run fonts:subset after updating manifest.characters)`,
