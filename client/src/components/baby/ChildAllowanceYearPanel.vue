@@ -46,10 +46,11 @@ const metrics = computed(() => [
   <div class="space-y-4">
     <section class="retro-panel-muted p-4 space-y-2">
       <p class="text-caption text-muted-foreground">{{ birthYear }}년생 아동수당 지급 상태</p>
-      <!-- 숫자가 아닌 판정 텍스트라 강조 숫자 폰트(font-brand) 대상이 아니다.
-           실측(BL-020): 41-글리프 서브셋에 '급' 한 글자만 있어 적용 시 단어 내
-           한 글자만 다른 서체로 렌더돼 오히려 어색했다(글리프 감사로 확인). -->
-      <p class="text-display font-bold text-primary tabular-nums">
+      <!-- BL-020 개정판(제목+숫자 서브셋)에서는 회피를 되돌렸다: 이 판정 문구는
+           히어로 금액(CountUpAmount, text-display font-bold font-brand tabular-nums)과
+           동일한 시각 언어로 설계된 요소라 font-brand가 디자인 의도에 맞고, 새 서브셋은
+           렌더되는 텍스트 전수를 담아 글자 단위 서체 혼합이 생기지 않는다(cmap 대조로 검증). -->
+      <p class="text-display font-bold font-brand text-primary tabular-nums">
         {{ primary.isCurrentlyEligible ? "지급 대상" : "지급 종료" }}
       </p>
       <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>

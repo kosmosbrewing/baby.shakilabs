@@ -28,13 +28,15 @@
   font-display: swap;
 }
 
-/* 강조 숫자 전용 서브셋(BL-020). font-brand는 히어로 금액(CountUpAmount)과
-   h1 페이지 타이틀에 쓰이는데, 숫자 폰트라 타이틀의 한글 대부분은 커버 못해
-   글자 단위로 Pretendard 폴백된다 — 폰트 스택상 정상 동작이라 별도 처리 없음.
-   944KB 전체 .woff는 원본 서브셋 소스로 파일만 남기고 어디서도 참조하지 않는다. */
+/* 제목+숫자 서브셋(BL-020 개정판, docs/BRAND_FONT_SUBSET.md). font-brand로 실제
+   렌더되는 리프 텍스트 전수(h1 페이지 타이틀·retro-title h2·히어로 금액·아동수당
+   지급 판정 문구) ∪ 숫자셋을 fontTools cmap 대조로 커버 확인 후 잘랐다 — 120자,
+   7,812B(24KB 예산 내). 숫자 41자 전용안(구 num-v1)은 제목 한글을 못 커버해
+   단어 안에서 서체가 갈리는 버그가 있어 폐기했다. 원본 966KB .woff는 서브셋
+   소스로 파일만 남기고 어디서도 참조하지 않는다. */
 @font-face {
   font-family: "GmarketSans";
-  src: url("/fonts/GmarketSansBold-num-v1.woff2") format("woff2");
+  src: url("/fonts/GmarketSansBold-brand-v1.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
