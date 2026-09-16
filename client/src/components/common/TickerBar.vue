@@ -84,7 +84,7 @@ onUnmounted(() => {
 <template>
   <div role="status" aria-live="polite" aria-atomic="true">
     <Transition name="ticker-fade" mode="out-in">
-      <p :key="currentMessage" class="text-caption text-foreground/75 text-center line-clamp-2 sm:text-body sm:truncate">
+      <p :key="currentMessage" class="text-caption text-center line-clamp-2 sm:text-body sm:truncate">
         {{ currentMessage }}
       </p>
     </Transition>
