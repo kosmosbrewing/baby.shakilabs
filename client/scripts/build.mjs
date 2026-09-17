@@ -238,4 +238,15 @@ const validationResult = spawnSync(
   }
 );
 
-process.exit(validationResult.status ?? 1);
+if (validationResult.status !== 0) {
+  process.exit(validationResult.status ?? 1);
+}
+
+// 카테고리 액센트·의미색 게이트(계획서 §4.2·§4.3). 산출물만 읽으므로 여기 순서면 된다.
+const accentResult = spawnSync(
+  process.execPath,
+  [resolve(projectRoot, "scripts", "verify-accent-tokens.mjs")],
+  { cwd: projectRoot, stdio: "inherit" },
+);
+
+process.exit(accentResult.status ?? 1);
