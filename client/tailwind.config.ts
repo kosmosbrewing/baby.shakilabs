@@ -64,10 +64,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // 의미색은 v3 §2.1의 넷뿐이다. 5번째(주의)는 쓰는 곳이 0이라 폐기했다.
         status: {
           success: "hsl(var(--status-success))",
           warning: "hsl(var(--status-warning))",
-          caution: "hsl(var(--status-caution))",
           danger: "hsl(var(--status-danger))",
           info: "hsl(var(--status-info))",
         },

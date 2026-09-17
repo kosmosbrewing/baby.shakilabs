@@ -45,25 +45,23 @@
 
 @layer base {
   :root {
-    /* 라이트 의미색은 흰 카드 위 본문 텍스트로 쓰이므로 4.5:1을 넘겨야 한다.
-       기존 값은 success 3.86 / warning 2.60 / caution 3.17로 전부 미달이었다.
-       finance·house가 이미 쓰는 통과값으로 통일 (각각 7.20 / 7.04 / 7.02). */
-    --status-success: 142 64% 24%;
-    --status-warning: 24 83% 31%;
-    --status-caution: 17 79% 34%;
-    /* danger는 흰 카드(4.73)만 보고 통과 판정했던 값이다. 실제로 텍스트가 얹히는
-       --background(4.52)·--muted(4.31)까지 재보니 muted에서 미달이라 45%로 내렸다
-       (5.34~5.87). info 212 83% 45%는 세 표면 모두 4.64 이상이라 그대로 둔다. */
-    --status-danger: 0 70% 45%;
-    --status-info: 212 83% 45%;
+    /* v3 §2.1 고정 의미색(#1B7A4A·#B45309·#C62828·#1D4E8C)의 HSL 역산. 12개 앱이
+       같은 값을 써야 "초록=이득"이 앱을 옮겨도 같은 뜻으로 읽힌다. 자리올림 없이
+       hex로 되돌아오는 소수 표기를 골랐다 — 게이트가 hex로 대조한다.
+       v3에 없던 5번째 색(주의)은 쓰는 곳이 0이라 같이 지운다.
+       세 표면(--background·--card·--muted) 대비는 verify-token-contrast.mjs가 잰다. */
+    --status-success: 149.7 63.8% 29.2%;
+    --status-warning: 26 90.5% 37.1%;
+    --status-danger: 0 66.4% 46.7%;
+    --status-info: 213.5 65.7% 33.1%;
   }
 
   .dark {
-    --status-success: 148 63% 66%;
-    --status-warning: 43 95% 70%;
-    --status-caution: 28 91% 66%;
-    --status-danger: 0 86% 73%;
-    --status-info: 205 90% 72%;
+    /* v3 §2.1 고정 다크 의미색(#5DCA8E·#F0B429·#F07171·#8BB4E8)의 HSL 역산 */
+    --status-success: 147 50.7% 57.8%;
+    --status-warning: 41.9 86.9% 55.1%;
+    --status-danger: 0 80.9% 69.2%;
+    --status-info: 213.5 66.9% 72.7%;
   }
 
   * {

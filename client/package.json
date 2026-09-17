@@ -9,6 +9,7 @@
     "fonts:verify": "node scripts/verify-fonts.mjs",
     "build": "node scripts/build.mjs",
     "verify:static": "node scripts/validate-static-output.mjs",
+    "verify:accent": "node scripts/verify-accent-tokens.mjs",
     "sbom:prod": "node scripts/sbom.mjs",
     "verify:supply-chain": "node scripts/verify-sbom-identity.mjs && node scripts/verify-vendor-readme.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",

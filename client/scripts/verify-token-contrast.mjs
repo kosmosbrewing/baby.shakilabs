@@ -25,7 +25,6 @@ const FOREGROUNDS = [
   "--destructive",
   "--status-success",
   "--status-warning",
-  "--status-caution",
   "--status-danger",
   "--status-info",
 ];
