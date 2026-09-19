@@ -34,7 +34,7 @@ const titleId = "faq-panel-" + useId();
           <span>{{ item.q }}</span>
           <ChevronDown aria-hidden="true" class="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
         </summary>
-        <p class="mt-2 pr-6 text-caption leading-relaxed text-muted-foreground">{{ item.a }}</p>
+        <p class="mt-2 max-w-[65ch] pr-6 text-caption leading-relaxed text-muted-foreground">{{ item.a }}</p>
       </details>
     </div>
   </section>

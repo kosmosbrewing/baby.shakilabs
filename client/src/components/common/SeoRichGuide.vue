@@ -27,20 +27,20 @@ defineProps<{
   <section class="seo-rich-guide space-y-4 rounded-lg border border-border/40 bg-muted/10 p-4 md:p-6">
     <header class="space-y-2">
       <h2 class="text-xl font-bold text-foreground">{{ title }}</h2>
-      <p class="text-sm leading-relaxed text-muted-foreground">{{ intro }}</p>
+      <p class="max-w-[65ch] text-sm leading-relaxed text-muted-foreground">{{ intro }}</p>
     </header>
 
     <div v-if="sections && sections.length > 0" class="space-y-4">
       <article v-for="(s, i) in sections" :key="`sec-${i}`" class="space-y-2">
         <h3 class="text-base font-semibold text-foreground">{{ s.h2 }}</h3>
-        <p class="text-sm leading-relaxed text-muted-foreground">{{ s.body }}</p>
+        <p class="max-w-[65ch] text-sm leading-relaxed text-muted-foreground">{{ s.body }}</p>
       </article>
     </div>
 
     <!-- 외부 공식 출처는 RouterLink가 아닌 일반 <a>를 쓴다 (내부 링크만 RouterLink 필수 — base /baby/ 우회 404 이력) -->
     <div v-if="sources && sources.length > 0" class="space-y-2">
       <h3 class="text-base font-semibold text-foreground">공식 출처</h3>
-      <ul class="ml-4 list-disc space-y-1 text-sm text-muted-foreground">
+      <ul class="ml-4 max-w-[65ch] list-disc space-y-1 text-sm text-muted-foreground">
         <li v-for="(src, i) in sources" :key="`src-${i}`">
           <a
             :href="src.url"
@@ -52,7 +52,7 @@ defineProps<{
       </ul>
     </div>
 
-    <p v-if="disclaimer" class="border-t border-border/40 pt-3 text-xs text-muted-foreground">
+    <p v-if="disclaimer" class="max-w-[65ch] border-t border-border/40 pt-3 text-xs text-muted-foreground">
       {{ disclaimer }}
     </p>
   </section>
