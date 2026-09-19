@@ -69,7 +69,7 @@ const nextSteps = [
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader title="첫만남이용권 계산기" />
       <FreshBadge />

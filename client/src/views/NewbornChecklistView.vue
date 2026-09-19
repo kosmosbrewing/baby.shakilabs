@@ -113,7 +113,7 @@ const nextSteps = [
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--prose space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader title="출산 직후 신청 순서 가이드" />
       <FreshBadge />
