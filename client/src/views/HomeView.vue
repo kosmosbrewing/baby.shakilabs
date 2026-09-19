@@ -62,7 +62,7 @@ const nextSteps = [
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--page space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader title="육아·출산 지원금 계산기" />
       <FreshBadge />

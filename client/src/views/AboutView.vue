@@ -36,7 +36,7 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, FIRST
     description="shakilabs.com/baby가 어떤 지원금을 어떤 기준으로 계산하는지, 무엇을 포함하지 않는지, 수치를 어떻게 검증하고 갱신하는지 안내합니다."
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--prose space-y-5 py-5">
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
         <h1 class="retro-title">서비스 안내</h1>

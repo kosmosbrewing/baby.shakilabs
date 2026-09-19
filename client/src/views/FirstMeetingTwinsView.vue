@@ -52,7 +52,7 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, SECON
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader title="쌍둥이 첫만남이용권" />
       <FreshBadge />

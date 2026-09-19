@@ -59,7 +59,7 @@ const nextSteps = [
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--prose space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader title="어린이집 입소 전환 체크리스트" />
       <FreshBadge />

@@ -6,7 +6,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 <template>
   <SEOHead title="페이지를 찾을 수 없습니다" description="요청한 페이지를 찾을 수 없습니다." noindex />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--page space-y-5 py-5">
     <div class="retro-panel overflow-hidden">
       <div class="retro-titlebar rounded-t-2xl">
         <h1 class="retro-title">페이지를 찾을 수 없습니다</h1>

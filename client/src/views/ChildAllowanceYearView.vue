@@ -78,7 +78,7 @@ const nextSteps = computed<NextStepLink[]>(() => {
     :json-ld="faqJsonLd"
   />
 
-  <div class="container space-y-5 py-5">
+  <div class="sh-container sh-container--tool space-y-5 py-5">
     <div class="flex items-start justify-between gap-3">
       <CalculatorPageHeader :title="`${birthYear}년생 아동수당 총정리`" />
       <FreshBadge />
