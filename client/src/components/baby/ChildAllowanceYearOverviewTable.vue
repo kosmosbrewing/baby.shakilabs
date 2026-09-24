@@ -8,24 +8,42 @@
  * information away instead of merging it.
  * 수치는 전부 childAllowanceOutlook.ts 계산 결과이며 하드코딩하지 않는다.
  */
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { CHILD_ALLOWANCE_LANDING_YEARS } from "@/data/childAllowanceYearGuides";
 import { childAllowanceOutlookByBirthYear } from "@/utils/childAllowanceOutlook";
 import { CHILD_ALLOWANCE_BY_REGION } from "@/data/benefitRates2026";
 import { formatWon, formatYearMonth } from "@/lib/utils";
 
+// 남은 개월수·총액은 "지금"에 따라 달라진다. 서버(프리렌더)가 빌드 날짜로 계산하면 달이 바뀔 때마다
+// HTML이 달라져 사이트맵 lastmod 원장이 소스 변경 없이 어긋난다(CI red). 마운트 뒤에만 계산하고
+// 기준 월을 밝힌다 — 서버와 첫 클라이언트 렌더는 둘 다 기준 없음이라 하이드레이션도 같다.
+const referenceDate = ref<Date | null>(null);
+onMounted(() => {
+  referenceDate.value = new Date();
+});
+const referenceLabel = computed(() =>
+  referenceDate.value ? `${referenceDate.value.getFullYear()}년 ${referenceDate.value.getMonth() + 1}월 기준` : "",
+);
+// 마지막 지급월은 기준일과 무관하다 — 기준일이 없을 때도 이 값만은 서버에서 그린다
+const NO_REFERENCE = new Date(0);
+
 const rows = computed(() =>
   CHILD_ALLOWANCE_LANDING_YEARS.map((year) => {
-    const outlook = childAllowanceOutlookByBirthYear(year, "metro");
+    const reference = referenceDate.value;
+    const outlook = childAllowanceOutlookByBirthYear(year, "metro", reference ?? NO_REFERENCE);
     return {
       year,
       lastPayment: `${formatYearMonth(outlook.lastPaymentEarliest)} ~ ${formatYearMonth(outlook.lastPaymentLatest)}`,
-      remainingMonths: outlook.isCurrentlyEligible
-        ? `${outlook.remainingMonthsMin}~${outlook.remainingMonthsMax}개월`
-        : "지급 종료",
-      remainingTotal: outlook.isCurrentlyEligible
-        ? `${formatWon(outlook.remainingTotalMin)} ~ ${formatWon(outlook.remainingTotalMax)}`
-        : "-",
+      remainingMonths: !reference
+        ? "—"
+        : outlook.isCurrentlyEligible
+          ? `${outlook.remainingMonthsMin}~${outlook.remainingMonthsMax}개월`
+          : "지급 종료",
+      remainingTotal: !reference
+        ? "—"
+        : outlook.isCurrentlyEligible
+          ? `${formatWon(outlook.remainingTotalMin)} ~ ${formatWon(outlook.remainingTotalMax)}`
+          : "-",
     };
   }),
 );
@@ -65,7 +83,7 @@ const rows = computed(() =>
     </div>
 
     <p class="text-tiny leading-relaxed text-muted-foreground">
-      남은 총액은 "남은 개월수 × 지역 월액"으로 계산한 참고값이며, 이미 받은 금액은 포함하지 않습니다. 출생월까지 알고
+      <template v-if="referenceLabel">남은 개월수·총액은 {{ referenceLabel }}입니다. </template>남은 총액은 "남은 개월수 × 지역 월액"으로 계산한 참고값이며, 이미 받은 금액은 포함하지 않습니다. 출생월까지 알고
       있다면 위 계산기에 생년월을 입력하는 편이 훨씬 정확합니다.
     </p>
   </section>

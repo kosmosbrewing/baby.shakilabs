@@ -15,14 +15,19 @@ const props = defineProps<{
   initialMultipleBirthCount?: number;
 }>();
 
-const { state, voucherTotal, deadline, isStillValid, daysElapsed, validDays } = useFirstMeetingCalc({
+const { state, voucherTotal, deadline, isStillValid, daysElapsed, validDays, hasBirthDate } = useFirstMeetingCalc({
   birthOrder: props.initialBirthOrder,
   multipleBirthCount: props.initialMultipleBirthCount,
 });
 
 const metrics = computed(() => [
-  { label: "사용 기한", value: deadline.value, helper: "출생일로부터 2년" },
-  { label: "사용 가능 여부", value: isStillValid.value ? "사용 가능" : "기한 만료", helper: "국민행복카드 바우처" },
+  // 출생일 없이 판정하면 "기한 만료"로 읽힌다 — 입력 전에는 판정하지 않는다
+  { label: "사용 기한", value: hasBirthDate.value ? deadline.value : "—", helper: "출생일로부터 2년" },
+  {
+    label: "사용 가능 여부",
+    value: !hasBirthDate.value ? "—" : isStillValid.value ? "사용 가능" : "기한 만료",
+    helper: "국민행복카드 바우처",
+  },
 ]);
 
 function formatDays(value: number): string {
@@ -47,8 +52,10 @@ function formatDays(value: number): string {
       <p class="text-caption text-muted-foreground">첫만남이용권 바우처 총액</p>
       <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(voucherTotal)" /></p>
       <p class="text-caption text-muted-foreground">
-        현금이 아닌 국민행복카드 바우처이며, <span class="font-semibold text-foreground">{{ deadline }}</span
-        >까지 사용해야 합니다.
+        현금이 아닌 국민행복카드 바우처이며,
+        <span v-if="hasBirthDate"><span class="font-semibold text-foreground">{{ deadline }}</span>까지</span>
+        <span v-else>출생일로부터 2년 안에</span>
+        사용해야 합니다.
       </p>
       <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
     </section>
