@@ -2,30 +2,10 @@
 // v3 AppShell(BL-003/004) — 앱 자체 헤더 마크업을 패키지 ShGlobalHeader로 교체한다.
 // 검정 고정 배경·56px 높이·로고→포털 홈(/)은 패키지가 강제하므로 앱은 유틸(테마 토글)만 채운다.
 // 0.3.38 "순수 내비게이션"(2026-09-25): 헤더는 위치(로고 / 앱 이름)와 이동(블로그·소개·☰)만 싣는다 — 팁 티커는 뺐다.
-import { computed, onMounted, ref } from "vue";
-import { Moon, Sun } from "lucide-vue-next";
+import { computed } from "vue";
 import { RouterLink, useRoute } from "vue-router";
-import { ShButton, ShGlobalHeader, type GlobalHeaderLink, type PrimaryNavigationItem } from "@shakilabs/ui";
+import { ShGlobalHeader, ShThemeToggle, type GlobalHeaderLink, type PrimaryNavigationItem } from "@shakilabs/ui";
 import { BABY_TOOLS } from "@/data/babyNavigation";
-
-const THEME_STORAGE_KEY = "baby-tools:theme:v1";
-type ThemeMode = "light" | "dark";
-
-const theme = ref<ThemeMode>("light");
-
-function applyTheme(next: ThemeMode): void {
-  theme.value = next;
-  document.documentElement.classList.toggle("dark", next === "dark");
-  localStorage.setItem(THEME_STORAGE_KEY, next);
-}
-
-function toggleTheme(): void {
-  applyTheme(theme.value === "dark" ? "light" : "dark");
-}
-
-onMounted(() => {
-  theme.value = document.documentElement.classList.contains("dark") ? "dark" : "light";
-});
 
 // 사이트 링크 — 블로그는 포털 소유라 href, 소개는 이 앱 라우트라 RouterLink(to). 모바일에서는 ☰ 안으로 들어간다.
 const links: GlobalHeaderLink[] = [
@@ -61,17 +41,7 @@ const navActiveKey = computed(
     :link-component="RouterLink"
   >
     <template #utility>
-      <ShButton
-        type="button"
-        variant="secondary"
-        size="sm"
-        class="design-system-theme-toggle shrink-0"
-        :aria-label="theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'"
-        @click="toggleTheme"
-      >
-        <Moon v-if="theme === 'dark'" class="h-4 w-4" />
-        <Sun v-else class="h-4 w-4" />
-      </ShButton>
+      <ShThemeToggle storage-key="baby-tools:theme:v1" />
     </template>
   </ShGlobalHeader>
 </template>

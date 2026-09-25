@@ -32,10 +32,6 @@ html {
   }
 }
 
-/* ── GlobalHeader 유틸 버튼 대비 보정 — 0.3.16에서 구조로 이관됨 ──────────────
-   패키지가 이제 `.sh-global-header__utility :is(button,a)`를 header-ink로 강제한다
-   (Wave2 §2). 앱 로컬 .design-system-theme-toggle 패치는 중복이라 제거했다. */
-
 /* ── 입력 칩 2행 줄 간격 (BL-064) ───────────────────────────────────────────
    패키지 .sh-toggle-group은 row-gap: 0(vendored, forms.css)이라 390px에서
    5개 옵션(단태아/쌍둥이/세쌍둥이/네쌍둥이/다섯쌍둥이)이 2행으로 감싸질 때
