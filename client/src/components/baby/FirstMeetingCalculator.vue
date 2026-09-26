@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import CountUpAmount from "@/components/common/CountUpAmount.vue";
 import { computed } from "vue";
-import { ShBulletProgress, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
+import { ShBulletProgress, ShCalculatorSplit, ShField, ShInput, ShLabel } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
+import LabeledToggleGroup from "@/components/baby/LabeledToggleGroup.vue";
 import { useFirstMeetingCalc } from "@/composables/useFirstMeetingCalc";
 import { BIRTH_ORDER_OPTIONS, CALCULATION_BASIS_NOTE, type BirthOrder } from "@/data/benefitRates2026";
 import { MULTIPLE_BIRTH_OPTIONS } from "@/data/babyPresets";
@@ -36,40 +37,43 @@ function formatDays(value: number): string {
 </script>
 
 <template>
-  <div class="space-y-4 lg:grid lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start lg:gap-4 lg:space-y-0">
-    <section class="retro-panel-muted p-4 space-y-4">
-      <ShField>
-        <ShLabel for="first-meeting-birth-date">자녀 출생일</ShLabel>
-        <ShInput id="first-meeting-birth-date" v-model="state.birthDate" type="date" />
-      </ShField>
+  <!-- 다른 앱 계산기와 같은 입력|결과 1:1 틀 — 결과를 붙일지(sticky)는 틀이 높이를 재서 정한다 -->
+  <ShCalculatorSplit>
+    <template #input>
+      <section class="retro-panel-muted p-4 space-y-4">
+        <ShField>
+          <ShLabel for="first-meeting-birth-date">자녀 출생일</ShLabel>
+          <ShInput id="first-meeting-birth-date" v-model="state.birthDate" type="date" />
+        </ShField>
 
-      <ShToggleGroup label="출생 순위" v-model="state.birthOrder" :options="BIRTH_ORDER_OPTIONS" />
-      <ShToggleGroup label="다태아 여부" v-model="state.multipleBirthCount" :options="MULTIPLE_BIRTH_OPTIONS" />
-    </section>
+        <LabeledToggleGroup v-model="state.birthOrder" label="출생 순위" :options="BIRTH_ORDER_OPTIONS" />
+        <LabeledToggleGroup v-model="state.multipleBirthCount" label="다태아 여부" :options="MULTIPLE_BIRTH_OPTIONS" />
+      </section>
+    </template>
 
-    <div class="space-y-4 min-w-0">
-    <section class="retro-panel p-4 space-y-2">
-      <p class="text-caption text-muted-foreground">첫만남이용권 바우처 총액</p>
-      <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(voucherTotal)" /></p>
-      <p class="text-caption text-muted-foreground">
-        현금이 아닌 국민행복카드 바우처이며,
-        <span v-if="hasBirthDate"><span class="font-semibold text-foreground">{{ deadline }}</span>까지</span>
-        <span v-else>출생일로부터 2년 안에</span>
-        사용해야 합니다.
-      </p>
-      <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
-    </section>
+    <template #result>
+      <section class="retro-panel p-4 space-y-2">
+        <p class="text-caption text-muted-foreground">첫만남이용권 바우처 총액</p>
+        <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(voucherTotal)" /></p>
+        <p class="text-caption text-muted-foreground">
+          현금이 아닌 국민행복카드 바우처이며,
+          <span v-if="hasBirthDate"><span class="font-semibold text-foreground">{{ deadline }}</span>까지</span>
+          <span v-else>출생일로부터 2년 안에</span>
+          사용해야 합니다.
+        </p>
+        <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
+      </section>
 
-    <BenefitMetricGrid :items="metrics" />
+      <BenefitMetricGrid :items="metrics" />
 
-    <ShBulletProgress
-      v-if="isStillValid"
-      label="바우처 사용기한 게이지"
-      :value="daysElapsed"
-      :limit="validDays"
-      limit-label="사용기한 만료"
-      :format-value="formatDays"
-    />
-    </div>
-  </div>
+      <ShBulletProgress
+        v-if="isStillValid"
+        label="바우처 사용기한 게이지"
+        :value="daysElapsed"
+        :limit="validDays"
+        limit-label="사용기한 만료"
+        :format-value="formatDays"
+      />
+    </template>
+  </ShCalculatorSplit>
 </template>
