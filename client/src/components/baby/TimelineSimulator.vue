@@ -2,8 +2,9 @@
 import CountUpAmount from "@/components/common/CountUpAmount.vue";
 // 킬러 기능: 월령별 수령 타임라인 시뮬레이터 — 자녀 생년월만 입력해도 즉시 결과가 보인다 (빈 화면 금지).
 import { computed } from "vue";
-import { ShBreakdownBar, ShBulletProgress, ShButton, ShField, ShInput, ShLabel, ShToggleGroup } from "@shakilabs/ui";
+import { ShBreakdownBar, ShBulletProgress, ShButton, ShCalculatorSplit, ShField, ShInput, ShLabel } from "@shakilabs/ui";
 import BenefitMetricGrid from "@/components/baby/BenefitMetricGrid.vue";
+import LabeledToggleGroup from "@/components/baby/LabeledToggleGroup.vue";
 import TimelineTable from "@/components/baby/TimelineTable.vue";
 import { useBenefitTimeline } from "@/composables/useBenefitTimeline";
 import { BIRTH_MONTH_PRESETS } from "@/data/babyPresets";
@@ -55,49 +56,54 @@ const metrics = computed(() => [
 </script>
 
 <template>
-  <div class="space-y-4 lg:grid lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-start lg:gap-4 lg:space-y-0">
-    <section class="retro-panel-muted p-4 space-y-4 lg:sticky lg:top-4">
-      <div class="flex flex-wrap gap-2">
-        <ShButton
-          v-for="preset in BIRTH_MONTH_PRESETS"
-          :key="preset.key"
-          type="button"
-          variant="secondary"
-          size="sm"
-          @click="applyBirthMonthPreset(preset.monthsAgo)"
-        >
-          {{ preset.label }}
-        </ShButton>
-      </div>
+  <!-- 입력|결과는 다른 앱 계산기와 같은 1:1 틀에 둔다 — 결과를 붙일지(sticky)는 틀이 높이를 재서 정한다.
+       진행 막대·전환 시점·타임라인 표(최소 34rem)는 반폭 칸(약 544px)에 넣으면 표가 가로로 잘리므로 틀 아래 전폭에 둔다. -->
+  <div class="space-y-4">
+    <ShCalculatorSplit>
+      <template #input>
+        <section class="retro-panel-muted p-4 space-y-4">
+          <ShField>
+            <ShLabel for="home-birth-month">자녀 생년월</ShLabel>
+            <ShInput id="home-birth-month" v-model="state.birthYearMonth" type="month" />
+            <div class="flex flex-wrap gap-2">
+              <ShButton
+                v-for="preset in BIRTH_MONTH_PRESETS"
+                :key="preset.key"
+                type="button"
+                variant="secondary"
+                size="sm"
+                @click="applyBirthMonthPreset(preset.monthsAgo)"
+              >
+                {{ preset.label }}
+              </ShButton>
+            </div>
+          </ShField>
 
-      <ShField>
-        <ShLabel for="home-birth-month">자녀 생년월</ShLabel>
-        <ShInput id="home-birth-month" v-model="state.birthYearMonth" type="month" />
-      </ShField>
+          <LabeledToggleGroup v-model="state.birthOrder" label="출생 순위" :options="BIRTH_ORDER_OPTIONS" />
+          <LabeledToggleGroup v-model="state.careType" label="보육 형태" :options="CARE_TYPE_OPTIONS" />
+          <LabeledToggleGroup v-model="state.region" label="지역" :options="REGION_OPTIONS" />
+        </section>
+      </template>
 
-      <ShToggleGroup label="출생 순위" v-model="state.birthOrder" :options="BIRTH_ORDER_OPTIONS" />
-      <ShToggleGroup label="보육 형태" v-model="state.careType" :options="CARE_TYPE_OPTIONS" />
-      <ShToggleGroup label="지역" v-model="state.region" :options="REGION_OPTIONS" />
-    </section>
+      <template #result>
+        <section class="retro-panel p-4 space-y-2">
+          <p class="text-caption text-muted-foreground">지금부터 9세까지 받을 현금 지원 총액 (월 지원 합산)</p>
+          <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(remaining.remainingMonthlyTotal)" /></p>
+          <p class="text-tiny text-muted-foreground">첫만남이용권(바우처)은 현금이 아니라 합계에 넣지 않고 아래에 따로 표시합니다.</p>
+          <p v-if="state.careType === 'daycare'" class="text-tiny text-muted-foreground">어린이집 이용 시 보육료 바우처는 별도 지원되며, 이 합계는 현금으로 받는 금액만 계산합니다.</p>
+          <p v-if="state.region === 'populationDeclineSpecial'" class="text-tiny text-muted-foreground">인구감소 특별지역 12만 원은 지자체에 따라 일부가 지역화폐로 지급될 수 있습니다.</p>
+          <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
+        </section>
 
-    <div class="space-y-4 min-w-0">
-    <section class="retro-panel p-4 space-y-2">
-      <p class="text-caption text-muted-foreground">지금부터 9세까지 받을 현금 지원 총액 (월 지원 합산)</p>
-      <p class="text-display font-bold font-brand text-primary tabular-nums"><CountUpAmount :value="formatWon(remaining.remainingMonthlyTotal)" /></p>
-      <p class="text-tiny text-muted-foreground">첫만남이용권(바우처)은 현금이 아니라 합계에 넣지 않고 아래에 따로 표시합니다.</p>
-      <p v-if="state.careType === 'daycare'" class="text-tiny text-muted-foreground">어린이집 이용 시 보육료 바우처는 별도 지원되며, 이 합계는 현금으로 받는 금액만 계산합니다.</p>
-      <p v-if="state.region === 'populationDeclineSpecial'" class="text-tiny text-muted-foreground">인구감소 특별지역 12만 원은 지자체에 따라 일부가 지역화폐로 지급될 수 있습니다.</p>
-      <p class="text-tiny text-muted-foreground">{{ CALCULATION_BASIS_NOTE }}</p>
-    </section>
+        <ShBreakdownBar
+          label="남은 현금 지원 구성"
+          :segments="remainingBreakdown.segments"
+          :format-value="formatWon"
+        />
 
-    <ShBreakdownBar
-      label="남은 현금 지원 구성"
-      :segments="remainingBreakdown.segments"
-      :format-value="formatWon"
-    />
-
-    <BenefitMetricGrid :items="metrics" />
-    </div>
+        <BenefitMetricGrid :items="metrics" />
+      </template>
+    </ShCalculatorSplit>
 
     <ShBulletProgress
       label="지원 타임라인 진행"
@@ -106,10 +112,9 @@ const metrics = computed(() => [
       limit-label="9세(아동수당 종료)"
       :format-value="formatMonths"
       :note="progressNote"
-      class="lg:col-span-2"
     />
 
-    <section v-if="transitions.length > 0" class="retro-panel-muted p-4 space-y-3 lg:col-span-2">
+    <section v-if="transitions.length > 0" class="retro-panel-muted p-4 space-y-3">
       <p class="text-heading font-bold text-foreground">앞으로의 전환 시점</p>
       <ul class="space-y-2">
         <li v-for="t in transitions" :key="t.label" class="retro-step">
@@ -122,8 +127,6 @@ const metrics = computed(() => [
       </ul>
     </section>
 
-    <div class="lg:col-span-2">
-      <TimelineTable :entries="timeline" :current-month="currentMonths" />
-    </div>
+    <TimelineTable :entries="timeline" :current-month="currentMonths" />
   </div>
 </template>
