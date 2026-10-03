@@ -1,7 +1,7 @@
 .text-tiny,
 .text-\[10px\],
 .text-\[11px\] {
-  font-size: 0.75rem;
+  font-size: 0.8125rem; /* v8b: 12px → 13px 하한 */
   line-height: 1.4;
 }
 
@@ -24,7 +24,7 @@
   [class*="text-[10px]"],
   [class*="text-[11px]"],
   [class~="!text-xs"] {
-    font-size: 12px !important;
+    font-size: 13px !important; /* v8b: 12px가 360px 갤럭시에서 토큰 수정을 무효화했다 */
     line-height: 1.4 !important;
   }
 

@@ -67,22 +67,12 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, CHILD_ALLOWANCE_LINK, FIRST
         </div>
 
         <h2 class="text-heading font-bold text-foreground">계산 기준: 만 나이가 아니라 개월수</h2>
-        <p class="text-body leading-relaxed text-muted-foreground">
-          이 사이트의 모든 계산은 출생월을 0개월로 세는 개월수 기준을 씁니다. 부모급여는 0~23개월, 가정양육수당은
-          24~86개월, 아동수당은 {{ CHILD_ALLOWANCE_END_MONTH }}개월째까지가 지급 구간입니다. 만 나이로 생각하면
-          경계 달에서 한 달씩 어긋나 보이기 때문에, 제도 문서와 같은 개월수 기준을 그대로 따랐습니다. 신청 기한도
-          같은 원칙으로 처리해, 출생일로부터 {{ PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS }}일 이내 신청 시 출생월분부터
-          소급된다는 점을 결과 화면에서 함께 안내합니다.
-        </p>
+        <p class="text-body leading-relaxed text-muted-foreground">이 사이트의 모든 계산은 출생월을 0개월로 세는 개월수 기준을 씁니다. 부모급여는 0~23개월, 가정양육수당은 24~86개월, 아동수당은 {{ CHILD_ALLOWANCE_END_MONTH }}개월째까지가 지급 구간입니다. 만 나이로 생각하면 경계 달에서 한 달씩 어긋나 보이기 때문에, 제도 문서와 같은 개월수 기준을 그대로 따랐습니다.</p>
+        <p class="text-body leading-relaxed text-muted-foreground">신청 기한도 같은 원칙으로 처리해, 출생일로부터 {{ PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS }}일 이내 신청 시 출생월분부터 소급된다는 점을 결과 화면에서 함께 안내합니다.</p>
 
         <h2 class="text-heading font-bold text-foreground">수치를 어떻게 검증하나요</h2>
-        <p class="text-body leading-relaxed text-muted-foreground">
-          지원금 단가·지급 구간·지급일 같은 수치는 코드 안 한 곳(상수 파일)에 모아 두고, 각 값마다 근거가 되는 정부
-          발표나 공공기관 안내 주소를 주석으로 함께 남깁니다. 화면에 보이는 금액은 이 상수에서 계산해 만들어지므로,
-          본문 설명과 계산 결과가 서로 어긋나지 않습니다. 커뮤니티나 블로그에서 퍼지는 잘못된 금액(예: "부모급여
-          110만원 인상")은 확인되는 대로 FAQ에 정정 문구를 추가하고 있습니다. 현재 반영된 기준일은
-          {{ BABY_DATA_UPDATED }}이며, 제도가 개정되면 확인 즉시 상수와 설명을 함께 갱신합니다.
-        </p>
+        <p class="text-body leading-relaxed text-muted-foreground">지원금 단가·지급 구간·지급일 같은 수치는 코드 안 한 곳(상수 파일)에 모아 두고, 각 값마다 근거가 되는 정부 발표나 공공기관 안내 주소를 주석으로 함께 남깁니다. 화면에 보이는 금액은 이 상수에서 계산해 만들어지므로, 본문 설명과 계산 결과가 서로 어긋나지 않습니다.</p>
+        <p class="text-body leading-relaxed text-muted-foreground">커뮤니티나 블로그에서 퍼지는 잘못된 금액(예: "부모급여 110만원 인상")은 확인되는 대로 FAQ에 정정 문구를 추가하고 있습니다. 현재 반영된 기준일은 {{ BABY_DATA_UPDATED }}이며, 제도가 개정되면 확인 즉시 상수와 설명을 함께 갱신합니다.</p>
 
         <h2 class="text-heading font-bold text-foreground">포함하지 않는 것</h2>
         <p class="text-body leading-relaxed text-muted-foreground">

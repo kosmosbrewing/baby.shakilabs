@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { validateNoTinyTextUtilities } from "./validate-no-tiny-text.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -298,3 +299,6 @@ console.log(
   `Guide paragraphs: ${paragraphGate.paragraphCount} <p> on ${paragraphGate.routeCount} /guide/ routes, ` +
     `longest ${paragraphGate.longest} ≤ 250 chars.`,
 );
+
+// v8b(2026-10-03): 13px 미만 글자 소스 게이트(10·11px대 임의값 + CSS 규칙, 차트 밖)
+validateNoTinyTextUtilities({ projectRoot });

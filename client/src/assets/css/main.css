@@ -192,12 +192,12 @@
   }
 
   .text-caption {
-    font-size: 0.75rem;
+    font-size: 0.8125rem; /* v8b: 모바일도 13px 하한 */
     line-height: 1.4;
   }
 
   .text-tiny {
-    font-size: 0.65625rem;
+    font-size: 0.8125rem; /* v8b */
     line-height: 1.3;
   }
 

@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs";
 
 export const PARAGRAPH_MAX_CHARS = 250;
-export const PARAGRAPH_GATED_PREFIX = "/guide/";
+export const PARAGRAPH_GATED_PREFIX = "/"; // v8b: /guide/ → 전 라우트(약관·방침 제외)
 
 const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", nbsp: " " };
 
@@ -26,7 +26,7 @@ function paragraphTexts(html) {
 
 /** routes 중 /guide/ 라우트를 검사하고 [검사 라우트 수, 검사 문단 수, 최장 길이]를 돌려준다. */
 export function validateGuideParagraphs({ routes, routeOutputPath, assert }) {
-  const gated = routes.filter((route) => route.startsWith(PARAGRAPH_GATED_PREFIX));
+  const gated = routes.filter((route) => route.startsWith(PARAGRAPH_GATED_PREFIX) && !/^\/(terms|privacy)\/?$/.test(route));
   // 대상이 0개면 무조건 통과한다 — 라우트 이름이 바뀌어 게이트가 조용히 꺼지는 것을 막는다.
   assert(gated.length > 0, `Paragraph gate: no ${PARAGRAPH_GATED_PREFIX} routes found`);
 
