@@ -56,8 +56,10 @@ const nextSteps = [
 </script>
 
 <template>
+  <!-- 함대 제목 레시피(2026-10-03 개정): 홈은 `<앱 이름> | ShakiLabs` — title에 앱 이름
+       자체("육아 지원금 계산기")를 넘기면 useSEO의 계산기 레시피가 그대로 그 결과를 만든다. -->
   <SEOHead
-    title="2026 육아·출산 지원금 계산기 | 부모급여·아동수당"
+    title="육아 지원금 계산기"
     description="자녀 생년월과 지역만 입력하면 부모급여·아동수당·첫만남이용권 남은 총 수령액을 월별 타임라인으로 바로 계산합니다."
     :json-ld="faqJsonLd"
   />

@@ -4,7 +4,7 @@ import SEOHead from "@/components/common/SEOHead.vue";
 </script>
 
 <template>
-  <SEOHead title="페이지를 찾을 수 없습니다" description="요청한 페이지를 찾을 수 없습니다." noindex />
+  <SEOHead title="페이지를 찾을 수 없습니다" description="요청한 페이지를 찾을 수 없습니다." noindex policy-page />
 
   <div class="sh-container sh-container--page space-y-5 py-5">
     <div class="retro-panel overflow-hidden">

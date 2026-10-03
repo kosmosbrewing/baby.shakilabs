@@ -17,6 +17,7 @@ import {
   <SEOHead
     title="이용약관"
     description="육아·출산 지원금 계산기 이용약관입니다. 계산기가 받는 입력 항목, 개월수 산정 기준, 계산에서 제외되는 항목(지자체 출산지원금·지역화폐·중복 배제 제도), 수치 출처 표기 원칙, 광고와 면책을 안내합니다."
+    policy-page
   />
 
   <div class="sh-container sh-container--prose space-y-5 py-5">
