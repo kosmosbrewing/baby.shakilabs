@@ -11,6 +11,7 @@ import {
 import { verifyTokenContrast } from "./verify-token-contrast.mjs";
 import { validateUtilitiesAreGenerated } from "./validate-tailwind-utilities.mjs";
 import { validateLlmsTxt } from "./validate-llms-txt.mjs";
+import { validateGuideParagraphs } from "./validate-paragraph-length.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
@@ -269,6 +270,7 @@ SEO_ROUTES.forEach((route) => {
 });
 
 const utilityCount = validateUtilitiesAreGenerated({ projectRoot, distRoot });
+const paragraphGate = validateGuideParagraphs({ routes: SEO_ROUTES, routeOutputPath, assert });
 const llmsUrlCount = validateLlmsTxt({
   distRoot,
   sitemapRoutes: SITEMAP_ROUTES,
@@ -292,3 +294,7 @@ console.log(
 console.log(`Token contrast: ${contrastPairCount} pairs (light + dark, incl. alpha tints) ≥ 4.5:1.`);
 console.log(`Colour utilities generated: ${utilityCount} checked against the built CSS.`);
 console.log(`llms.txt: ${llmsUrlCount} page URLs, exact two-way match with the sitemap.`);
+console.log(
+  `Guide paragraphs: ${paragraphGate.paragraphCount} <p> on ${paragraphGate.routeCount} /guide/ routes, ` +
+    `longest ${paragraphGate.longest} ≤ 250 chars.`,
+);

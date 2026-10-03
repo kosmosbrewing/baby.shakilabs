@@ -28,6 +28,7 @@ import {
 } from "@/data/digests/enrollmentFacts";
 import { DAYCARE_TRANSITION_DIGEST, findingSections } from "@/data/digests";
 import { DAYCARE_TRANSITION_STEPS } from "@/data/daycareTransitionSteps";
+import { stepParagraphs, stepText } from "@/components/baby/procedureStep";
 
 // 화면 기준과 같은 값이지만 참조를 공유하지 않는 독립 리터럴 — 같은 객체를 재사용하면
 // "기준값 == 화면 기본값" 검사가 자기 자신과의 비교가 되어 절대 red가 나지 않는다.
@@ -223,9 +224,14 @@ describe("정직성 게이트 — 현금 비교에는 바우처가 따라붙는�
   });
 
   it("현금 비교를 담은 단계 카드도 바우처를 같은 문단에 적는다", () => {
-    const cashSteps = DAYCARE_TRANSITION_STEPS.filter((step) => /현금/.test(step.description));
-    expect(cashSteps.length).toBeGreaterThan(0);
-    for (const step of cashSteps) expect(step.description, step.title).toContain("바우처");
+    // 카드를 본문·자세히·표로 나눈 뒤에도 단서가 "같은 문단"에 붙어 있는지를 렌더 단위로 본다 —
+    // 카드 전체 문자열로 보면 바우처 문장이 자세히로 내려가도 통과해 버린다.
+    const cashBlocks = DAYCARE_TRANSITION_STEPS.flatMap((step) => [
+      ...stepParagraphs(step).map((text) => ({ title: step.title, text })),
+      ...(step.table ? [{ title: step.title, text: step.table.caption }] : []),
+    ]).filter((block) => /현금/.test(block.text));
+    expect(cashBlocks.length).toBeGreaterThan(0);
+    for (const block of cashBlocks) expect(block.text, block.title).toContain("바우처");
   });
 
   it("h3에 등장하는 수치가 본문에도 그대로 남아 있다 (h3-본문 모순 방지)", () => {
@@ -242,20 +248,38 @@ describe("단계 카드의 수치 근거", () => {
   it("네 단계 모두 엔진에서 나온 구체 수치를 최소 하나 인용한다", () => {
     expect(DAYCARE_TRANSITION_STEPS).toHaveLength(4);
     for (const step of DAYCARE_TRANSITION_STEPS) {
-      expect(step.description, step.title).toMatch(/\d{1,3}(,\d{3})+원|\d+개월/);
+      // 카드 = 본문 + 자세히 + 표. 숫자를 표로 옮겨도 카드가 엔진 값을 인용한다는 사실은 그대로여야 한다.
+      expect(stepText(step), step.title).toMatch(/\d{1,3}(,\d{3})+원|\d+개월/);
     }
     expect(new Set(DAYCARE_TRANSITION_STEPS.map((step) => step.title)).size).toBe(4);
   });
 
   it("단계 카드가 인용한 금액이 엔진 값과 일치한다", () => {
     const [enrol, care, sitter, allowance] = DAYCARE_TRANSITION_STEPS;
-    expect(enrol.description).toContain("584,000원");
-    expect(enrol.description).toContain("500,000원");
-    expect(enrol.description).toContain("100,000원");
-    expect(care.description).toContain("6,300,000원");
-    expect(sitter.description).toContain("18,000,000원");
-    expect(sitter.description).toContain("6,000,000원");
-    expect(allowance.description).toContain("10,800,000원");
-    expect(allowance.description).toContain("0개");
+    expect(stepText(enrol)).toContain("584,000원");
+    expect(stepText(enrol)).toContain("500,000원");
+    expect(stepText(enrol)).toContain("100,000원");
+    expect(stepText(care)).toContain("6,300,000원");
+    expect(stepText(sitter)).toContain("18,000,000원");
+    expect(stepText(sitter)).toContain("6,000,000원");
+    expect(stepText(allowance)).toContain("10,800,000원");
+    expect(stepText(allowance)).toContain("0개");
+  });
+
+  it("문장에서 표로 옮긴 금액 구간이 행 단위로 그대로 남아 있다", () => {
+    const [enrol, , sitter] = DAYCARE_TRANSITION_STEPS;
+    // 예전 문장: "0~11개월 월 584,000원, 12~23개월 월 500,000원, 24~86개월 월 100,000원의 3개 값뿐"
+    expect(enrol.table?.rows).toEqual([
+      ["0~11개월", "월 584,000원"],
+      ["12~23개월", "월 500,000원"],
+      ["24~86개월", "월 100,000원"],
+    ]);
+    expect(stepText(enrol)).toContain("아래 표의 3개 값뿐");
+    // 예전 문장: "0개월이면 18,000,000원, 12개월이면 6,000,000원, 24개월부터는 0원"
+    expect(sitter.table?.rows).toEqual([
+      ["0개월", "18,000,000원"],
+      ["12개월", "6,000,000원"],
+      ["24개월부터", "0원"],
+    ]);
   });
 });

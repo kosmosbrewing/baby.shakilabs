@@ -1,6 +1,7 @@
 // 절차 가이드 페이지(C: /guide/newborn-checklist, /guide/daycare-transition) 전용 SeoRichGuide·정리표 데이터.
 // 신청 순서·기한 관련 수치는 전부 benefitRates2026.ts 상수를 참조한다 (하드코딩 금지).
 // 지자체별로 다른 항목은 수치를 넣지 않고 "정부24 확인"으로만 안내한다 (정직성 규칙).
+// 250자를 넘는 섹션 본문은 문장 경계에서 PARAGRAPH_BREAK로 문단을 나눈다(v8 가독성, guideParagraphs.test.ts).
 import { COMMON_DISCLAIMER, type GuideData } from "@/data/seoGuides";
 import {
   APPLICATION_CHANNELS,
@@ -23,6 +24,7 @@ import {
   PARENTAL_BENEFIT_PHASE2_END_MONTH,
   PARENTAL_BENEFIT_RETROACTIVE_DEADLINE_DAYS,
 } from "@/data/benefitRates2026";
+import { PARAGRAPH_BREAK } from "@/lib/paragraphs";
 
 // 정리표 데이터 — GuideDataTable.vue가 렌더한다. rows의 첫 셀은 항목명(강조)이다.
 export interface GuideTable {
@@ -92,7 +94,7 @@ export const NEWBORN_CHECKLIST_GUIDE: GuideData = {
     },
     {
       h2: "행복출산 원스톱 서비스로 한 번에",
-      body: `행정복지센터에서 출생신고를 하면서 행복출산 원스톱 서비스를 이용하면 첫만남이용권·부모급여·아동수당은 물론 거주지 지자체의 출산지원금까지 한 장의 신청서로 접수할 수 있습니다. 정부24(${LOCAL_BIRTH_SUPPORT_URL})에서 온라인으로도 같은 통합 신청이 가능합니다. 지자체 출산지원금은 지역마다 금액과 요건이 크게 달라 이 앱에서는 수치를 안내하지 않으니, 거주지 기준으로 직접 확인하세요.`,
+      body: `행정복지센터에서 출생신고를 하면서 행복출산 원스톱 서비스를 이용하면 첫만남이용권·부모급여·아동수당은 물론 거주지 지자체의 출산지원금까지 한 장의 신청서로 접수할 수 있습니다. 정부24(${LOCAL_BIRTH_SUPPORT_URL})에서 온라인으로도 같은 통합 신청이 가능합니다.${PARAGRAPH_BREAK}지자체 출산지원금은 지역마다 금액과 요건이 크게 달라 이 앱에서는 수치를 안내하지 않으니, 거주지 기준으로 직접 확인하세요.`,
     },
     {
       h2: "지급일도 함께 알아두세요",
