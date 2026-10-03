@@ -3,17 +3,30 @@ import { toValue, type MaybeRefOrGetter } from "vue";
 import { useRoute } from "vue-router";
 import { getSiteUrl } from "@/lib/site";
 
-// 정본 규칙(디자인 시스템 §11.1): "{페이지} | {카테고리} | ShakiLabs".
+// 함대 제목 레시피(2026-10-03 개정, 네이버 CTR 측정) — 네이버는 검색 결과 제목을
+// 약 35자에서 자른다. 옛 레시피 `<페이지 제목> | 육아 지원금 계산기 | ShakiLabs`는
+// 가운데 "육아 지원금 계산기" 세그먼트가 핵심 구절과 브랜드를 같이 밀어내 잘려 보이게
+// 했다. 이제 페이지 종류에 따라 두 모양을 쓴다.
+// - 계산기·가이드(기본값): `<페이지 제목> | ShakiLabs`
+// - 소개·이용약관·개인정보처리방침·404(policyPage=true): `<페이지 제목> · <앱 이름> | ShakiLabs`
+//   앱 이름까지 빼면 "이용약관 | ShakiLabs"가 shakilabs.com 아래 12개 앱에서 전부
+//   똑같아져 도메인 안에서 제목이 중복된다. 정책 페이지는 검색 유입이 목적이 아니라
+//   35자 절단이 문제되지 않는다.
+// 홈은 `<앱 이름> | ShakiLabs` — HomeView가 title로 앱 이름 자체(CATEGORY)를 넘기면
+// 계산기 레시피 그대로 그 결과가 된다(별도 분기 불필요).
 const CATEGORY = "육아 지원금 계산기";
-const TITLE_SUFFIX = ` | ${CATEGORY} | ShakiLabs`;
-const DEFAULT_TITLE = CATEGORY;
-// 뷰에 "| shakilabs.com/baby"가 하드코딩돼 있던 잔재를 방어적으로 벗겨낸다
-// (§11.1 금지 패턴 — 정본 규칙 자체가 예로 드는 사례).
+const BRAND = "ShakiLabs";
+const CALCULATOR_SUFFIX = ` | ${BRAND}`;
+const POLICY_SUFFIX = ` · ${CATEGORY} | ${BRAND}`;
+
+// 호출부가 옛 접미사를 그대로 넘겨도 두 번 붙지 않게 벗겨 낸다. 긴 것(구 3단 레시피)부터
+// 검사해야 " | ShakiLabs"만 먼저 벗겨지고 앱 이름이 남는 일이 없다.
 const LEGACY_TITLE_SUFFIXES = [
-  TITLE_SUFFIX,
-  " | shakilabs.com/baby",
-  " | ShakiLabs",
+  ` | ${CATEGORY}${CALCULATOR_SUFFIX}`, // 구 3단 레시피: "<제목> | 육아 지원금 계산기 | ShakiLabs"
+  POLICY_SUFFIX,
+  " | shakilabs.com/baby", // 뷰에 하드코딩돼 있던 더 오래된 잔재(§11.1 금지 패턴)
   ` | ${CATEGORY}`,
+  CALCULATOR_SUFFIX,
 ] as const;
 
 type SEOOptions = {
@@ -30,38 +43,42 @@ type SEOOptions = {
    * signals merge into the base page instead of being thrown away.
    */
   canonicalPath?: MaybeRefOrGetter<string | undefined>;
+  /**
+   * 소개·이용약관·개인정보처리방침·404 전용. true면
+   * `<페이지 제목> · 육아 지원금 계산기 | ShakiLabs`로 앱 이름을 남긴다.
+   * 계산기·가이드 페이지는 기본값(false, 앱 이름 제거)을 쓴다.
+   */
+  policyPage?: MaybeRefOrGetter<boolean | undefined>;
 };
 
-// 뷰가 넘기는 title에 이미 "|"가 들어있어도(서브타이틀 병기) 배지를 건너뛰지
-// 않는다 — 예전에는 pipe 유무로 두 레시피가 섞였다(카테고리 배지 있음/없음).
-// 항상 한 레시피만 적용해 배지 유무가 페이지마다 갈리지 않게 한다.
-function normalizeTitle(rawTitle: string): string {
+function stripKnownSuffix(rawTitle: string): string {
   const trimmed = rawTitle.trim();
-  let baseTitle = trimmed || DEFAULT_TITLE;
-
   for (const suffix of LEGACY_TITLE_SUFFIXES) {
-    if (baseTitle.endsWith(suffix)) {
-      baseTitle = baseTitle.slice(0, -suffix.length).trimEnd();
-      break;
+    if (trimmed.endsWith(suffix)) {
+      return trimmed.slice(0, -suffix.length).trimEnd();
     }
   }
+  return trimmed;
+}
 
-  if (!baseTitle) {
-    baseTitle = DEFAULT_TITLE;
-  }
-
-  // v3 §11.1의 레시피는 `{페이지} | {카테고리} | ShakiLabs` 3단이다.
-  // 페이지 이름이 자체 부제를 pipe로 달고 있으면 4단이 되어 어디까지가 페이지명인지
-  // 읽히지 않는다. 부제는 검색 키워드를 담고 있으므로 버리지 않고 구분자만 중점으로 바꾼다.
+// 뷰가 넘기는 title에 자체 부제를 "|"로 병기해도(예: "아동수당 계산기 | 9세 미만
+// 지역별 월액") 접미사를 그대로 붙이면 4단이 되어 어디까지가 페이지명인지 읽히지
+// 않는다. 부제는 검색 키워드를 담고 있으므로 버리지 않고 구분자만 가운뎃점으로
+// 바꾼다 — 항상 한 레시피만 적용해 배지 유무가 페이지마다 갈리지 않게 한다.
+function normalizeTitle(rawTitle: string, isPolicyPage: boolean): string {
+  let baseTitle = stripKnownSuffix(rawTitle) || CATEGORY;
   baseTitle = baseTitle.replace(/\s*\|\s*/g, " · ");
 
-  // 카테고리 없는 루트 예외(§11.1): 페이지 이름이 이미 카테고리로 시작하면
-  // 배지를 또 붙이지 않고 ShakiLabs만 덧붙인다.
-  if (baseTitle.startsWith(CATEGORY)) {
-    return `${baseTitle} | ShakiLabs`;
+  if (isPolicyPage) {
+    // 페이지 제목이 이미 카테고리 자체면("육아 지원금 계산기") 또 붙이지 않는다 —
+    // 중복("육아 지원금 계산기 · 육아 지원금 계산기 | ShakiLabs") 방지.
+    if (baseTitle === CATEGORY) {
+      return `${CATEGORY}${CALCULATOR_SUFFIX}`;
+    }
+    return `${baseTitle}${POLICY_SUFFIX}`;
   }
 
-  return `${baseTitle}${TITLE_SUFFIX}`;
+  return `${baseTitle}${CALCULATOR_SUFFIX}`;
 }
 
 export function useSEO({
@@ -71,11 +88,12 @@ export function useSEO({
   noindex = false,
   jsonLd,
   canonicalPath,
+  policyPage = false,
 }: SEOOptions): void {
   const route = useRoute();
 
   useHead(() => {
-    const resolvedTitle = normalizeTitle(toValue(title));
+    const resolvedTitle = normalizeTitle(toValue(title), Boolean(toValue(policyPage)));
     const resolvedDescription = toValue(description);
     const resolvedNoindex = Boolean(toValue(noindex));
     const resolvedOgImage = toValue(ogImage);
