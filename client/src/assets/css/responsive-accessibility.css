@@ -94,8 +94,10 @@
     overflow-wrap: anywhere;
   }
 
+  /* 패널형 details(FAQ 아코디언)만 안쪽 여백을 줄인다. 단계 카드의 "자세히 보기"는 본문과 같은
+     줄에서 시작하는 인라인 펼침이라, 여기 걸리면 요약 줄이 본문보다 12px 안으로 밀린다. */
   .text-resize-layout .baby-metric-card,
-  .text-resize-layout details,
+  .text-resize-layout details.retro-panel-muted,
   .text-resize-layout .seo-rich-guide {
     padding: 12px;
   }

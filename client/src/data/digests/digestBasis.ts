@@ -2,6 +2,7 @@
 // 계산기가 모델링하지 않는 것을 여기서 명시해, 발견 문장이 실제보다 넓게 읽히는 것을 막는다.
 import { BABY_DATA_UPDATED, LOCAL_BIRTH_SUPPORT_URL } from "@/data/benefitRates2026";
 import type { GuideSection } from "@/data/seoGuides";
+import { PARAGRAPH_BREAK } from "@/lib/paragraphs";
 
 /** 계산기가 모델링하지 않는 항목 — 발견 문장의 적용 범위를 좁히는 데 쓴다. */
 export const NOT_MODELLED = [
@@ -12,16 +13,31 @@ export const NOT_MODELLED = [
   "인구감소지역 지정 목록",
 ] as const;
 
-export function buildBasisSection(baselineSentence: string): GuideSection {
+export interface BasisSectionOptions {
+  /**
+   * true면 문장 묶음 사이를 PARAGRAPH_BREAK로 나눠 여러 문단으로 렌더한다.
+   * 가이드(/guide/*)만 v8 문단 상한(250자) 대상이라 거기서만 켠다 — 계산기 페이지는 이번 변경
+   * 범위 밖이고, false일 때 출력은 예전 한 문단과 글자 하나까지 같다(그 페이지 지문·lastmod 불변).
+   */
+  paragraphs?: boolean;
+}
+
+export function buildBasisSection(baselineSentence: string, options: BasisSectionOptions = {}): GuideSection {
+  // 묶음 = 문단 하나: 값의 출처·확인일 / 기본 가정 / 모델링하지 않는 것 / 따로 확인할 곳.
+  const groups = [
+    [
+      `위 항목의 숫자는 이 페이지 계산기와 같은 함수를 조건만 바꿔 반복 호출해 얻은 값이며, ` +
+        `계산에 쓴 금액 상수를 사람이 마지막으로 확인한 날짜는 ${BABY_DATA_UPDATED}입니다.`,
+    ],
+    [baselineSentence, `개월수는 모두 출생월을 0개월로 세는 기준이라 만 나이와 한 달 어긋나 보일 수 있습니다.`],
+    [`이 계산기는 ${NOT_MODELLED.join(", ")}을 모델링하지 않으므로 위 금액에는 그 항목이 들어 있지 않습니다.`],
+    [
+      `지자체 자체 지원금은 정부24 통합 신청 페이지(${LOCAL_BIRTH_SUPPORT_URL})에서 거주지 기준으로 따로 확인해야 합니다.`,
+      `본인 조건은 위 계산기에 직접 넣어 확인하시기 바랍니다.`,
+    ],
+  ];
   return {
     h2: "위 발견의 계산 기준",
-    body:
-      `위 항목의 숫자는 이 페이지 계산기와 같은 함수를 조건만 바꿔 반복 호출해 얻은 값이며, ` +
-      `계산에 쓴 금액 상수를 사람이 마지막으로 확인한 날짜는 ${BABY_DATA_UPDATED}입니다. ` +
-      `${baselineSentence} ` +
-      `개월수는 모두 출생월을 0개월로 세는 기준이라 만 나이와 한 달 어긋나 보일 수 있습니다. ` +
-      `이 계산기는 ${NOT_MODELLED.join(", ")}을 모델링하지 않으므로 위 금액에는 그 항목이 들어 있지 않습니다. ` +
-      `지자체 자체 지원금은 정부24 통합 신청 페이지(${LOCAL_BIRTH_SUPPORT_URL})에서 거주지 기준으로 따로 확인해야 합니다. ` +
-      `본인 조건은 위 계산기에 직접 넣어 확인하시기 바랍니다.`,
+    body: groups.map((group) => group.join(" ")).join(options.paragraphs ? PARAGRAPH_BREAK : " "),
   };
 }
