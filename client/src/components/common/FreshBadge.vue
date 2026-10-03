@@ -11,7 +11,7 @@ const props = defineProps<{
 
 <template>
   <span
-    class="hidden shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-primary/35 bg-primary/10 px-2 py-1 text-[10px] font-bold leading-none text-primary md:inline-flex md:gap-1.5 md:px-2.5 md:text-[11px]"
+    class="hidden shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-primary/35 bg-primary/10 px-2 py-1 text-caption font-bold leading-none text-primary md:inline-flex md:gap-1.5 md:px-2.5"
   >
     <CheckCircle2 class="h-3.5 w-3.5" />
     {{ props.message ?? BABY_BADGE_MESSAGE }}

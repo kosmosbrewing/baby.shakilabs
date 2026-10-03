@@ -29,7 +29,7 @@ const config: Config = {
         heading: ["1rem", { lineHeight: "1.35", fontWeight: "600" }],
         body: ["0.875rem", { lineHeight: "1.5", fontWeight: "400" }],
         caption: ["0.8125rem", { lineHeight: "1.45", fontWeight: "400" }],
-        tiny: ["0.6875rem", { lineHeight: "1.35", fontWeight: "400" }],
+        tiny: ["0.8125rem", { lineHeight: "1.45", fontWeight: "400" }],
       },
 
       colors: {

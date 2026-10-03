@@ -17,7 +17,27 @@ export function splitParagraphs(text: string): string[] {
   return text
     .split(PARAGRAPH_BREAK)
     .map((paragraph) => paragraph.trim())
-    .filter((paragraph) => paragraph.length > 0);
+    .filter((paragraph) => paragraph.length > 0)
+    // v8b(2026-10-03): 구분자가 없어도 250자를 넘으면 문장 경계에서 ≤200자 문단으로 나눈다 —
+    // 연도별 랜딩(child-allowance·parental-benefit 등) 본문이 한 덩어리 505~549자였다. 원문 불변.
+    .flatMap((paragraph) => (paragraph.length > PARAGRAPH_MAX_CHARS ? packSentences(splitSentences(paragraph)) : [paragraph]));
+}
+
+/** 문장을 앞에서부터 묶되 maxChars를 넘기기 직전에 새 문단을 연다(탐욕). 문장 하나가 maxChars보다 길면 그대로 둔다. */
+export function packSentences(sentences: string[], maxChars = 200): string[] {
+  const paragraphs: string[] = [];
+  let current = "";
+  for (const sentence of sentences) {
+    const candidate = current ? `${current} ${sentence}` : sentence;
+    if (candidate.length > maxChars && current) {
+      paragraphs.push(current);
+      current = sentence;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current) paragraphs.push(current);
+  return paragraphs;
 }
 
 /**
