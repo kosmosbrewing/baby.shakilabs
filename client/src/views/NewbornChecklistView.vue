@@ -53,7 +53,7 @@ const nextSteps = [
 </script>
 
 <template>
-  <SEOHead
+  <SEOHead noindex
     title="출산 직후 신청 순서 가이드 | 60일 소급 기한"
     description="출생신고부터 부모급여·아동수당까지 신청 순서와 기한을 정리했습니다. 60일 이내 부모급여 신청을 놓치지 마세요."
     :json-ld="faqJsonLd"

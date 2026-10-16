@@ -40,7 +40,7 @@ const nextSteps = [HOME_LINK, PARENTAL_BENEFIT_LINK, FIRST_MEETING_LINK, ...FINA
 </script>
 
 <template>
-  <SEOHead
+  <SEOHead noindex
     title="인구감소지역 아동수당 | 우대 11만·특별 12만원"
     description="인구감소지역 아동수당은 우대 11만원, 특별 12만원으로 더 많이 지급됩니다. 지역 판정 확인 방법과 함께 계산합니다."
     :json-ld="faqJsonLd"

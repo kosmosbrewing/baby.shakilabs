@@ -1,4 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
+import { validateNoindex } from "./validate-noindex.mjs";
+import { NOINDEX_ROUTES as NOINDEX_ROUTES_FOR_GATE } from "./seo-routes.mjs";
 import { validateBuiltFontSizes } from "./validate-built-font-sizes.mjs";
 import { validateNoTinyTextUtilities } from "./validate-no-tiny-text.mjs";
 import { dirname, resolve } from "node:path";
@@ -218,6 +220,8 @@ function validateRouterRoutesAreListed(sitemapUrls) {
   for (const route of staticRoutes) {
     const url = canonicalUrlFor(route.path);
     if (canonicalPathFor(route.path) === route.path) {
+      // 색인 소거(2026-10-16): NOINDEX_ROUTES는 라우터에 있고 프리렌더되지만 사이트맵에 없다(validate-noindex.mjs가 noindex를 확인)
+      if (NOINDEX_ROUTES_FOR_GATE.includes(route.path)) continue;
       assert(sitemapUrls.has(url), `Router route is missing from the sitemap: ${url}`);
     } else {
       assert(
@@ -307,3 +311,7 @@ validateNoTinyTextUtilities({ projectRoot });
 // v8c(2026-10-04): 배포되는 CSS·HTML의 글자 크기를 직접 잰다 — 13px 미만은 차트 축 눈금(__scale)·차트 전용 text-[12px]만.
 const builtFontDeclarations = validateBuiltFontSizes({ distRoot: distRoot });
 console.log(`Validated built font sizes — ${builtFontDeclarations} declarations, 0 under 13px outside the chart-axis allowance.`);
+
+// 색인 소거 게이트(2026-10-16): 사이트맵 ⇔ noindex 없음, 사이트맵 밖 self-canonical ⇔ noindex, NOINDEX_ROUTES 전수 확인
+const noindexChecked = validateNoindex({ distRoot: distRoot, siteUrl: "https://shakilabs.com/baby", noindexRoutes: NOINDEX_ROUTES_FOR_GATE });
+console.log(`Validated noindex/sitemap consistency across ${noindexChecked} built pages (${NOINDEX_ROUTES_FOR_GATE.length} noindex routes).`);
