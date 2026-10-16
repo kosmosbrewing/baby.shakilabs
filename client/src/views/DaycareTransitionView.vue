@@ -53,7 +53,7 @@ const nextSteps = [
 </script>
 
 <template>
-  <SEOHead
+  <SEOHead noindex
     title="어린이집 입소 전환 체크리스트 | 택1 구조 정리"
     description="어린이집 입소 시 부모급여·양육수당·아이돌봄 지원이 어떻게 바뀌는지 단계별로 확인합니다."
     :json-ld="faqJsonLd"

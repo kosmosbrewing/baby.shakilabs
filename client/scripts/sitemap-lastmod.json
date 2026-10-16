@@ -2,44 +2,32 @@
   "schemaVersion": "sitemap-lastmod-v1",
   "routes": {
     "/": {
-      "contentHash": "ff7cb07143362a58",
-      "lastmod": "2026-10-03"
+      "contentHash": "5575e73bcd1961b7",
+      "lastmod": "2026-10-16"
     },
     "/parental-benefit": {
-      "contentHash": "bc51626e472a7a20",
-      "lastmod": "2026-10-03"
+      "contentHash": "396bd84c5f7cf4ea",
+      "lastmod": "2026-10-16"
     },
     "/child-allowance": {
-      "contentHash": "c0d577f2981ac085",
-      "lastmod": "2026-10-03"
-    },
-    "/child-allowance/population-decline": {
-      "contentHash": "69ba43dbbd3166aa",
-      "lastmod": "2026-10-03"
+      "contentHash": "6508fe43b99b389d",
+      "lastmod": "2026-10-16"
     },
     "/first-meeting": {
-      "contentHash": "4eb0328d6422cd95",
-      "lastmod": "2026-10-03"
-    },
-    "/guide/newborn-checklist": {
-      "contentHash": "2195d8eb33aab5fb",
-      "lastmod": "2026-10-03"
-    },
-    "/guide/daycare-transition": {
-      "contentHash": "1f62e03ef68bc2f4",
-      "lastmod": "2026-10-03"
+      "contentHash": "d7d66608cf6d2048",
+      "lastmod": "2026-10-16"
     },
     "/about": {
-      "contentHash": "5ff9b92230565a89",
-      "lastmod": "2026-10-03"
+      "contentHash": "abf5c7708da4ef93",
+      "lastmod": "2026-10-16"
     },
     "/terms": {
-      "contentHash": "ce12e099392801d7",
-      "lastmod": "2026-10-03"
+      "contentHash": "de4b92cf32131cf3",
+      "lastmod": "2026-10-16"
     },
     "/privacy": {
-      "contentHash": "0fddba264688ed4b",
-      "lastmod": "2026-10-03"
+      "contentHash": "d1eb36aa8a6f4ce7",
+      "lastmod": "2026-10-16"
     }
   }
 }

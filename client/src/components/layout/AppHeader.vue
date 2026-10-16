@@ -9,7 +9,6 @@ import { BABY_TOOLS } from "@/data/babyNavigation";
 
 // 사이트 링크 — 블로그는 포털 소유라 href, 소개는 이 앱 라우트라 RouterLink(to). 모바일에서는 ☰ 안으로 들어간다.
 const links: GlobalHeaderLink[] = [
-  { href: "/blog", label: "블로그" },
   { to: "/about", label: "소개" },
 ];
 

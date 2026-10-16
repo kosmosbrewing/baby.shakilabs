@@ -95,7 +95,10 @@ export function useSEO({
   useHead(() => {
     const resolvedTitle = normalizeTitle(toValue(title), Boolean(toValue(policyPage)));
     const resolvedDescription = toValue(description);
-    const resolvedNoindex = Boolean(toValue(noindex));
+    // 색인 소거(2026-10-16): noindex는 self-canonical 페이지에만 — canonical이 다른 곳을 가리키는 변형(/tax/2000 등)에
+    // noindex를 달면 canonical 신호와 충돌한다. 변형은 Googlebot robots 차단으로 처리한다.
+    const canonicalizedElsewhere = Boolean(toValue(canonicalPath)) && toValue(canonicalPath) !== route.path;
+    const resolvedNoindex = Boolean(toValue(noindex)) && !canonicalizedElsewhere;
     const resolvedOgImage = toValue(ogImage);
     const resolvedJsonLd = toValue(jsonLd);
     const resolvedJsonLdArray = Array.isArray(resolvedJsonLd)
